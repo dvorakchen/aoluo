@@ -1,0 +1,30 @@
+import { themePrefer } from "$lib/shared";
+
+
+const IS_DARK_KEY = 'isdark';
+
+class ThemeStore {
+    constructor() {
+        this._isDark = JSON.parse(localStorage.getItem(IS_DARK_KEY) ?? 'false');
+
+        this.changeTheme();
+    }
+
+    private _isDark = false;
+
+    public toggle(): void {
+        this._isDark = !this._isDark;
+        localStorage.setItem(IS_DARK_KEY, JSON.stringify(this._isDark));
+        this.changeTheme();
+    }
+
+    private changeTheme(): void {
+        document.documentElement.dataset.theme = this._isDark ? themePrefer.dark : themePrefer.light;
+    }
+}
+
+export function initThemeStore() {
+    themeStore = new ThemeStore();
+}
+
+export let themeStore: ThemeStore; 
