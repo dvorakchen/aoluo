@@ -2,6 +2,7 @@
 	import { authClient } from '$lib/client/auth';
 	import { Mail, User, Lock, Loader } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { m } from '$lib/paraglide/messages';
 
 	let activeTab = $state('password'); // 'password' | 'phone'
@@ -34,10 +35,10 @@
 			if (result?.error) {
 				errorMessage = result.error.message || '登录失败';
 			} else {
-				goto('/');
+				goto(resolve('/'));
 			}
-		} catch (e: any) {
-			errorMessage = e.message || '发生未知错误';
+		} catch (e: unknown) {
+			errorMessage = e instanceof Error ? e.message : '发生未知错误';
 		} finally {
 			loading = false;
 		}
