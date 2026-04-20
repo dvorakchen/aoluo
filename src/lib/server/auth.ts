@@ -18,7 +18,7 @@ export const auth = betterAuth({
 		sveltekitCookies(getRequestEvent), // make sure this is the last plugin in the array
 		username({}),
 		phoneNumber({
-			sendOTP: ({ phoneNumber, code }, _) => {
+			sendOTP: ({ phoneNumber, code }) => {
 				// TODO: Implement sending OTP code via SMS
 				logger.debug(`Send OTP code ${code} to phone number ${phoneNumber}`);
 			}

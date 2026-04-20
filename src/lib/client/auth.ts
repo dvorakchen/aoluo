@@ -1,5 +1,5 @@
 import { createAuthClient } from 'better-auth/svelte';
-import { usernameClient, phoneNumberClient, emailOTPClient } from 'better-auth/client/plugins';
+import { usernameClient, phoneNumberClient } from 'better-auth/client/plugins';
 import { env } from '$env/dynamic/public';
 import { passkeyClient } from '@better-auth/passkey/client';
 

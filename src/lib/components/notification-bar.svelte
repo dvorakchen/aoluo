@@ -9,6 +9,7 @@
 	import { m } from '$lib/paraglide/messages';
 	import { X } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import { fade, fly } from 'svelte/transition';
 
 	const take3 = $derived(notificationStore.list.slice(0, 3));
 
@@ -30,11 +31,11 @@
 	<div class="pointer-events-none fixed top-0 right-0 left-0 z-100 flex h-32 justify-center p-4">
 		{#each take3 as notification, i (notification.text)}
 			<div
-				class="pointer-events-auto absolute w-full max-w-2xl transition-all duration-500 ease-in-out"
-				style="
-					transform: translateY({i * 8}px) scale({1 - i * 0.05}); 
-					z-index: {100 - i}; 
-				"
+				class="pointer-events-auto absolute w-full max-w-2xl"
+				in:fade
+				out:fly={{ y: -100, duration: 500 }}
+				style:transform="translateY({i * 8}px) scale({1 - i * 0.05})"
+				style:z-index={100 - i}
 			>
 				{#if notification.type === 'warning'}
 					{@render warning(notification)}
@@ -47,7 +48,7 @@
 {/if}
 
 {#snippet info(notification: Notification)}
-	<div role="alert" class="alert alert-vertical alert-info shadow sm:alert-horizontal">
+	<div role="alert" class="alert alert-vertical alert-soft alert-info shadow sm:alert-horizontal">
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
@@ -66,7 +67,7 @@
 			class="tooltip tooltip-bottom"
 			data-tip={`${m.rest_notifications({ count: notificationStore.list.length })}`}
 		>
-			<button class="btn btn-sm btn-info" onclick={() => handleClose(notification.text)}>
+			<button class="btn btn-dash btn-sm btn-info" onclick={() => handleClose(notification.text)}>
 				<X />
 			</button>
 		</div>
@@ -74,7 +75,10 @@
 {/snippet}
 
 {#snippet warning(notification: Notification)}
-	<div role="alert" class="alert alert-vertical alert-warning shadow sm:alert-horizontal">
+	<div
+		role="alert"
+		class="alert alert-vertical alert-soft alert-warning shadow sm:alert-horizontal"
+	>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
@@ -93,7 +97,10 @@
 			class="tooltip tooltip-bottom"
 			data-tip={`${m.rest_notifications({ count: notificationStore.list.length })}`}
 		>
-			<button class="btn btn-sm btn-warning" onclick={() => handleClose(notification.text)}>
+			<button
+				class="btn btn-dash btn-sm btn-warning"
+				onclick={() => handleClose(notification.text)}
+			>
 				<X />
 			</button>
 		</div>

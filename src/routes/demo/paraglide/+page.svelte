@@ -2,7 +2,6 @@
 	import { setLocale } from '$lib/paraglide/runtime';
 </script>
 
-
 <div>
 	<button onclick={() => setLocale('zh')}>zh</button>
 	<button onclick={() => setLocale('en')}>en</button>
