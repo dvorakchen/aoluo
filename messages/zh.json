@@ -1,5 +1,6 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "你好, {name} from 中国!",
-	"lang": "简体中文"
+	"lang": "简体中文",
+	"title": "傲罗",
+	"rest_notifications": "还有 {count} 条未读通知"
 }

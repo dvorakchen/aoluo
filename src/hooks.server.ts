@@ -6,7 +6,7 @@ import type { Handle } from '@sveltejs/kit';
 import { getTextDirection } from '$lib/paraglide/runtime';
 import { paraglideMiddleware } from '$lib/paraglide/server';
 import { logger } from '$lib/server/logger';
-import { themePrefer } from '$lib/shared';
+import { seed } from '$lib/server/db/seed';
 
 const handleParaglide: Handle = ({ event, resolve }) =>
 	paraglideMiddleware(event.request, ({ request, locale }) => {
@@ -31,7 +31,6 @@ const handleBetterAuth: Handle = async ({ event, resolve }) => {
 	return svelteKitHandler({ event, resolve, auth, building });
 };
 
-
 const handleLog: Handle = async ({ event, resolve }) => {
 	const start = performance.now();
 
@@ -41,22 +40,30 @@ const handleLog: Handle = async ({ event, resolve }) => {
 	const time = performance.now() - start;
 
 	// 记录所有请求日志
-	logger.info({
-		method: event.request.method,
-		url: event.url.pathname,
-		status: response.status,
-		time: `${time.toFixed(2)}ms`
-	}, 'Incoming Request');
+	logger.info(
+		{
+			method: event.request.method,
+			url: event.url.pathname,
+			status: response.status,
+			time: `${time.toFixed(2)}ms`
+		},
+		'Incoming Request'
+	);
 
 	return response;
 };
 
 // 全局错误捕获
 export const handleError = ({ error, event }) => {
-	logger.error({
-		err: error,
-		url: event.url.pathname
-	}, 'Uncaught Server Error');
+	logger.error(
+		{
+			err: error,
+			url: event.url.pathname
+		},
+		'Uncaught Server Error'
+	);
 };
 
 export const handle: Handle = sequence(handleLog, handleParaglide, handleBetterAuth);
+
+await seed();
