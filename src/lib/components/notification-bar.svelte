@@ -8,19 +8,9 @@
 	import { notificationStore, type Notification } from '$lib/client/store/notification.svelte';
 	import { m } from '$lib/paraglide/messages';
 	import { X } from 'lucide-svelte';
-	import { onMount } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
 
 	const take3 = $derived(notificationStore.list.slice(0, 3));
-
-	onMount(() => {
-		for (let i = 0; i < 10; i++) {
-			notificationStore.add({
-				text: `Notification ${i + 1}: This is a sample message to test stacking.`,
-				type: Math.random() > 0.5 ? 'info' : 'warning'
-			});
-		}
-	});
 
 	function handleClose(notification: string) {
 		notificationStore.remove(notification);
