@@ -60,7 +60,7 @@
 	},
 	"dependencies": {
 		"@better-auth/passkey": "^1.6.5",
-		"lucide-svelte": "^1.0.1",
+		"@lucide/svelte": "^1.8.0",
 		"pino": "^10.3.1"
 	}
 }

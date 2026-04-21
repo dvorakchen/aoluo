@@ -17,3 +17,201 @@
 	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
 	>Show Toast</button
 >
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>
+
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<ThemeController />
+<ChangeLang />
+<button
+	onclick={() => toastStore.add('This is a toast message', Math.random() > 0.5 ? 'info' : 'error')}
+	>Show Toast</button
+>

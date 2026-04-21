@@ -2,5 +2,6 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"lang": "简体中文",
 	"title": "傲罗",
+	"admin_dashboard": "后台面板",
 	"rest_notifications": "还有 {count} 条未读通知"
 }

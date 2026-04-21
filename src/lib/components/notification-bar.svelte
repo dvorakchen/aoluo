@@ -1,13 +1,14 @@
-<script lang="ts">
-	/**
-	 * 通知组件，固定在页面最顶部显示。
-	 * 通知不会自动关闭，需要用户点击关闭按钮来移除。
-	 * 多个通知会叠加在一起，但视觉上限制最多显示 3 层叠加感。
-	 */
+<!-- 
+通知组件，固定在页面最顶部显示。
+通知不会自动关闭，需要用户点击关闭按钮来移除。
+多个通知会叠加在一起，但视觉上限制最多显示 3 层叠加感。
+	  
+-->
 
+<script lang="ts">
 	import { notificationStore, type Notification } from '$lib/client/store/notification.svelte';
 	import { m } from '$lib/paraglide/messages';
-	import { X } from 'lucide-svelte';
+	import { X } from '@lucide/svelte';
 	import { fade, fly } from 'svelte/transition';
 
 	const take3 = $derived(notificationStore.list.slice(0, 3));

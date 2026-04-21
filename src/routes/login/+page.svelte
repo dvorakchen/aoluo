@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { authClient } from '$lib/client/auth';
-	import { Mail, User, Lock, Loader } from 'lucide-svelte';
+	import { Mail, User, Lock, Loader } from '@lucide/svelte';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { m } from '$lib/paraglide/messages';

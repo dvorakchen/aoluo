@@ -2,5 +2,6 @@
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"lang": "English",
 	"title": "Aoluo",
+	"admin_dashboard": "Admin Dashboard",
 	"rest_notifications": "and {count} more"
 }
