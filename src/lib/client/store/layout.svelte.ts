@@ -30,7 +30,7 @@ const createLayoutStore = () => {
 };
 
 class Breadcrumbs {
-	constructor(private _breadcrumbs = $state<string[]>([DEFAULT_ACTIVE_MENU])) {}
+	private _breadcrumbs = $state<string[]>([DEFAULT_ACTIVE_MENU]);
 
 	get list() {
 		return this._breadcrumbs;

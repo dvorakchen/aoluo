@@ -12,7 +12,7 @@
 
 <ul class="menu mt-4 w-full">
 	<li class="pointer-events-none">
-		<span class="px-0 text-base-content">{@render topTitle()}</span>
+		<span class="ml-2 px-0 text-base-content">{@render topTitle()}</span>
 	</li>
 	<li>
 		<Menu

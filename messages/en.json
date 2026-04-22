@@ -4,5 +4,6 @@
 	"title": "Aoluo",
 	"admin_dashboard": "Admin Dashboard",
 	"rest_notifications": "and {count} more",
-	"menu_dashboard": "Dashboard"
+	"menu_dashboard": "Dashboard",
+	"ask_ai": "Ask AI"
 }

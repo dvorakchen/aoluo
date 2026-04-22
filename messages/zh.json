@@ -4,5 +4,6 @@
 	"title": "傲罗",
 	"admin_dashboard": "后台面板",
 	"rest_notifications": "还有 {count} 条未读通知",
-	"menu_dashboard": "仪表盘"
+	"menu_dashboard": "仪表盘",
+	"ask_ai": "问AI"
 }
