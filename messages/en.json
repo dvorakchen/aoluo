@@ -3,5 +3,6 @@
 	"lang": "English",
 	"title": "Aoluo",
 	"admin_dashboard": "Admin Dashboard",
-	"rest_notifications": "and {count} more"
+	"rest_notifications": "and {count} more",
+	"menu_dashboard": "Dashboard"
 }

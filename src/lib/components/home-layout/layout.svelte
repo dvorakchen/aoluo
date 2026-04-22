@@ -7,16 +7,21 @@ The `children` prop contains the content of the specific admin page being render
 <script lang="ts">
 	import Sidebar from './sidebar.svelte';
 	import Header from './header.svelte';
+	import { layoutStore } from '$lib/client/store/layout.svelte';
 
 	const { children } = $props();
+
+	const sidebarCollapsed = $derived(layoutStore.sidebarWidth === 0);
 </script>
 
 <div
-	class="grid h-screen w-screen overflow-hidden"
-	style="grid-template-columns: 300px 1fr; grid-template-rows: auto 1fr;"
+	class="grid h-screen w-screen grid-cols-[300px_1fr] grid-rows-[auto_1fr] transition-all duration-300"
+	style:grid-template-columns={sidebarCollapsed ? '0px 1fr' : ''}
 >
 	<!-- Sidebar: 左侧固定宽度，高度占满 -->
-	<aside class="row-span-2 h-full overflow-y-auto border-r border-base-300">
+	<aside
+		class="relative row-span-2 h-full overflow-hidden overflow-y-auto border-r border-base-300"
+	>
 		<Sidebar />
 	</aside>
 

@@ -1,4 +1,4 @@
-import type { User, Session } from '$lib/server/auth';
+import type { User, Session } from '$lib/shared';
 
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces

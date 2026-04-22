@@ -6,3 +6,7 @@
 		cmyk --default,
 		sunset --prefersdark;
 }
+
+@utility shadow-top {
+	box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+}

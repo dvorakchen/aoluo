@@ -6,10 +6,18 @@ The `children` prop contains the content of the specific admin page being render
 
 <script lang="ts">
 	import Layout from '$lib/components/home-layout/layout.svelte';
+	import { onMount } from 'svelte';
 
 	import type { LayoutProps } from './$types';
+	import { userStore } from '$lib/client/store/user.svelte';
 
-	const { children }: LayoutProps = $props();
+	const { children, data }: LayoutProps = $props();
+
+	onMount(() => {
+		userStore.setUser(data.user);
+	});
+
+	$inspect(userStore.user);
 </script>
 
 <Layout>
