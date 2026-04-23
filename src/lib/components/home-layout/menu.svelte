@@ -11,10 +11,10 @@
 	const { icon, title, links }: MenuListProps = $props();
 </script>
 
-<details class="mt-1 rounded p-1 pr-2 hover:bg-base-200">
+<details class="rounded p-1 pr-2 hover:bg-base-200">
 	<summary class="bg-transparent">
 		{@render icon()}
-		<span class="text-lg font-semibold">{title}</span>
+		<span class="text-lg font-medium">{title}</span>
 	</summary>
 	<ul class="pb-4">
 		{#each links as link (link.label + link.href)}

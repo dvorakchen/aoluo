@@ -12,7 +12,7 @@
 
 <ul class="menu mt-4 w-full">
 	<li class="pointer-events-none">
-		<span class="ml-2 px-0 text-base-content">{@render topTitle()}</span>
+		<span class="ml-4 px-0 pb-0 text-base-content">{@render topTitle()}</span>
 	</li>
 	<li>
 		<Menu
@@ -23,7 +23,7 @@
 			]}
 		>
 			{#snippet icon()}
-				<LayoutDashboard />
+				<LayoutDashboard size={20} />
 			{/snippet}
 		</Menu>
 	</li>
@@ -36,7 +36,7 @@
 			]}
 		>
 			{#snippet icon()}
-				<LayoutDashboard />
+				<LayoutDashboard size={20} />
 			{/snippet}
 		</Menu>
 	</li>
@@ -49,7 +49,7 @@
 			]}
 		>
 			{#snippet icon()}
-				<LayoutDashboard />
+				<LayoutDashboard size={20} />
 			{/snippet}
 		</Menu>
 	</li>

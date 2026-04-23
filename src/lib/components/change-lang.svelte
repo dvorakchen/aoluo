@@ -13,7 +13,7 @@
 </script>
 
 <div class="dropdown-hover dropdown dropdown-end">
-	<div tabindex="0" role="button" class="btn m-1 btn-ghost">
+	<div tabindex="0" role="button" class="btn btn-ghost">
 		<Languages />{m.lang()}
 	</div>
 	<ul tabindex="-1" class="dropdown-content menu z-1 w-40 rounded-box bg-base-100 p-2 shadow-all">

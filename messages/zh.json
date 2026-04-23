@@ -5,5 +5,10 @@
 	"admin_dashboard": "后台面板",
 	"rest_notifications": "还有 {count} 条未读通知",
 	"menu_dashboard": "仪表盘",
-	"ask_ai": "问AI"
+	"ask_ai": "问AI",
+	"all_read": "全部已读",
+	"read": "Read",
+	"unread_chat_message": "您有未读的聊天信息",
+	"todo_message": "您有待办事项",
+	"click_goto": "点击前往"
 }

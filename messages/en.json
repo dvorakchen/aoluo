@@ -5,5 +5,10 @@
 	"admin_dashboard": "Admin Dashboard",
 	"rest_notifications": "and {count} more",
 	"menu_dashboard": "Dashboard",
-	"ask_ai": "Ask AI"
+	"ask_ai": "Ask AI",
+	"all_read": "All Read",
+	"read": "Read",
+	"unread_chat_message": "You have unread chat messages",
+	"todo_message": "You have Todo",
+	"click_goto": "Click Goto"
 }
