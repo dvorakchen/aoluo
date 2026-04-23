@@ -14,11 +14,7 @@
 
 <div class="bg-base-100 px-1 pb-2">
 	<div class="dropdown dropdown-end dropdown-top w-full">
-		<div
-			tabindex="0"
-			role="button"
-			class="btn h-full w-full px-3 py-1 shadow-2xl shadow-top btn-ghost"
-		>
+		<div tabindex="0" role="button" class="btn h-full w-full px-3 py-1 shadow-all btn-ghost">
 			<div class="grid w-full grid-cols-[auto_1fr_auto] items-center gap-2 gap-x-4 gap-y-1">
 				<!-- 头像 -->
 				<div class="col-start-1 row-span-2 items-center justify-center">
@@ -52,7 +48,7 @@
 		</div>
 		<ul
 			tabindex="-1"
-			class="dropdown-content menu z-1 mb-2 w-full rounded-box border border-base-200 bg-base-100 shadow-2xl shadow-top"
+			class="dropdown-content menu z-1 mb-2 w-full rounded-box border border-base-200 bg-base-100 shadow-all"
 		>
 			<li class="pointer-events-none divider h-px"></li>
 			<li>

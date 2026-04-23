@@ -44,7 +44,6 @@
 				placeholder={m.ask_ai()}
 			/>
 			<kbd class="kbd kbd-sm">⌘</kbd>
-			+
 			<kbd class="kbd kbd-sm">K</kbd>
 		</label>
 	</div>
