@@ -5,7 +5,7 @@ import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { env } from '$env/dynamic/private';
 import { getRequestEvent } from '$app/server';
 import { db } from '$lib/server/db';
-import { username } from 'better-auth/plugins';
+import { organization, username } from 'better-auth/plugins';
 import { phoneNumber } from 'better-auth/plugins';
 import { logger } from '$lib/server/logger';
 
@@ -28,6 +28,9 @@ export const auth = betterAuth({
 				authenticatorAttachment: 'cross-platform', // YubiKey 是跨平台认证器
 				userVerification: 'preferred'
 			}
+		}),
+		organization({
+			dynamicAccessControl: { enabled: true }
 		})
 	]
 });

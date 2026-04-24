@@ -130,12 +130,7 @@
 			<div class="flex items-center">
 				<ListTodo />
 			</div>
-			<a
-				class="tooltip btn tooltip-top btn-ghost"
-				href={msg.data?.link}
-				rel="external"
-				data-tip={m.click_goto()}
-			>
+			<a class="tooltip btn tooltip-top btn-ghost" href={msg.data?.link} data-tip={m.click_goto()}>
 				<div class="text-xs font-semibold">{msg.text}</div>
 			</a>
 

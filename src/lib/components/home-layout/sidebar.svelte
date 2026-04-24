@@ -11,6 +11,7 @@ Sidebar component for the admin dashboard.
 	import { resolve } from '$app/paths';
 	import MenuList from './menu-list.svelte';
 	import UserCard from './user-card.svelte';
+	import { LayoutDashboard } from '@lucide/svelte';
 </script>
 
 <aside class="flex h-full flex-col pb-4">
@@ -26,41 +27,68 @@ Sidebar component for the admin dashboard.
 	</header>
 
 	<div class="mb-8 grow">
-		<MenuList>
-			{#snippet topTitle()}
-				Overview
-			{/snippet}
-		</MenuList>
-		<MenuList>
-			{#snippet topTitle()}
-				Overview
-			{/snippet}
-		</MenuList>
-		<MenuList>
-			{#snippet topTitle()}
-				Overview
-			{/snippet}
-		</MenuList>
-		<MenuList>
-			{#snippet topTitle()}
-				Overview
-			{/snippet}
-		</MenuList>
-		<MenuList>
-			{#snippet topTitle()}
-				Overview
-			{/snippet}
-		</MenuList>
-		<MenuList>
-			{#snippet topTitle()}
-				Overview
-			{/snippet}
-		</MenuList>
-		<MenuList>
-			{#snippet topTitle()}
-				Overview
-			{/snippet}
-		</MenuList>
+		<MenuList
+			topTitle="Overriew"
+			list={{
+				title: 'Dashboard',
+				Icon: LayoutDashboard,
+				links: [
+					{ label: 'Submenu 1', href: '/' },
+					{ label: 'Submenu 2', href: '/subm' }
+				]
+			}}
+		></MenuList>
+		<MenuList
+			topTitle="Overriew"
+			list={{
+				title: 'Dashboard',
+				Icon: LayoutDashboard,
+				links: [
+					{ label: 'Submenu 1', href: '/1' },
+					{ label: 'Submenu 2', href: '/1' }
+				]
+			}}
+		></MenuList><MenuList
+			topTitle="Overriew"
+			list={{
+				title: 'Dashboard',
+				Icon: LayoutDashboard,
+				links: [
+					{ label: 'Submenu 1', href: '/1' },
+					{ label: 'Submenu 2', href: '/1' }
+				]
+			}}
+		></MenuList><MenuList
+			topTitle="Overriew"
+			list={{
+				title: 'Dashboard',
+				Icon: LayoutDashboard,
+				links: [
+					{ label: 'Submenu 1', href: '/1' },
+					{ label: 'Submenu 2', href: '/1' }
+				]
+			}}
+		></MenuList><MenuList
+			topTitle="Overriew"
+			list={{
+				title: 'Dashboard',
+				Icon: LayoutDashboard,
+				links: [
+					{ label: 'Submenu 1', href: '/1' },
+					{ label: 'Submenu 2', href: '/1' }
+				]
+			}}
+		></MenuList><MenuList
+			topTitle="Overriew"
+			list={{
+				title: 'Dashboard',
+				Icon: LayoutDashboard,
+				links: [
+					{ label: 'Submenu 1', href: '/1' },
+					{ label: 'Submenu 2', href: '/1' }
+				]
+			}}
+		></MenuList>
 	</div>
 
 	<div class="sticky bottom-0">

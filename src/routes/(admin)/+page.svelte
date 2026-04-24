@@ -2,11 +2,9 @@
 	import { toastStore } from '$lib/client/store/toast.svelte';
 	import ChangeLang from '$lib/components/change-lang.svelte';
 	import ThemeController from '$lib/components/theme-controller.svelte';
-	import type { PageProps } from './$types';
+	// import type { PageProps } from './$types';
 
-	const { data }: PageProps = $props();
-
-	$inspect(data);
+	// const { data }: PageProps = $props();
 </script>
 
 <h1>Welcome to SvelteKit</h1>

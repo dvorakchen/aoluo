@@ -16,8 +16,6 @@ The `children` prop contains the content of the specific admin page being render
 	onMount(() => {
 		userStore.setUser(data.user);
 	});
-
-	$inspect(userStore.user);
 </script>
 
 <Layout>

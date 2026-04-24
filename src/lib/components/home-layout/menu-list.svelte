@@ -3,54 +3,23 @@
 -->
 
 <script lang="ts">
-	import { LayoutDashboard } from '@lucide/svelte';
-	import Menu from './menu.svelte';
-	import { resolve } from '$app/paths';
+	import Menu, { type MenuListProps } from './menu.svelte';
 
-	const { topTitle } = $props();
+	const {
+		topTitle,
+		list
+	}: {
+		topTitle: string;
+		list: MenuListProps;
+	} = $props();
 </script>
 
 <ul class="menu mt-4 w-full">
 	<li class="pointer-events-none">
-		<span class="ml-4 px-0 pb-0 text-base-content">{@render topTitle()}</span>
+		<span class="ml-4 px-0 pb-0 text-base-content">{topTitle}</span>
 	</li>
+
 	<li>
-		<Menu
-			title="Dashboard"
-			links={[
-				{ label: 'Submenu 1', href: resolve('/#') },
-				{ label: 'Submenu 2', href: resolve('/#') }
-			]}
-		>
-			{#snippet icon()}
-				<LayoutDashboard size={20} />
-			{/snippet}
-		</Menu>
-	</li>
-	<li>
-		<Menu
-			title="Dashboard"
-			links={[
-				{ label: 'Submenu 1', href: resolve('/#') },
-				{ label: 'Submenu 2', href: resolve('/#') }
-			]}
-		>
-			{#snippet icon()}
-				<LayoutDashboard size={20} />
-			{/snippet}
-		</Menu>
-	</li>
-	<li>
-		<Menu
-			title="Dashboard"
-			links={[
-				{ label: 'Submenu 1', href: resolve('/#') },
-				{ label: 'Submenu 2', href: resolve('/#') }
-			]}
-		>
-			{#snippet icon()}
-				<LayoutDashboard size={20} />
-			{/snippet}
-		</Menu>
+		<Menu Icon={list.Icon} title={list.title} links={list.links}></Menu>
 	</li>
 </ul>
