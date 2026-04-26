@@ -10,5 +10,10 @@
 	"read": "Read",
 	"unread_chat_message": "You have unread chat messages",
 	"todo_message": "You have Todo",
-	"click_goto": "Click Goto"
+	"click_goto": "Click to go",
+	"menu_overview": "Overview",
+	"menu_overview_dashboard": "Dashboard",
+	"menu_hrm": "HRM",
+	"menu_hrm_employee": "Employee Management",
+	"menu_hrm_leave": "Leave Management"
 }

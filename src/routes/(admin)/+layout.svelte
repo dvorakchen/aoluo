@@ -14,7 +14,7 @@ The `children` prop contains the content of the specific admin page being render
 	const { children, data }: LayoutProps = $props();
 
 	onMount(() => {
-		userStore.setUser(data.user);
+		userStore.setUser(data.user, data.teams);
 	});
 </script>
 

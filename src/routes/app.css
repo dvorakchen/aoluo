@@ -15,6 +15,6 @@
 		var(--tw-inset-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
 }
 
-@utility link-active {
-	@apply border-l-2 border-primary;
+@utility menu-link-active {
+	@apply bg-neutral text-neutral-content;
 }

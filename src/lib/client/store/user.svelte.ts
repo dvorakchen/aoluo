@@ -2,10 +2,11 @@
  * 当前登录用户
  */
 
-import { type User } from '$lib/shared';
+import type { User, Team } from '$lib/shared';
 
 const createUserStore = () => {
 	let _user: User | null = $state(null);
+	let _teams: Team[] = $state([]);
 
 	return {
 		get isLoggedIn() {
@@ -16,8 +17,13 @@ const createUserStore = () => {
 			return _user;
 		},
 
-		setUser(user: User) {
+		get teams() {
+			return _teams;
+		},
+
+		setUser(user: User, teams: Team[]) {
 			_user = user;
+			_teams = teams;
 		},
 
 		clear() {

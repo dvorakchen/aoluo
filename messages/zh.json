@@ -10,5 +10,10 @@
 	"read": "Read",
 	"unread_chat_message": "您有未读的聊天信息",
 	"todo_message": "您有待办事项",
-	"click_goto": "点击前往"
+	"click_goto": "点击前往",
+	"menu_overview": "总览",
+	"menu_overview_dashboard": "仪表盘",
+	"menu_hrm": "人事管理",
+	"menu_hrm_employee": "员工管理",
+	"menu_hrm_leave": "请假管理"
 }

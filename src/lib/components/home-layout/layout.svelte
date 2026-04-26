@@ -15,7 +15,7 @@ The `children` prop contains the content of the specific admin page being render
 </script>
 
 <div
-	class="grid h-screen w-screen grid-cols-[300px_1fr] grid-rows-[auto_1fr] transition-all duration-300"
+	class="grid h-screen w-screen grid-cols-[256px_1fr] grid-rows-[auto_1fr] transition-all duration-300"
 	style:grid-template-columns={sidebarCollapsed ? '0px 1fr' : ''}
 >
 	<!-- Sidebar: 左侧固定宽度，高度占满 -->

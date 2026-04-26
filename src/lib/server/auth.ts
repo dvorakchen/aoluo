@@ -8,6 +8,7 @@ import { db } from '$lib/server/db';
 import { organization, username } from 'better-auth/plugins';
 import { phoneNumber } from 'better-auth/plugins';
 import { logger } from '$lib/server/logger';
+import { betterAuthOrgConfig } from '$lib/shared/permissions';
 
 export const auth = betterAuth({
 	baseURL: env.ORIGIN,
@@ -30,6 +31,7 @@ export const auth = betterAuth({
 			}
 		}),
 		organization({
+			...betterAuthOrgConfig,
 			dynamicAccessControl: { enabled: true }
 		})
 	]

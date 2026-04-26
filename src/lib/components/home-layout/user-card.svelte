@@ -12,7 +12,7 @@
 	}
 </script>
 
-<div class="bg-base-100 px-1 pb-2">
+<div class="bg-base-100 px-2 pb-2">
 	<div class="dropdown dropdown-end dropdown-top w-full">
 		<div tabindex="0" role="button" class="btn h-full w-full px-3 py-1 shadow-all btn-ghost">
 			<div class="grid w-full grid-cols-[auto_1fr_auto] items-center gap-2 gap-x-4 gap-y-1">
@@ -50,6 +50,14 @@
 			tabindex="-1"
 			class="dropdown-content menu z-1 mb-2 w-full rounded-box border border-base-200 bg-base-100 shadow-all"
 		>
+			<li>
+				<div class="flex">
+					<h1 class="truncate text-lg font-bold">{userStore.user?.displayUsername}</h1>
+					<span class="flex grow justify-end truncate">
+						{userStore.teams.map((t) => t.name).join(', ')}
+					</span>
+				</div>
+			</li>
 			<li class="pointer-events-none divider h-px"></li>
 			<li>
 				<button class="btn btn-wide btn-soft btn-sm btn-error" onclick={handleLogout}>Logout</button
