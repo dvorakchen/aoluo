@@ -58,15 +58,6 @@
 	//         console.log('Passkey sign-in result:', { data, error });
 	// 	}
 	// }
-
-	async function handleSignUp() {
-		await authClient.signUp.email({
-			email: identifier,
-			password,
-			name: identifier,
-			callbackURL: '/'
-		});
-	}
 </script>
 
 <div class="flex min-h-screen items-center justify-center bg-base-200 p-4">
@@ -153,18 +144,6 @@
 						{/if}
 						登录
 					</button>
-					<button
-						type="button"
-						class="btn w-full btn-primary"
-						disabled={loading}
-						onclick={handleSignUp}
-					>
-						{#if loading}
-							<Loader class="animate-spin" size={18} />
-						{/if}
-						注册
-					</button>
-					<!--  -->
 				</div>
 			</form>
 		</div>

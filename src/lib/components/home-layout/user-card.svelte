@@ -58,6 +58,9 @@
 					</span>
 				</div>
 			</li>
+			<address class="mx-3">
+				{userStore.user?.email}
+			</address>
 			<li class="pointer-events-none divider h-px"></li>
 			<li>
 				<button class="btn btn-wide btn-soft btn-sm btn-error" onclick={handleLogout}>Logout</button
