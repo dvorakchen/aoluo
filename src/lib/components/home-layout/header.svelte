@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { layoutStore } from '$lib/client/store/layout.svelte';
 	import { m } from '$lib/paraglide/messages';
-	import { ListIndentDecrease, Search } from '@lucide/svelte';
+	import { ListIndentDecrease } from '@lucide/svelte';
 	import ThemeController from '$lib/components/theme-controller.svelte';
 	import ChangeLang from '$lib/components/change-lang.svelte';
 	import BellMessage from './bell-message.svelte';
+	import AiSearch from '$lib/components/ai-window/ai-search.svelte';
 
 	const menuI18n = $derived(
 		`menu_${layoutStore.activeMenu.toLowerCase()}`
@@ -38,15 +39,6 @@
 		<BellMessage />
 		<ThemeController />
 		<ChangeLang />
-		<label class="input w-50 cursor-pointer ring-offset-2 hover:ring-2">
-			<Search size={32} />
-			<input
-				type="search"
-				class="pointer-events-none grow cursor-pointer"
-				placeholder={m.ask_ai()}
-			/>
-			<kbd class="kbd kbd-sm">⌘</kbd>
-			<kbd class="kbd kbd-sm">K</kbd>
-		</label>
+		<AiSearch />
 	</div>
 </nav>

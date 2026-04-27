@@ -5,7 +5,7 @@
 	"admin_dashboard": "后台面板",
 	"rest_notifications": "还有 {count} 条未读通知",
 	"menu_dashboard": "仪表盘",
-	"ask_ai": "问AI",
+	"ask_ai": "让 AI 做",
 	"all_read": "全部已读",
 	"read": "Read",
 	"unread_chat_message": "您有未读的聊天信息",
@@ -15,5 +15,8 @@
 	"menu_overview_dashboard": "仪表盘",
 	"menu_hrm": "人事管理",
 	"menu_hrm_employee": "员工管理",
-	"menu_hrm_leave": "请假管理"
+	"menu_hrm_leave": "请假管理",
+	"press_esc_to_close": "按 Esc 或点击 ✕ 关闭",
+	"ai_assistant": "AI助手",
+	"ai_assistant_handling": "AI助手处理中"
 }

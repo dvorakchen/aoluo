@@ -5,7 +5,6 @@
 	import { resolve } from '$app/paths';
 	import { m } from '$lib/paraglide/messages';
 
-	let activeTab = $state('password'); // 'password' | 'phone'
 	let identifier = $state(''); // 用户名或邮箱
 	let password = $state('');
 	let loading = $state(false);
@@ -64,24 +63,6 @@
 	<div class="card w-full max-w-md bg-base-100 shadow-xl">
 		<div class="card-body">
 			<h2 class="mb-4 card-title justify-center text-2xl font-bold">{m.title()}</h2>
-
-			<!-- Tabs -->
-			<div role="tablist" class="tabs-lifted mb-6 tabs">
-				<button
-					role="tab"
-					class="tab {activeTab === 'password' ? 'tab-active' : ''}"
-					onclick={() => (activeTab = 'password')}
-				>
-					密码登录
-				</button>
-				<!-- <button
-					role="tab"
-					class="tab {activeTab === 'phone' ? 'tab-active' : ''}"
-					onclick={() => (activeTab = 'phone')}
-				>
-					验证码登录
-				</button> -->
-			</div>
 
 			{#if errorMessage}
 				<div class="mb-4 alert py-2 alert-error">

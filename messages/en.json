@@ -15,5 +15,8 @@
 	"menu_overview_dashboard": "Dashboard",
 	"menu_hrm": "HRM",
 	"menu_hrm_employee": "Employee Management",
-	"menu_hrm_leave": "Leave Management"
+	"menu_hrm_leave": "Leave Management",
+	"press_esc_to_close": "Press ESC key or click on ✕ button to close",
+	"ai_assistant": "AI Assistant",
+	"ai_assistant_handling": "AI Assistant Handling"
 }

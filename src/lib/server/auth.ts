@@ -9,9 +9,10 @@ import { organization, username } from 'better-auth/plugins';
 import { phoneNumber } from 'better-auth/plugins';
 import { logger } from '$lib/server/logger';
 import { betterAuthOrgConfig } from '$lib/shared/permissions';
+import { PUBLIC_ORIGIN } from '$env/static/public';
 
 export const auth = betterAuth({
-	baseURL: env.ORIGIN,
+	baseURL: PUBLIC_ORIGIN,
 	secret: env.BETTER_AUTH_SECRET,
 	database: drizzleAdapter(db, { provider: 'pg' }),
 	emailAndPassword: { enabled: true, autoSignIn: false },
@@ -21,7 +22,7 @@ export const auth = betterAuth({
 		phoneNumber({
 			sendOTP: ({ phoneNumber, code }) => {
 				// TODO: Implement sending OTP code via SMS
-				logger.debug(`Send OTP code ${code} to phone number ${phoneNumber}`);
+				logger.debug(`Send OTP code %s to phone number %s`, code, phoneNumber);
 			}
 		}),
 		passkey({

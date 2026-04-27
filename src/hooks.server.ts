@@ -7,6 +7,8 @@ import { getTextDirection } from '$lib/paraglide/runtime';
 import { paraglideMiddleware } from '$lib/paraglide/server';
 import { logger } from '$lib/server/logger';
 import { seed } from '$lib/server/db/seed';
+import { initWebSocket } from '$lib/server/websocket';
+import { PUBLIC_WS } from '$env/static/public';
 
 const handleParaglide: Handle = ({ event, resolve }) =>
 	paraglideMiddleware(event.request, ({ request, locale }) => {
@@ -67,3 +69,9 @@ export const handleError = ({ error, event }) => {
 export const handle: Handle = sequence(handleLog, handleParaglide, handleBetterAuth);
 
 await seed();
+
+{
+	const wsPort = +new URL(PUBLIC_WS).port;
+	logger.info(`WebSocket Port: %d`, wsPort);
+	initWebSocket(wsPort);
+}

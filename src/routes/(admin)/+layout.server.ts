@@ -9,7 +9,7 @@ export const load: LayoutServerLoad = async (event) => {
 	if (!event.locals.user) {
 		return redirect(302, '/login');
 	}
-	logger.debug('Admin layout load: user is logged in: ' + JSON.stringify(event.locals.user));
+	logger.debug(event.locals.user, 'Admin layout load: user is logged in');
 
 	const userTeams = await db.query.teamMember.findMany({
 		where: eq(schema.teamMember.userId, event.locals.user.id),
