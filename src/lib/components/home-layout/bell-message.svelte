@@ -87,7 +87,7 @@
 {/snippet}
 
 {#snippet chatMessage(list: BellMessage<ChatMessage>[])}
-	<li class="flex items-center gap-2 p-4 pb-2 text-xs tracking-wide opacity-60">
+	<li class="flex items-center gap-2 p-4 pb-2 text-xs tracking-wide">
 		{m.unread_chat_message()}
 		<div class="badge badge-sm badge-info">+99</div>
 	</li>
@@ -120,7 +120,7 @@
 {/snippet}
 
 {#snippet todoMessage(list: BellMessage<TodoMessage>[])}
-	<li class="flex items-center gap-2 p-4 pb-2 text-xs tracking-wide opacity-60">
+	<li class="flex items-center gap-2 p-4 pb-2 text-xs tracking-wide">
 		{m.todo_message()}
 		<div class="badge badge-sm badge-info">+99</div>
 	</li>
