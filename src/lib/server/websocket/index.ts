@@ -1,4 +1,4 @@
-import { WebSocketServer, type WebSocket } from 'ws';
+import { type WebSocket } from 'ws';
 import type { WsMessage } from '$lib/shared';
 import { logger } from '$lib/server/logger';
 
@@ -6,11 +6,12 @@ import { logger } from '$lib/server/logger';
  * 启动 WebSocket 服务器逻辑
  * @param server HTTP 服务器实例
  */
-export function initWebSocket(port: number) {
-	const wss = new WebSocketServer({ port });
-
-	// 挂载到全局，供 SvelteKit 后端调用
-	global.wss = wss;
+export function initWebSocket() {
+	const wss = global.wss;
+	if (!wss) {
+		logger.warn('❌ 没有找到 WebSocket 客户端');
+		return;
+	}
 
 	wss.on('connection', (ws: WebSocket) => {
 		logger.info('✅ WebSocket 客户端已连接');

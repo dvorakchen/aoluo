@@ -1,6 +1,28 @@
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aoluo-app
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      # 数据库连接
+      ADMIN_DATABASE_URL: postgres://admin:password@db:5432/local
+      # 核心生产环境身份变量 (用于 SvelteKit CSRF 检查)
+      ORIGIN: http://127.0.0.1:3000
+      # 业务逻辑使用的源地址
+      PUBLIC_ORIGIN: http://127.0.0.1:3000
+      BETTER_AUTH_SECRET: 'a937b266-c4d1-485b-b201-a85447918c6d'
+      # 其他需要的变量可以在这里添加
+    depends_on:
+      db:
+        condition: service_healthy
+
   db:
     image: postgres:latest
+    container_name: aoluo-db
     restart: always
     ports:
       - '5433:5432'
@@ -8,6 +30,11 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
       POSTGRES_DB: local
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U admin -d local']
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - pgdata:/var/lib/postgresql
 

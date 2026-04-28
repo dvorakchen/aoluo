@@ -1,5 +1,4 @@
 import { betterAuth } from 'better-auth/minimal';
-import { passkey } from '@better-auth/passkey';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { env } from '$env/dynamic/private';
@@ -9,10 +8,13 @@ import { organization, username } from 'better-auth/plugins';
 import { phoneNumber } from 'better-auth/plugins';
 import { logger } from '$lib/server/logger';
 import { betterAuthOrgConfig } from '$lib/shared/permissions';
-import { PUBLIC_ORIGIN } from '$env/static/public';
+import { env as pubenv } from '$env/dynamic/public';
+
+const baseURL = pubenv.PUBLIC_ORIGIN;
+console.log(`[Better Auth] Initializing baseURL: ${baseURL}`);
 
 export const auth = betterAuth({
-	baseURL: PUBLIC_ORIGIN,
+	baseURL,
 	secret: env.BETTER_AUTH_SECRET,
 	database: drizzleAdapter(db, { provider: 'pg' }),
 	emailAndPassword: { enabled: true, autoSignIn: false },
@@ -25,12 +27,12 @@ export const auth = betterAuth({
 				logger.debug(`Send OTP code %s to phone number %s`, code, phoneNumber);
 			}
 		}),
-		passkey({
-			authenticatorSelection: {
-				authenticatorAttachment: 'cross-platform', // YubiKey 是跨平台认证器
-				userVerification: 'preferred'
-			}
-		}),
+		// passkey({
+		// 	authenticatorSelection: {
+		// 		authenticatorAttachment: 'cross-platform', // YubiKey 是跨平台认证器
+		// 		userVerification: 'preferred'
+		// 	}
+		// }),
 		organization({
 			...betterAuthOrgConfig,
 			dynamicAccessControl: { enabled: true }

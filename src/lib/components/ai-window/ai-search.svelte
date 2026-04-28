@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import type { ChatContext } from './context';
 	import Plain from './context/plain.svelte';
-	import { wsStore } from '$lib/client/store/websocket.svelte';
+	import { wsClient } from '$lib/client/websocket';
 	import type { PayloadAiChat } from '$lib/shared';
 
 	let dialog = $state<HTMLDialogElement>();
@@ -21,7 +21,20 @@
 			pending: true
 		});
 
-		return wsStore.subscribe('ai-chat', (payload: PayloadAiChat) => {
+		wsClient.connect();
+
+		setInterval(() => {
+			console.log('send ws');
+			wsClient.send('ai-chat', {
+				type: 'txt-img',
+				data: {
+					txt: 'txt',
+					img: 'img'
+				}
+			});
+		}, 5000);
+
+		return wsClient.subscribe('ai-chat', (payload: PayloadAiChat) => {
 			console.log(payload);
 		});
 	});

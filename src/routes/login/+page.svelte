@@ -42,21 +42,6 @@
 			loading = false;
 		}
 	}
-
-	// async function handlePasskeyLogin() {
-	// 	{
-	// 		let { data, error } = await authClient.passkey.addPasskey({
-	// 			name: '我的 YubiKey',
-	// 			authenticatorAttachment: 'cross-platform'
-	// 		});
-	// 		console.log('Passkey login result:', { data, error });
-	// 	}
-
-	// 	{
-	// 		const { data, error } = await authClient.signIn.passkey();
-	//         console.log('Passkey sign-in result:', { data, error });
-	// 	}
-	// }
 </script>
 
 <div class="flex min-h-screen items-center justify-center bg-base-200 p-4">

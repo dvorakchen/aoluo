@@ -1,6 +1,5 @@
-import { PUBLIC_WS } from '$env/static/public';
+import { env as pubenv } from '$env/dynamic/public';
 import type { WsMessage, WsMessageType, WsPayloadMap } from '$lib/shared';
-import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 
 /**
  * 订阅回调类型
@@ -10,17 +9,17 @@ import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 
 export function createWebSocketClient(url: string) {
 	let socket: WebSocket | null = null;
-	let isConnected = $state(false);
+	let isConnected = false;
 
 	// 存储不同类型的订阅者
-	const subscribers = new SvelteMap<WsMessageType, SvelteSet<Callback<unknown>>>();
+	const subscribers = new Map<WsMessageType, Set<Callback<unknown>>>();
 
 	/**
 	 * 订阅指定类型的消息
 	 */
 	function subscribe<K extends WsMessageType>(type: K, callback: Callback<WsPayloadMap[K]>) {
 		if (!subscribers.has(type)) {
-			subscribers.set(type, new SvelteSet());
+			subscribers.set(type, new Set());
 		}
 		const internalCallback = callback as Callback<unknown>;
 
@@ -90,4 +89,11 @@ export function createWebSocketClient(url: string) {
 	};
 }
 
-export const wsStore = createWebSocketClient(PUBLIC_WS);
+export let wsClient: ReturnType<typeof createWebSocketClient>;
+
+export function initWebSocket() {
+	// 将 HTTP/HTTPS 转换为 WS/WSS
+	const wsUrl = pubenv.PUBLIC_ORIGIN.replace(/^http/, 'ws');
+	const path = wsUrl + (wsUrl.endsWith('/') ? '' : '/') + `ws`;
+	wsClient = createWebSocketClient(path);
+}
