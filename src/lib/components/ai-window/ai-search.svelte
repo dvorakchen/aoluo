@@ -2,24 +2,32 @@
 	import { m } from '$lib/paraglide/messages';
 	import { Bot } from '@lucide/svelte';
 	import { onMount } from 'svelte';
-	import { ChatBubble, ChatContext, thinking } from './context';
+	import { ChatBubble, ChatContext } from './context';
 	import { wsClient } from '$lib/client/websocket/index';
-	import UserInput, { focus as focusUserInput } from './user-input.svelte';
+	import UserInput, { focus as focusUserInput, reset as resetUserInput } from './user-input.svelte';
 	import ChatListBox from './chat-list-box.svelte';
 	import type { RxDataAiChat } from '$lib/client/websocket/model';
 	import { subscribeAiChatRx } from './ai-search';
 
 	let dialog = $state<HTMLDialogElement>();
-	let chatContext: ChatContext = $state(ChatContext.new());
+	let chatContext: ChatContext = ChatContext.new();
 
 	onMount(() => {
 		wsClient.connect();
 
-		return wsClient.subscribe('ai-chat', (payload: RxDataAiChat) => {
-			console.log('接收到 ai-chat 订阅: ', payload);
-			subscribeAiChatRx(chatContext, payload);
-		});
+		return wsClient.subscribe('ai-chat', subscribe);
 	});
+
+	const subscribe = (payload: RxDataAiChat) => {
+		console.log('接收到 ai-chat 订阅: ', payload);
+
+		if (payload.type === 'end' || payload.type === 'unknow') {
+			chatContext.end();
+			resetUserInput();
+			return;
+		}
+		subscribeAiChatRx(chatContext, payload);
+	};
 
 	function openDialog() {
 		dialog?.showModal();
@@ -34,7 +42,8 @@
 	}
 
 	function onSend(txt: string, imgs: string[]) {
-		thinking(chatContext);
+		chatContext.end();
+		chatContext.chatList.push(ChatBubble.fromUser(txt, imgs));
 
 		wsClient.send('ai-chat', {
 			type: 'txt-imgs',
@@ -43,7 +52,6 @@
 				imgs
 			}
 		});
-		chatContext.chatList.push(ChatBubble.fromUser(txt, imgs));
 	}
 </script>
 

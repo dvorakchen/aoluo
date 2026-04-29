@@ -1,16 +1,16 @@
 import type { RxDataAiChat } from '$lib/client/websocket/model';
-import { type ChatContext } from './context';
+import { ChatBubble, type ChatContext } from './context';
 
-export function subscribeAiChatRx(_: ChatContext, payload: RxDataAiChat) {
+export function subscribeAiChatRx(ctx: ChatContext, payload: RxDataAiChat) {
 	if (!payload.type) {
 		return;
 	}
 
 	switch (payload.type) {
-		case 'unknow':
-			// context.chatList.push(
-			//     thinkingComponent()
-			// );
+		case 'plain':
+			{
+				ctx.chatList.push(ChatBubble.plain(payload.data ?? ''));
+			}
 			break;
 
 		default:

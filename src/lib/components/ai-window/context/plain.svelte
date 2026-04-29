@@ -1,9 +1,13 @@
 <script module>
-	export type PlainProps = { va: string };
+	export type PlainProps = { txt: string };
 </script>
 
 <script lang="ts">
-	let { va }: PlainProps = $props();
+	let { txt }: PlainProps = $props();
 </script>
 
-<h2>{va}</h2>
+<div class="chat-start chat">
+	<div class="chat-bubble">
+		{txt}
+	</div>
+</div>

@@ -1,8 +1,19 @@
 <script module>
+	let btnPending = $state(false);
+	let btnDisabled = $derived.by(() => {
+		const txt = (userInputValue ?? '').trim();
+		return !txt;
+	});
+
 	let userInput = $state<HTMLTextAreaElement>();
+	let userInputValue = $state('');
 
 	export function focus() {
 		userInput?.focus();
+	}
+
+	export function reset() {
+		btnPending = false;
 	}
 </script>
 
@@ -18,31 +29,11 @@
 		onSend: (txt: string, imgs: []) => void;
 	} = $props();
 
-	const SendBtnStatus = {
-		enable: 'enable',
-		pending: 'pending',
-		disable: 'disable'
-	} as const;
-	type SendBtnStatusType = keyof typeof SendBtnStatus;
-
-	let userInputValue = $state('');
 	let preValue = $state('');
-
-	let btnPending = $state(false);
-	let sendBtnStatus: SendBtnStatusType = $derived.by(() => {
-		if (btnPending) {
-			return 'pending';
-		}
-		const txt = (userInputValue ?? '').trim();
-		if (!txt) {
-			return 'disable';
-		}
-		return SendBtnStatus.enable as SendBtnStatusType;
-	});
 
 	function sendMsg() {
 		const txt = (userInputValue ?? '').trim();
-		if (!txt || sendBtnStatus !== 'enable') {
+		if (!txt || btnDisabled) {
 			return;
 		}
 		preValue = txt;
@@ -53,10 +44,11 @@
 	}
 
 	function stopMsg() {
-		if (sendBtnStatus === 'enable') {
+		if (!btnDisabled) {
 			return;
 		}
-		sendBtnStatus = 'enable';
+		btnDisabled = false;
+
 		if (!userInputValue) {
 			userInputValue = preValue;
 		}
@@ -89,7 +81,7 @@
 				<button class="tooltip btn btn-square" data-tip={`${m.attachment()}`}>
 					<Paperclip />
 				</button>
-				{#if sendBtnStatus === 'pending'}
+				{#if btnPending}
 					<button
 						class="tooltip btn btn-circle btn-soft btn-primary"
 						data-tip={`${m.stop()}`}
@@ -98,7 +90,7 @@
 						<Square size={16} />
 					</button>
 				{:else}
-					<button class=" btn btn-primary" onclick={sendMsg} disabled={sendBtnStatus !== 'enable'}
+					<button class=" btn btn-primary" onclick={sendMsg} disabled={btnDisabled}
 						>{m.send()}</button
 					>
 				{/if}

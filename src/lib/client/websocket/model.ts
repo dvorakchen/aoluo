@@ -70,4 +70,8 @@ export type RxDataAiChatKeyValue = {
 	 * 客户端发送了服务端无法识别的内容
 	 */
 	unknow: string;
+	/**
+	 * 表示 AI 处理完了
+	 */
+	end: null;
 };

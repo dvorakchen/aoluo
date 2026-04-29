@@ -2,6 +2,7 @@ import { type WebSocket } from 'ws';
 import { logger } from '$lib/server/logger';
 import type { TxDataAiChat } from '$lib/client/websocket/model';
 import type { RxData, TxData } from './model';
+import { setTimeout } from 'node:timers/promises';
 
 /**
  * 启动 WebSocket 服务器逻辑
@@ -36,10 +37,9 @@ export function initWebSocket() {
 /**
  * 统一处理客户端发来的消息
  */
-function handleIncomingMessage(ws: WebSocket, message: RxData) {
+async function handleIncomingMessage(ws: WebSocket, message: RxData) {
 	const { type, payload } = message;
-
-	let response: TxData;
+	logger.debug(message, 'Received Msg');
 
 	switch (type) {
 		/* 
@@ -47,45 +47,68 @@ function handleIncomingMessage(ws: WebSocket, message: RxData) {
 		*/
 		case 'ai-chat':
 			{
-				logger.info(message, 'Received AI chat content');
-				response = handleAiChatMsg(payload);
-				logger.debug(response);
+				logger.debug(message, 'Received AI chat content');
+				await handleAiChatMsg(ws, payload);
 			}
 			break;
 
 		default:
 			console.warn('收到未定义的业务类型:', type);
 	}
-
-	response ??= {
-		type: 'ai-chat',
-		payload: {
-			type: 'unknow',
-			data: ''
-		}
-	};
-	ws.send(JSON.stringify(response));
 }
 
-function handleAiChatMsg(payload: TxDataAiChat): TxData {
-	const { type /* data*/ } = payload;
+/**
+ * 处理和 AI 对话的逻辑
+ * 
+ * 所有逻辑处理完后需要发送一个：
+ * ```
+ * {
+		type: 'ai-chat',
+		payload: {
+			type: 'end',
+			data: null
+		}
+	}
+ * ```
+
+	给客户端表示 AI 回答完了你的对话
+ */
+async function handleAiChatMsg(ws: WebSocket, payload: TxDataAiChat) {
+	const { type, data } = payload;
+
+	let response: TxData;
 
 	switch (type) {
 		case 'txt-imgs':
 			{
-				// TODO: handle txt
+				logger.info('txt-imgs');
+				await setTimeout(2000);
+				response = {
+					type: 'ai-chat',
+					payload: {
+						type: 'plain',
+						data: `你说的是：${data?.txt}`
+					}
+				};
+				logger.info(response, 'txt-imgs response');
 			}
 			break;
 
-		default:
-			break;
+		default: {
+			ws.send(JSON.stringify(UNKNOW_RESPONSE));
+			return;
+		}
 	}
-	// 这里可以接入真实的 AI 逻辑
 
-	// 模拟一个简单的回显回复
-	const response: TxData = UNKNOW_RESPONSE;
+	response = {
+		type: 'ai-chat',
+		payload: {
+			type: 'end',
+			data: null
+		}
+	};
 
-	return response;
+	ws.send(JSON.stringify(response));
 }
 
 const UNKNOW_RESPONSE: TxData = {

@@ -38,7 +38,9 @@ export function createWebSocketClient(url: string) {
 		}
 		const internalCallback = callback as Callback<unknown>;
 
-		subscribers.get(type)!.add(internalCallback);
+		if (!subscribers.get(type)?.has(internalCallback)) {
+			subscribers.get(type)!.add(internalCallback);
+		}
 
 		return () => {
 			subscribers.get(type)?.delete(internalCallback);
