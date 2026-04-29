@@ -1,6 +1,7 @@
 import { type WebSocket } from 'ws';
-import type { WsMessage } from '$lib/shared';
 import { logger } from '$lib/server/logger';
+import type { TxDataAiChat } from '$lib/client/websocket/model';
+import type { RxData, TxData } from './model';
 
 /**
  * 启动 WebSocket 服务器逻辑
@@ -16,9 +17,9 @@ export function initWebSocket() {
 	wss.on('connection', (ws: WebSocket) => {
 		logger.info('✅ WebSocket 客户端已连接');
 
-		ws.on('message', (raw) => {
+		ws.on('message', async (raw) => {
 			try {
-				const message: WsMessage = JSON.parse(raw.toString());
+				const message: RxData = JSON.parse(raw.toString());
 				handleIncomingMessage(ws, message);
 			} catch (error) {
 				console.error('WebSocket 消息解析失败:', error);
@@ -35,32 +36,62 @@ export function initWebSocket() {
 /**
  * 统一处理客户端发来的消息
  */
-function handleIncomingMessage(ws: WebSocket, message: WsMessage) {
+function handleIncomingMessage(ws: WebSocket, message: RxData) {
 	const { type, payload } = message;
 
+	let response: TxData;
+
 	switch (type) {
+		/* 
+			用户提交的 AI 消息
+		*/
 		case 'ai-chat':
 			{
-				// 这里可以接入真实的 AI 逻辑
-				logger.info('收到 AI 聊天内容: %s', payload.data.txt);
-
-				// 模拟一个简单的回显回复
-				const response: WsMessage = {
-					type: 'ai-chat',
-					payload: {
-						type: 'txt-img',
-						data: {
-							txt: `已收到：${payload.data.txt}。这是来自服务器的消息。`,
-							img: ''
-						}
-					}
-				};
-
-				ws.send(JSON.stringify(response));
+				logger.info(message, 'Received AI chat content');
+				response = handleAiChatMsg(payload);
+				logger.debug(response);
 			}
 			break;
 
 		default:
 			console.warn('收到未定义的业务类型:', type);
 	}
+
+	response ??= {
+		type: 'ai-chat',
+		payload: {
+			type: 'unknow',
+			data: ''
+		}
+	};
+	ws.send(JSON.stringify(response));
 }
+
+function handleAiChatMsg(payload: TxDataAiChat): TxData {
+	const { type /* data*/ } = payload;
+
+	switch (type) {
+		case 'txt-imgs':
+			{
+				// TODO: handle txt
+			}
+			break;
+
+		default:
+			break;
+	}
+	// 这里可以接入真实的 AI 逻辑
+
+	// 模拟一个简单的回显回复
+	const response: TxData = UNKNOW_RESPONSE;
+
+	return response;
+}
+
+const UNKNOW_RESPONSE: TxData = {
+	type: 'ai-chat',
+	payload: {
+		type: 'unknow',
+		data: ''
+	}
+};

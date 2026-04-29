@@ -7,6 +7,8 @@
 </script>
 
 <script lang="ts">
+	import { wsClient } from '$lib/client/websocket/index';
+
 	import { m } from '$lib/paraglide/messages';
 	import { Paperclip, Square } from '@lucide/svelte';
 
@@ -51,10 +53,17 @@
 	}
 
 	function stopMsg() {
+		if (sendBtnStatus === 'enable') {
+			return;
+		}
 		sendBtnStatus = 'enable';
 		if (!userInputValue) {
 			userInputValue = preValue;
 		}
+		wsClient.send('ai-chat', {
+			type: 'cancel',
+			data: null
+		});
 	}
 </script>
 

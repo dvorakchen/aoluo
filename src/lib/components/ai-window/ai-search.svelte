@@ -2,35 +2,22 @@
 	import { m } from '$lib/paraglide/messages';
 	import { Bot } from '@lucide/svelte';
 	import { onMount } from 'svelte';
-	import { ChatBubble, type ChatContext } from './context';
-	import { wsClient } from '$lib/client/websocket';
-	import type { PayloadAiChat } from '$lib/shared';
+	import { ChatBubble, ChatContext, thinking } from './context';
+	import { wsClient } from '$lib/client/websocket/index';
 	import UserInput, { focus as focusUserInput } from './user-input.svelte';
+	import ChatListBox from './chat-list-box.svelte';
+	import type { RxDataAiChat } from '$lib/client/websocket/model';
+	import { subscribeAiChatRx } from './ai-search';
 
 	let dialog = $state<HTMLDialogElement>();
-
-	let chatContext: ChatContext = $state({ chatList: [] });
+	let chatContext: ChatContext = $state(ChatContext.new());
 
 	onMount(() => {
-		const bubble = ChatBubble.fromAi('entoe');
-		bubble.pending = true;
-		chatContext.chatList.push(bubble);
-
 		wsClient.connect();
 
-		setInterval(() => {
-			console.log('send ws');
-			wsClient.send('ai-chat', {
-				type: 'txt-img',
-				data: {
-					txt: 'txt',
-					img: 'img'
-				}
-			});
-		}, 5000);
-
-		return wsClient.subscribe('ai-chat', (payload: PayloadAiChat) => {
-			console.log(payload);
+		return wsClient.subscribe('ai-chat', (payload: RxDataAiChat) => {
+			console.log('接收到 ai-chat 订阅: ', payload);
+			subscribeAiChatRx(chatContext, payload);
 		});
 	});
 
@@ -47,6 +34,15 @@
 	}
 
 	function onSend(txt: string, imgs: string[]) {
+		thinking(chatContext);
+
+		wsClient.send('ai-chat', {
+			type: 'txt-imgs',
+			data: {
+				txt,
+				imgs
+			}
+		});
 		chatContext.chatList.push(ChatBubble.fromUser(txt, imgs));
 	}
 </script>
@@ -73,19 +69,7 @@
 			</form>
 			<h3 class="text-lg font-bold">🤖{m.ai_assistant()}</h3>
 
-			<div class="my-4 grow">
-				<ul>
-					{#each chatContext.chatList as bubble (bubble.id)}
-						<bubble.View {...bubble.props} />
-						{#if bubble.pending}
-							<div class="mt-4 flex items-center gap-3">
-								<span class="loading w-4 loading-spinner"></span>
-								<span class="text-sm opacity-80">{m.ai_assistant_handling()}...</span>
-							</div>
-						{/if}
-					{/each}
-				</ul>
-			</div>
+			<ChatListBox {chatContext} />
 
 			<UserInput {onSend} />
 		</div>
