@@ -1,85 +1,182 @@
 import { db } from '$lib/server/db';
 import { logger } from '$lib/server/logger';
 import * as schema from './schema';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { auth } from '$lib/server/auth';
 import { PUBLIC_ORG_NAME, PUBLIC_ORG_SLUG } from '$env/static/public';
 
 export async function seed() {
-	/*
-INSERT INTO public."user"
-(id, "name", email, email_verified, image, created_at, updated_at, username, display_username, phone_number, phone_number_verified)
-VALUES('OMwGsAJGMjHYqtymtZvaFckUyuz3WYsY', 'admin@qq.com', 'admin@qq.com', false, NULL, '2026-04-19 16:37:35.222', '2026-04-19 16:37:35.222', 'admin', 'admin', NULL, NULL);
-	*/
-	/*
-INSERT INTO public.account
-(id, account_id, provider_id, user_id, access_token, refresh_token, id_token, access_token_expires_at, refresh_token_expires_at, "scope", "password", created_at, updated_at)
-VALUES('fU12WWLxVO8Jek0Mrbg2N0769RGxdSWx', 'OMwGsAJGMjHYqtymtZvaFckUyuz3WYsY', 'credential', 'OMwGsAJGMjHYqtymtZvaFckUyuz3WYsY', NULL, NULL, NULL, NULL, NULL, NULL, 'fabfad8ed9b81ef094350f9d56c69e10:393e6b49a08fbe34c892fa43081b8d3fae5ccb101bf00ed4347a4da8eafbdc30c00c477a96596fa6c1f704265382e829fc9fc925c20f08cc3706f354ce34d95f', '2026-04-19 16:37:35.228', '2026-04-19 16:37:35.228');
-	 */
+	logger.info('⏳ Seeding database with full company structure and roles...');
 
-	logger.info('⏳ Seeding database...');
+	const password = '123123123';
 
-	// 1. 检查并插入管理员用户和账号
-	const adminEmail = 'admin@qq.com';
-	const adminPassword = '123123123';
-	const adminUsername = 'admin';
-
-	let adminId: string;
-	const existingUser = await db.query.user.findFirst({
-		where: eq(schema.user.email, adminEmail)
-	});
-
-	if (!existingUser) {
-		const result = await auth.api.signUpEmail({
-			body: {
-				email: adminEmail,
-				password: adminPassword,
-				name: adminEmail,
-				username: adminUsername,
-				displayUsername: adminUsername
-			}
-		});
-		adminId = result.user.id;
-		logger.info('✅ Admin user and account created via auth API');
-	} else {
-		adminId = existingUser.id;
-		logger.info('ℹ️ Admin user already exists');
-	}
-
-	// 2. 检查并插入示例任务
-	const tasksToSeed = [
-		{ title: '完成项目初始化', priority: 1 },
-		{ title: '配置数据库种子', priority: 2 },
-		{ title: '实现用户登录功能', priority: 1 }
+	// 1. 定义用户数据及角色
+	const usersToSeed = [
+		{
+			email: 'admin@qq.com',
+			username: 'admin',
+			displayUsername: '系统管理员',
+			orgRole: 'admin'
+		},
+		{
+			email: 'laoban@example.com',
+			username: 'laoban',
+			displayUsername: '老板',
+			orgRole: 'boss'
+		},
+		{
+			email: 'zhangsan@example.com',
+			username: 'zhangsan',
+			displayUsername: '张三',
+			orgRole: 'manager'
+		},
+		{ email: 'lisi@example.com', username: 'lisi', displayUsername: '李四', orgRole: 'manager' },
+		{
+			email: 'wangwu@example.com',
+			username: 'wangwu',
+			displayUsername: '王五',
+			orgRole: 'manager'
+		},
+		{
+			email: 'zhaoliu@example.com',
+			username: 'zhaoliu',
+			displayUsername: '赵六',
+			orgRole: 'manager'
+		},
+		{ email: 'emp1@example.com', username: 'emp1', displayUsername: '员工甲', orgRole: 'member' },
+		{ email: 'emp2@example.com', username: 'emp2', displayUsername: '员工乙', orgRole: 'member' },
+		{ email: 'emp3@example.com', username: 'emp3', displayUsername: '员工丙', orgRole: 'member' },
+		{ email: 'emp4@example.com', username: 'emp4', displayUsername: '员工丁', orgRole: 'member' }
 	];
 
-	for (const task of tasksToSeed) {
-		const existingTask = await db.query.task.findFirst({
-			where: eq(schema.task.title, task.title)
+	const userMap: Record<string, string> = {};
+
+	for (const u of usersToSeed) {
+		const existing = await db.query.user.findFirst({
+			where: eq(schema.user.email, u.email)
 		});
 
-		if (!existingTask) {
-			await db.insert(schema.task).values(task);
-			logger.info(`✅ Task created: ${task.title}`);
+		if (!existing) {
+			const result = await auth.api.signUpEmail({
+				body: {
+					email: u.email,
+					password,
+					name: u.displayUsername,
+					username: u.username,
+					displayUsername: u.displayUsername
+				}
+			});
+			userMap[u.username] = result.user.id;
+			logger.info(`✅ User created: ${u.displayUsername}`);
+		} else {
+			userMap[u.username] = existing.id;
+			logger.info(`ℹ️ User already exists: ${u.displayUsername}`);
 		}
 	}
 
+	// 2. 确保组织存在
 	const orgSlug = PUBLIC_ORG_SLUG;
+	let orgId: string;
 	const existingOrg = await db.query.organization.findFirst({
 		where: eq(schema.organization.slug, orgSlug)
 	});
 
 	if (!existingOrg) {
-		await auth.api.createOrganization({
+		const org = await auth.api.createOrganization({
 			body: {
 				name: PUBLIC_ORG_NAME,
 				slug: orgSlug,
-				userId: adminId // 指定创建者（会成为 owner）
+				userId: userMap['admin']
 			}
 		});
-		logger.info('✅ Organization created');
+		orgId = org.id;
+		logger.info(`✅ Organization created: ${PUBLIC_ORG_NAME}`);
+
+		// 删除自动创建的默认团队
+		await db.delete(schema.team).where(eq(schema.team.organizationId, orgId));
+		logger.info('🗑️ Default auto-created team removed');
 	} else {
-		logger.info('ℹ️ Organization already exists');
+		orgId = existingOrg.id;
+		logger.info(`ℹ️ Organization already exists: ${PUBLIC_ORG_NAME}`);
+	}
+
+	// 3. 为所有用户分配组织角色 (member 表)
+	for (const u of usersToSeed) {
+		const userId = userMap[u.username];
+		const existingMember = await db.query.member.findFirst({
+			where: and(eq(schema.member.organizationId, orgId), eq(schema.member.userId, userId))
+		});
+
+		if (!existingMember) {
+			await db.insert(schema.member).values({
+				id: crypto.randomUUID(),
+				organizationId: orgId,
+				userId: userId,
+				role: u.orgRole,
+				createdAt: new Date()
+			});
+			logger.info(`✅ Assigned role ${u.orgRole} to ${u.displayUsername}`);
+		} else if (existingMember.role !== u.orgRole) {
+			await db
+				.update(schema.member)
+				.set({ role: u.orgRole })
+				.where(eq(schema.member.id, existingMember.id));
+			logger.info(`🔄 Updated role to ${u.orgRole} for ${u.displayUsername}`);
+		}
+	}
+
+	// 4. 定义部门及成员关系 (team 表)
+	const teamsToSeed = [
+		{ name: '老板办公室', manager: 'laoban', members: ['admin'] },
+		{ name: '研发部', manager: 'zhangsan', members: ['emp1', 'emp2'] },
+		{ name: '人事部', manager: 'lisi', members: ['emp3'] },
+		{ name: '销售部', manager: 'wangwu', members: ['emp4'] },
+		{ name: '财务部', manager: 'zhaoliu', members: [] }
+	];
+
+	for (const t of teamsToSeed) {
+		let teamId: string;
+		const existingTeam = await db.query.team.findFirst({
+			where: eq(schema.team.name, t.name)
+		});
+
+		const managerId = userMap[t.manager];
+
+		if (!existingTeam) {
+			teamId = crypto.randomUUID();
+			await db.insert(schema.team).values({
+				id: teamId,
+				name: t.name,
+				organizationId: orgId,
+				managerId: managerId,
+				createdAt: new Date(),
+				updatedAt: new Date()
+			});
+			logger.info(`✅ Team created: ${t.name} (Manager: ${t.manager})`);
+		} else {
+			teamId = existingTeam.id;
+			await db.update(schema.team).set({ managerId: managerId }).where(eq(schema.team.id, teamId));
+			logger.info(`ℹ️ Team updated: ${t.name}`);
+		}
+
+		// 5. 处理部门成员 (team_member 表)
+		const allMembers = Array.from(new Set([t.manager, ...t.members]));
+		for (const memberUsername of allMembers) {
+			const userId = userMap[memberUsername];
+			const existingTeamMember = await db.query.teamMember.findFirst({
+				where: and(eq(schema.teamMember.teamId, teamId), eq(schema.teamMember.userId, userId))
+			});
+
+			if (!existingTeamMember) {
+				await db.insert(schema.teamMember).values({
+					id: crypto.randomUUID(),
+					teamId: teamId,
+					userId: userId,
+					createdAt: new Date()
+				});
+				logger.info(`  + Member added to ${t.name}: ${memberUsername}`);
+			}
+		}
 	}
 
 	logger.info('🚀 Seeding process finished!');

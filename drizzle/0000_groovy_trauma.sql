@@ -78,7 +78,8 @@ CREATE TABLE "team" (
 	"name" text NOT NULL,
 	"organization_id" text NOT NULL,
 	"created_at" timestamp NOT NULL,
-	"updated_at" timestamp
+	"updated_at" timestamp,
+	"manager_id" text
 );
 --> statement-breakpoint
 CREATE TABLE "team_member" (

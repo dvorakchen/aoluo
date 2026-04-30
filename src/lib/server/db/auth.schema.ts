@@ -119,7 +119,8 @@ export const team = pgTable(
 			.notNull()
 			.references(() => organization.id, { onDelete: 'cascade' }),
 		createdAt: timestamp('created_at').notNull(),
-		updatedAt: timestamp('updated_at').$onUpdate(() => /* @__PURE__ */ new Date())
+		updatedAt: timestamp('updated_at').$onUpdate(() => /* @__PURE__ */ new Date()),
+		managerId: text('manager_id')
 	},
 	(table) => [index('team_organizationId_idx').on(table.organizationId)]
 );

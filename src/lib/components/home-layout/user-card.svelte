@@ -4,6 +4,7 @@
 	import { authClient } from '$lib/client/auth';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import UserAvatar from '../user-avatar.svelte';
 
 	async function handleLogout() {
 		await authClient.signOut();
@@ -18,19 +19,11 @@
 			<div class="grid w-full grid-cols-[auto_1fr_auto] items-center gap-2 gap-x-4 gap-y-1">
 				<!-- 头像 -->
 				<div class="col-start-1 row-span-2 items-center justify-center">
-					{#if userStore.user?.image}
-						<div class="avatar">
-							<div class="w-12 rounded-xl">
-								<img class="h-full w-full object-cover" src={userStore.user.image} alt="avatar" />
-							</div>
-						</div>
-					{:else}
-						<div class="avatar avatar-placeholder">
-							<div class="w-12 rounded-full bg-neutral text-lg text-neutral-content uppercase">
-								<span>{userStore.user?.displayUsername?.substring(0, 1)}</span>
-							</div>
-						</div>
-					{/if}
+					<UserAvatar
+						image={userStore.user?.image}
+						displayUsername={userStore.user?.displayUsername ?? ''}
+						size="3rem"
+					/>
 				</div>
 				<!-- 用户名 -->
 				<div class="col-start-2 row-start-1 min-w-0 self-end text-start text-lg font-bold">

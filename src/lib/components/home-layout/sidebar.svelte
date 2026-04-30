@@ -11,7 +11,7 @@ Sidebar component for the admin dashboard.
 	import { resolve } from '$app/paths';
 	import MenuList, { type MenuListDateType } from './menu-list.svelte';
 	import UserCard from './user-card.svelte';
-	import { LayoutDashboard } from '@lucide/svelte';
+	import { GitFork, LayoutDashboard } from '@lucide/svelte';
 
 	const menuList: MenuListDateType[] = [
 		{
@@ -19,7 +19,7 @@ Sidebar component for the admin dashboard.
 			menu: {
 				Icon: LayoutDashboard,
 				label: m.menu_overview_dashboard(),
-				href: '/'
+				href: resolve('/')
 			}
 		},
 		{
@@ -63,6 +63,14 @@ Sidebar component for the admin dashboard.
 					]
 				}
 			]
+		},
+		{
+			topTitle: m.menu_company(),
+			menu: {
+				Icon: GitFork,
+				label: m.menu_company_team(),
+				href: resolve('/teams')
+			}
 		},
 		{
 			topTitle: '设置',

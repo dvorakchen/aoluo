@@ -27,15 +27,31 @@ export const auth = betterAuth({
 				logger.debug(`Send OTP code %s to phone number %s`, code, phoneNumber);
 			}
 		}),
-		// passkey({
-		// 	authenticatorSelection: {
-		// 		authenticatorAttachment: 'cross-platform', // YubiKey 是跨平台认证器
-		// 		userVerification: 'preferred'
-		// 	}
-		// }),
 		organization({
 			...betterAuthOrgConfig,
-			dynamicAccessControl: { enabled: true }
+			dynamicAccessControl: { enabled: true },
+			organizationHooks: {
+				beforeAddMember: async ({ member /*user, organization*/ }) => {
+					// 自定义逻辑，动态设置角色
+					return {
+						data: {
+							...member,
+							role: 'member'
+						}
+					};
+				}
+			},
+			schema: {
+				team: {
+					additionalFields: {
+						managerId: {
+							type: 'string',
+							input: true,
+							required: false
+						}
+					}
+				}
+			}
 		})
 	]
 });
