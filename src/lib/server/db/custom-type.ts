@@ -3,14 +3,14 @@ import { DateTime } from 'luxon';
 /**
  * 自定义 Luxon DateTime 类型
  */
-export const luxonTimestamp = customType<{ data: DateTime; driverData: Date }>({
+export const luxonTimestamp = customType<{ data: DateTime; driverData: string }>({
 	dataType() {
 		return 'timestamp with time zone';
 	},
-	toDriver(value: DateTime): Date {
-		return value.toJSDate();
+	toDriver(value: DateTime): string {
+		return value.toISO()!;
 	},
-	fromDriver(value: Date): DateTime {
-		return DateTime.fromJSDate(value);
+	fromDriver(value: string): DateTime {
+		return DateTime.fromISO(value);
 	}
 });

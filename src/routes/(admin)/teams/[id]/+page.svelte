@@ -3,6 +3,7 @@
 	import UserAvatar from '$lib/components/user-avatar.svelte';
 	import { m } from '$lib/paraglide/messages';
 	import type { User } from '$lib/shared/index.js';
+	import { toDate } from '$lib/shared/utils.js';
 	import { MoveLeft, Users, User as UserIcon } from '@lucide/svelte';
 
 	let { data } = $props();
@@ -110,13 +111,13 @@
 				<div class="stat">
 					<div class="stat-title">创建时间</div>
 					<div class="stat-value text-sm">
-						{team.createdAt.toLocaleString()}
+						{toDate(team.createdAt)}
 					</div>
 				</div>
 				<div class="stat">
 					<div class="stat-title">最后更新</div>
 					<div class="stat-value text-sm">
-						{team.updatedAt ? team.updatedAt.toLocaleString() : '从未更新'}
+						{team.updatedAt ? toDate(team.updatedAt) : '从未更新'}
 					</div>
 				</div>
 			</div>
