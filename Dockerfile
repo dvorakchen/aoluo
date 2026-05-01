@@ -7,7 +7,6 @@ ENV PATH="$PNPM_HOME:$PATH"
 
 ENV NODE_ENV=production
 ENV PUBLIC_ORG_NAME="公司名称"
-ENV PUBLIC_ORG_SLUG="company-slug"
 ENV ADMIN_DATABASE_URL="postgres://user:password@db:5432/local"
 ENV BETTER_AUTH_SECRET="000000000"
 

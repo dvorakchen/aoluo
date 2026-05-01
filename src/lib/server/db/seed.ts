@@ -1,57 +1,126 @@
 import { db } from '$lib/server/db';
 import { logger } from '$lib/server/logger';
 import * as schema from './schema';
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { auth } from '$lib/server/auth';
-import { PUBLIC_ORG_NAME, PUBLIC_ORG_SLUG } from '$env/static/public';
+import type { DbI18nField } from '$lib/shared';
+import { PERMISSIONS } from '$lib/shared';
 
 export async function seed() {
-	logger.info('⏳ Seeding database with full company structure and roles...');
+	logger.info('⏳ Seeding database with full company structure and multiple roles...');
 
 	const password = '123123123';
 
-	// 1. 定义用户数据及角色
+	// 1. 定义权限集合
+	const allPermissions = [
+		PERMISSIONS.team.read,
+		PERMISSIONS.team.create,
+		PERMISSIONS.team.update,
+		PERMISSIONS.team.delet
+	];
+
+	// 2. 定义角色及其配置
+	const rolesConfig: Record<string, { name: DbI18nField; permissions: string[] }> = {
+		admin: {
+			name: { default: '系统管理员', zh: '系统管理员', en: 'System Admin' },
+			permissions: allPermissions
+		},
+		boss: {
+			name: { default: '老板', zh: '老板', en: 'Boss' },
+			permissions: allPermissions
+		},
+		manager: {
+			name: { default: '部门经理', zh: '部门经理', en: 'Manager' },
+			permissions: [PERMISSIONS.team.read, PERMISSIONS.team.update]
+		},
+		dev: {
+			name: { default: '开发者', zh: '开发者', en: 'Developer' },
+			permissions: allPermissions
+		},
+		employee: {
+			name: { default: '普通员工', zh: '普通员工', en: 'Employee' },
+			permissions: [PERMISSIONS.team.read]
+		}
+	};
+
+	// 3. 创建角色并建立映射
+	const roleIdMap: Record<string, string> = {};
+	for (const [key, config] of Object.entries(rolesConfig)) {
+		const existing = await db.query.role.findFirst({
+			where: (table, { sql }) => sql`${table.name}->>'en' = ${config.name.en}`
+		});
+
+		if (existing) {
+			roleIdMap[key] = existing.id;
+			logger.info(`ℹ️ Role already exists: ${config.name.zh}`);
+		} else {
+			const [inserted] = await db
+				.insert(schema.role)
+				.values({
+					name: config.name,
+					permissions: config.permissions
+				})
+				.returning();
+			roleIdMap[key] = inserted.id;
+			logger.info(`✅ Role created: ${config.name.zh}`);
+		}
+	}
+
+	// 4. 定义用户数据
 	const usersToSeed = [
 		{
 			email: 'admin@qq.com',
 			username: 'admin',
 			displayUsername: '系统管理员',
-			orgRole: 'admin'
+			roles: ['admin', 'employee']
 		},
 		{
 			email: 'laoban@example.com',
 			username: 'laoban',
 			displayUsername: '老板',
-			orgRole: 'boss'
+			roles: ['boss', 'employee']
 		},
 		{
 			email: 'zhangsan@example.com',
 			username: 'zhangsan',
 			displayUsername: '张三',
-			orgRole: 'manager'
+			roles: ['manager', 'employee']
 		},
-		{ email: 'lisi@example.com', username: 'lisi', displayUsername: '李四', orgRole: 'manager' },
+		{
+			email: 'lisi@example.com',
+			username: 'lisi',
+			displayUsername: '李四',
+			roles: ['manager', 'employee']
+		},
 		{
 			email: 'wangwu@example.com',
 			username: 'wangwu',
 			displayUsername: '王五',
-			orgRole: 'manager'
+			roles: ['manager', 'employee']
 		},
 		{
 			email: 'zhaoliu@example.com',
 			username: 'zhaoliu',
 			displayUsername: '赵六',
-			orgRole: 'manager'
+			roles: ['manager', 'employee']
 		},
-		{ email: 'emp1@example.com', username: 'emp1', displayUsername: '员工甲', orgRole: 'member' },
-		{ email: 'emp2@example.com', username: 'emp2', displayUsername: '员工乙', orgRole: 'member' },
-		{ email: 'emp3@example.com', username: 'emp3', displayUsername: '员工丙', orgRole: 'member' },
-		{ email: 'emp4@example.com', username: 'emp4', displayUsername: '员工丁', orgRole: 'member' }
+		{
+			email: 'dev@example.com',
+			username: 'dev',
+			displayUsername: '开发人员',
+			roles: ['dev', 'employee']
+		},
+		{ email: 'emp1@example.com', username: 'emp1', displayUsername: '员工甲', roles: ['employee'] },
+		{ email: 'emp2@example.com', username: 'emp2', displayUsername: '员工乙', roles: ['employee'] },
+		{ email: 'emp3@example.com', username: 'emp3', displayUsername: '员工丙', roles: ['employee'] },
+		{ email: 'emp4@example.com', username: 'emp4', displayUsername: '员工丁', roles: ['employee'] }
 	];
 
 	const userMap: Record<string, string> = {};
 
+	// 5. 创建用户并分配角色
 	for (const u of usersToSeed) {
+		let userId: string;
 		const existing = await db.query.user.findFirst({
 			where: eq(schema.user.email, u.email)
 		});
@@ -66,115 +135,85 @@ export async function seed() {
 					displayUsername: u.displayUsername
 				}
 			});
-			userMap[u.username] = result.user.id;
+			userId = result.user.id;
 			logger.info(`✅ User created: ${u.displayUsername}`);
 		} else {
-			userMap[u.username] = existing.id;
+			userId = existing.id;
 			logger.info(`ℹ️ User already exists: ${u.displayUsername}`);
 		}
-	}
+		userMap[u.username] = userId;
 
-	// 2. 确保组织存在
-	const orgSlug = PUBLIC_ORG_SLUG;
-	let orgId: string;
-	const existingOrg = await db.query.organization.findFirst({
-		where: eq(schema.organization.slug, orgSlug)
-	});
-
-	if (!existingOrg) {
-		const org = await auth.api.createOrganization({
-			body: {
-				name: PUBLIC_ORG_NAME,
-				slug: orgSlug,
-				userId: userMap['admin']
-			}
-		});
-		orgId = org.id;
-		logger.info(`✅ Organization created: ${PUBLIC_ORG_NAME}`);
-
-		// 删除自动创建的默认团队
-		await db.delete(schema.team).where(eq(schema.team.organizationId, orgId));
-		logger.info('🗑️ Default auto-created team removed');
-	} else {
-		orgId = existingOrg.id;
-		logger.info(`ℹ️ Organization already exists: ${PUBLIC_ORG_NAME}`);
-	}
-
-	// 3. 为所有用户分配组织角色 (member 表)
-	for (const u of usersToSeed) {
-		const userId = userMap[u.username];
-		const existingMember = await db.query.member.findFirst({
-			where: and(eq(schema.member.organizationId, orgId), eq(schema.member.userId, userId))
-		});
-
-		if (!existingMember) {
-			await db.insert(schema.member).values({
-				id: crypto.randomUUID(),
-				organizationId: orgId,
-				userId: userId,
-				role: u.orgRole,
-				createdAt: new Date()
+		// 分配角色
+		for (const roleKey of u.roles) {
+			const roleId = roleIdMap[roleKey];
+			const existingUserRole = await db.query.userRole.findFirst({
+				where: (table, { and, eq }) => and(eq(table.userId, userId), eq(table.roleId, roleId))
 			});
-			logger.info(`✅ Assigned role ${u.orgRole} to ${u.displayUsername}`);
-		} else if (existingMember.role !== u.orgRole) {
-			await db
-				.update(schema.member)
-				.set({ role: u.orgRole })
-				.where(eq(schema.member.id, existingMember.id));
-			logger.info(`🔄 Updated role to ${u.orgRole} for ${u.displayUsername}`);
+
+			if (!existingUserRole) {
+				await db.insert(schema.userRole).values({
+					userId,
+					roleId
+				});
+			}
 		}
 	}
 
-	// 4. 定义部门及成员关系 (team 表)
+	// 6. 定义并创建团队
 	const teamsToSeed = [
-		{ name: '老板办公室', manager: 'laoban', members: ['admin'] },
-		{ name: '研发部', manager: 'zhangsan', members: ['emp1', 'emp2'] },
-		{ name: '人事部', manager: 'lisi', members: ['emp3'] },
-		{ name: '销售部', manager: 'wangwu', members: ['emp4'] },
-		{ name: '财务部', manager: 'zhaoliu', members: [] }
+		{
+			key: 'rd',
+			name: { default: '研发部', zh: '研发部', en: 'Research & Development' },
+			manager: 'dev',
+			members: ['dev', 'emp1', 'emp2']
+		},
+		{
+			key: 'marketing',
+			name: { default: '市场部', zh: '市场部', en: 'Marketing' },
+			manager: 'laoban',
+			members: ['laoban', 'emp3', 'emp4']
+		},
+		{
+			key: 'management',
+			name: { default: '管理部', zh: '管理部', en: 'Management' },
+			manager: 'admin',
+			members: ['admin', 'zhangsan', 'lisi', 'wangwu', 'zhaoliu']
+		}
 	];
 
 	for (const t of teamsToSeed) {
 		let teamId: string;
 		const existingTeam = await db.query.team.findFirst({
-			where: eq(schema.team.name, t.name)
+			where: (table, { sql }) => sql`${table.name}->>'en' = ${t.name.en}`
 		});
 
-		const managerId = userMap[t.manager];
-
-		if (!existingTeam) {
-			teamId = crypto.randomUUID();
-			await db.insert(schema.team).values({
-				id: teamId,
-				name: t.name,
-				organizationId: orgId,
-				managerId: managerId,
-				createdAt: new Date(),
-				updatedAt: new Date()
-			});
-			logger.info(`✅ Team created: ${t.name} (Manager: ${t.manager})`);
-		} else {
+		if (existingTeam) {
 			teamId = existingTeam.id;
-			await db.update(schema.team).set({ managerId: managerId }).where(eq(schema.team.id, teamId));
-			logger.info(`ℹ️ Team updated: ${t.name}`);
+			logger.info(`ℹ️ Team already exists: ${t.name.zh}`);
+		} else {
+			const [inserted] = await db
+				.insert(schema.team)
+				.values({
+					name: t.name,
+					managerId: userMap[t.manager]
+				})
+				.returning();
+			teamId = inserted.id;
+			logger.info(`✅ Team created: ${t.name.zh}`);
 		}
 
-		// 5. 处理部门成员 (team_member 表)
-		const allMembers = Array.from(new Set([t.manager, ...t.members]));
-		for (const memberUsername of allMembers) {
+		// 添加团队成员
+		for (const memberUsername of t.members) {
 			const userId = userMap[memberUsername];
-			const existingTeamMember = await db.query.teamMember.findFirst({
-				where: and(eq(schema.teamMember.teamId, teamId), eq(schema.teamMember.userId, userId))
+			const existingTeamUser = await db.query.teamUser.findFirst({
+				where: (table, { and, eq }) => and(eq(table.teamId, teamId), eq(table.userId, userId))
 			});
 
-			if (!existingTeamMember) {
-				await db.insert(schema.teamMember).values({
-					id: crypto.randomUUID(),
-					teamId: teamId,
-					userId: userId,
-					createdAt: new Date()
+			if (!existingTeamUser) {
+				await db.insert(schema.teamUser).values({
+					teamId,
+					userId
 				});
-				logger.info(`  + Member added to ${t.name}: ${memberUsername}`);
 			}
 		}
 	}

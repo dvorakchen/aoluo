@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { team, user, teamMember } from '$lib/server/db/schema';
+import { team, user, teamUser } from '$lib/server/db/schema';
 import { count, eq, sql } from 'drizzle-orm';
 import type { PaginationResult, TeamWithManager, User } from '$lib/shared';
 
@@ -20,11 +20,11 @@ export async function getPaginatedTeams(
 			.select({
 				team: team,
 				manager: user,
-				memberCount: sql<number>`count(${teamMember.id})`.mapWith(Number)
+				memberCount: sql<number>`count(${teamUser.id})`.mapWith(Number)
 			})
 			.from(team)
 			.leftJoin(user, eq(team.managerId, user.id))
-			.leftJoin(teamMember, eq(team.id, teamMember.teamId))
+			.leftJoin(teamUser, eq(team.id, teamUser.teamId))
 			.groupBy(team.id, user.id)
 			.limit(pageSize)
 			.offset(offset)
@@ -60,11 +60,11 @@ export async function getTeamById(id: string): Promise<TeamWithManager | null> {
 		.select({
 			team: team,
 			manager: user,
-			memberCount: sql<number>`count(${teamMember.id})`.mapWith(Number)
+			memberCount: sql<number>`count(${teamUser.id})`.mapWith(Number)
 		})
 		.from(team)
 		.leftJoin(user, eq(team.managerId, user.id))
-		.leftJoin(teamMember, eq(team.id, teamMember.teamId))
+		.leftJoin(teamUser, eq(team.id, teamUser.teamId))
 		.where(eq(team.id, id))
 		.groupBy(team.id, user.id)
 		.limit(1);
@@ -87,9 +87,9 @@ export async function getTeamMembers(teamId: string): Promise<User[]> {
 		.select({
 			user: user
 		})
-		.from(teamMember)
-		.innerJoin(user, eq(teamMember.userId, user.id))
-		.where(eq(teamMember.teamId, teamId));
+		.from(teamUser)
+		.innerJoin(user, eq(teamUser.userId, user.id))
+		.where(eq(teamUser.teamId, teamId));
 
 	return result.map((r) => r.user);
 }

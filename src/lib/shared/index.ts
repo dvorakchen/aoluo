@@ -8,7 +8,6 @@ export type Session = typeof auth.$Infer.Session.session;
 export type User = typeof auth.$Infer.Session.user;
 
 export type Team = InferSelectModel<typeof schema.team>;
-export type Organization = InferSelectModel<typeof schema.organization>;
 
 export type TeamWithManager = Team & {
 	manager: User | null;
@@ -26,3 +25,30 @@ export interface PaginationResult<T> {
 }
 
 export const NO_ASSIGNED_TEAM = '未分配Team';
+
+/**
+ * 数据库里有些字段需要 i18n 显示，就会存这个 JSON 类型
+ *
+ * # Example
+ *
+ * ```json
+ * {
+ * 		default: "中文",
+ * 		zh: "中文",
+ * 		en: "English"
+ * }
+ * ```
+ */
+export type DbI18nField = {
+	/**
+	 * 当没有区域指定的文本时候，默认显示这个文本
+	 */
+	default: string;
+	/**
+	 * 区域文本
+	 *
+	 * zh: 中文
+	 * en: English
+	 */
+	[K: string]: string;
+};

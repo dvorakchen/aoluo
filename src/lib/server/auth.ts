@@ -4,10 +4,9 @@ import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { env } from '$env/dynamic/private';
 import { getRequestEvent } from '$app/server';
 import { db } from '$lib/server/db';
-import { organization, username } from 'better-auth/plugins';
+import { username } from 'better-auth/plugins';
 import { phoneNumber } from 'better-auth/plugins';
 import { logger } from '$lib/server/logger';
-import { betterAuthOrgConfig } from '$lib/shared/permissions';
 import { env as pubenv } from '$env/dynamic/public';
 
 const baseURL = pubenv.PUBLIC_ORIGIN;
@@ -26,32 +25,7 @@ export const auth = betterAuth({
 				// TODO: Implement sending OTP code via SMS
 				logger.debug(`Send OTP code %s to phone number %s`, code, phoneNumber);
 			}
-		}),
-		organization({
-			...betterAuthOrgConfig,
-			dynamicAccessControl: { enabled: true },
-			organizationHooks: {
-				beforeAddMember: async ({ member /*user, organization*/ }) => {
-					// 自定义逻辑，动态设置角色
-					return {
-						data: {
-							...member,
-							role: 'member'
-						}
-					};
-				}
-			},
-			schema: {
-				team: {
-					additionalFields: {
-						managerId: {
-							type: 'string',
-							input: true,
-							required: false
-						}
-					}
-				}
-			}
 		})
+		// 不使用 better-ath 的 orginization 插件，不满足要求
 	]
 });

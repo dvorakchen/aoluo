@@ -1,6 +1,8 @@
 <script lang="ts">
+	import Table from '$lib/components/table.svelte';
 	import UserAvatar from '$lib/components/user-avatar.svelte';
 	import { m } from '$lib/paraglide/messages';
+	import type { User } from '$lib/shared/index.js';
 	import { MoveLeft, Users, User as UserIcon } from '@lucide/svelte';
 
 	let { data } = $props();
@@ -22,9 +24,9 @@
 </div>
 
 {#if team}
-	<div class="grid gap-6 md:grid-cols-3">
+	<div class="grid gap-6 md:grid-cols-4">
 		<!-- 核心信息卡片 -->
-		<div class="card bg-base-100 shadow-all md:col-span-2">
+		<div class="card bg-base-100 shadow-all md:col-span-3">
 			<div class="card-body">
 				<div class="ml-4 grid grid-cols-1 grid-rows-2">
 					<h1 class="card-title text-3xl font-bold">{team.name}</h1>
@@ -61,40 +63,31 @@
 						<Users size={20} />
 						部门成员
 					</h3>
-					<div class="overflow-x-auto">
-						<table class="table w-full">
-							<thead>
-								<tr>
-									<th>成员</th>
-									<th>用户名</th>
-									<th>角色</th>
-								</tr>
-							</thead>
-							<tbody>
-								{#each members as member (member.id)}
-									<tr class="hover:bg-base-200">
-										<td>
-											<div class="flex items-center gap-3">
-												<UserAvatar
-													image={member.image}
-													displayUsername={member.displayUsername ?? ''}
-												/>
-												<div class="font-bold">{member.displayUsername}</div>
-											</div>
-										</td>
-										<td>{member.username}</td>
-										<td>
-											{#if member.id === team.managerId}
-												<div class="badge badge-sm badge-primary">负责人</div>
-											{:else}
-												<div class="badge badge-ghost badge-sm">职员</div>
-											{/if}
-										</td>
-									</tr>
-								{/each}
-							</tbody>
-						</table>
-					</div>
+					<Table
+						checkable={true}
+						columns={[
+							{ field: 'member', display: '成员' },
+							{ field: 'username', display: '用户名' },
+							{ field: 'role', display: '角色' }
+						]}
+						list={members}
+					>
+						<!-- TODO: 这里 -->
+						{#snippet member(row: User)}
+							<div class="flex items-center gap-3">
+								<UserAvatar image={row.image} displayUsername={row.displayUsername ?? ''} />
+								<div class="font-bold">{row.displayUsername}</div>
+							</div>
+						{/snippet}
+
+						{#snippet role(row: User)}
+							{#if row.id === team.managerId}
+								<div class="badge badge-sm badge-primary">负责人</div>
+							{:else}
+								<div class="badge badge-ghost badge-sm">职员</div>
+							{/if}
+						{/snippet}
+					</Table>
 				</div>
 			</div>
 		</div>
@@ -117,13 +110,13 @@
 				<div class="stat">
 					<div class="stat-title">创建时间</div>
 					<div class="stat-value text-sm">
-						{new Date(team.createdAt).toLocaleString()}
+						{team.createdAt.toLocaleString()}
 					</div>
 				</div>
 				<div class="stat">
 					<div class="stat-title">最后更新</div>
 					<div class="stat-value text-sm">
-						{team.updatedAt ? new Date(team.updatedAt).toLocaleString() : '从未更新'}
+						{team.updatedAt ? team.updatedAt.toLocaleString() : '从未更新'}
 					</div>
 				</div>
 			</div>
