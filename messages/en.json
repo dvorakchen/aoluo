@@ -47,5 +47,12 @@
 	"delete_team": "Delete Team",
 	"created_at": "Created At",
 	"last_updated": "Last Updated",
-	"never_updated": "Never Updated"
+	"never_updated": "Never Updated",
+	"email": "Email",
+	"display_name": "Display Name",
+	"phone": "Phone",
+	"account_banned": "Account has been banned: {reason}",
+	"no_reason": "No reason",
+	"unban_time": "Unban Time",
+	"forever": "Forever"
 }

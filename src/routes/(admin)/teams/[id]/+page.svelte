@@ -104,7 +104,9 @@
 					</h2>
 					<div class="mt-2 flex flex-col gap-2">
 						<button class="btn btn-outline btn-primary">{m.edit_team_info()}</button>
-						<button class="btn btn-outline">{m.manage_members()}</button>
+						<button class="btn btn-outline" {@attach guard('TEAM_Update')}
+							>{m.manage_members()}</button
+						>
 						<div class="divider"></div>
 						<button class="btn btn-outline btn-error" {@attach guard('TEAM_Delete')}
 							>{m.delete_team()}</button

@@ -15,7 +15,10 @@ export const user = pgTable('user', {
 	username: text('username').unique(),
 	displayUsername: text('display_username'),
 	phoneNumber: text('phone_number').unique(),
-	phoneNumberVerified: boolean('phone_number_verified')
+	phoneNumberVerified: boolean('phone_number_verified'),
+	banned: boolean('banned').default(false),
+	banReason: text('ban_reason'),
+	banExpires: timestamp('ban_expires')
 });
 
 export const session = pgTable(

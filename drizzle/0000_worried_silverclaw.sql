@@ -44,6 +44,9 @@ CREATE TABLE "user" (
 	"display_username" text,
 	"phone_number" text,
 	"phone_number_verified" boolean,
+	"banned" boolean DEFAULT false,
+	"ban_reason" text,
+	"ban_expires" timestamp,
 	CONSTRAINT "user_email_unique" UNIQUE("email"),
 	CONSTRAINT "user_username_unique" UNIQUE("username"),
 	CONSTRAINT "user_phone_number_unique" UNIQUE("phone_number")

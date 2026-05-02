@@ -47,5 +47,12 @@
 	"delete_team": "删除部门",
 	"created_at": "创建时间",
 	"last_updated": "最后更新",
-	"never_updated": "从未更新"
+	"never_updated": "从未更新",
+	"email": "邮箱",
+	"display_name": "显示名称",
+	"phone": "电话",
+	"account_banned": "您的账号已被封禁：{reason}",
+	"no_reason": "无原因",
+	"unban_time": "解禁时间",
+	"forever": "永远"
 }

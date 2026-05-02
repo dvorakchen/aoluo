@@ -10,6 +10,12 @@ import { logger } from '$lib/server/logger';
 import { env as pubenv } from '$env/dynamic/public';
 import type { Session, User } from '$lib/shared';
 import { DateTime } from 'luxon';
+import { APIError, createAuthMiddleware } from 'better-auth/api';
+import { eq } from 'drizzle-orm';
+import { user as userSchema } from '$lib/server/db/schema';
+import { userHasBeenBanned } from './business/user';
+import { m } from '$lib/paraglide/messages';
+import { toDateTime } from '$lib/shared/utils';
 
 const baseURL = pubenv.PUBLIC_ORIGIN;
 console.log(`[Better Auth] Initializing baseURL: ${baseURL}`);
@@ -29,7 +35,80 @@ export const auth = betterAuth({
 			}
 		})
 		// 不使用 better-ath 的 orginization 插件，不满足要求
-	]
+	],
+	user: {
+		additionalFields: {
+			banned: {
+				type: 'boolean',
+				required: false,
+				defaultValue: false,
+				input: false // 用户不可自己设置
+			},
+			banReason: {
+				type: 'string',
+				required: false,
+				defaultValue: ''
+			},
+			banExpires: {
+				type: 'date',
+				required: false,
+				defaultValue: new Date()
+			}
+		}
+	},
+	hooks: {
+		before: createAuthMiddleware(async (ctx) => {
+			// 拦截登录相关的端点
+			if (ctx.path === '/sign-in/email' || ctx.path === '/sign-in/username') {
+				// 查询用户是否被 ban（需要根据 email/username 查用户）
+				const email = ctx.body?.email;
+				const username = ctx.body?.username;
+
+				// 根据 email 或 username 查找用户（需要用你的 ORM 查询）
+				const user = await db.query.user.findFirst({
+					where: email ? eq(userSchema.email, email) : eq(userSchema.username, username)
+				});
+				// 检查封禁状态
+				if (await userHasBeenBanned(user)) {
+					throw new APIError('FORBIDDEN', {
+						message: m.account_banned({ reason: user?.banReason || m.no_reason() })
+					});
+				}
+			}
+
+			if (ctx.path === '/get-session') {
+				// 从 cookie 中获取 session token
+				const sessionCookieToken = await ctx.getSignedCookie(
+					ctx.context.authCookies.sessionToken.name,
+					ctx.context.secret
+				);
+
+				if (!sessionCookieToken) {
+					return; // 没有 session，让 Better Auth 正常处理
+				}
+
+				// 查询 session 和 user 信息
+				const session = await ctx.context.internalAdapter.findSession(sessionCookieToken);
+
+				if (await userHasBeenBanned(session?.user?.id)) {
+					ctx.setCookie(ctx.context.authCookies.sessionToken.name, '', {
+						maxAge: 0,
+						path: '/'
+					});
+
+					const unbanDate = session?.user.banExpires
+						? toDateTime(session.user.banExpires)
+						: m.forever();
+
+					throw new APIError('FORBIDDEN', {
+						message:
+							m.account_banned({ reason: session?.user.banReason || m.no_reason() }) +
+							`, ${m.unban_time()}: ${unbanDate}`
+					});
+				}
+			}
+		})
+	}
 });
 
 /**

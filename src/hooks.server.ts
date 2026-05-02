@@ -8,6 +8,7 @@ import { paraglideMiddleware } from '$lib/paraglide/server';
 import { logger } from '$lib/server/logger';
 import { seed } from '$lib/server/db/seed';
 import { initWebSocket } from '$lib/server/websocket';
+import { APIError } from 'better-auth/api';
 
 const handleParaglide: Handle = ({ event, resolve }) =>
 	paraglideMiddleware(event.request, ({ request, locale }) => {
@@ -22,11 +23,21 @@ const handleParaglide: Handle = ({ event, resolve }) =>
 	});
 
 const handleBetterAuth: Handle = async ({ event, resolve }) => {
-	const session = await auth.api.getSession({ headers: event.request.headers });
+	try {
+		const session = await auth.api.getSession({ headers: event.request.headers });
 
-	if (session) {
-		event.locals.session = session.session;
-		event.locals.user = session.user;
+		if (session) {
+			event.locals.session = session.session;
+			event.locals.user = session.user;
+		}
+	} catch (e) {
+		if (e instanceof APIError) {
+			// 如果是 APIError，说明是业务逻辑拦截（如 banned）
+			// 我们在这里不处理，让后面的 svelteKitHandler 再次执行并正确返回 Response
+			logger.debug(`APIError caught in hooks: ${e.message}`);
+		} else {
+			logger.error(e, 'Error in getSession hook');
+		}
 	}
 
 	return svelteKitHandler({ event, resolve, auth, building });

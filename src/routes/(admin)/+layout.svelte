@@ -7,7 +7,6 @@ The `children` prop contains the content of the specific admin page being render
 <script lang="ts">
 	import Layout from '$lib/components/home-layout/layout.svelte';
 	import { onMount } from 'svelte';
-	import Toast from '$lib/components/toast.svelte';
 
 	import type { LayoutProps } from './$types';
 	import { userStore } from '$lib/client/store/user.svelte';
@@ -22,4 +21,3 @@ The `children` prop contains the content of the specific admin page being render
 <Layout>
 	{@render children()}
 </Layout>
-<Toast />

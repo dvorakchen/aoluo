@@ -1,11 +1,45 @@
 import { db } from '$lib/server/db';
-import { role, userRole } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
-import type { PermissionSchema, PermissionValue } from '$lib/shared';
+import { role, userRole, user } from '$lib/server/db/schema';
+import { eq, count } from 'drizzle-orm';
+import type {
+	PaginationResult,
+	PermissionSchema,
+	PermissionValue,
+	User as UserType
+} from '$lib/shared';
+
+/**
+ * 分页获取所有用户
+ * @param page 当前页码
+ * @param pageSize 每页条数
+ */
+export async function getPaginatedUsers(
+	page: number = 1,
+	pageSize: number = 10
+): Promise<PaginationResult<UserType>> {
+	const offset = (page - 1) * pageSize;
+
+	const [list, totalRes] = await Promise.all([
+		db.select().from(user).limit(pageSize).offset(offset).orderBy(user.createdAt),
+		db.select({ value: count() }).from(user)
+	]);
+
+	const total = totalRes[0].value;
+
+	return {
+		list,
+		pagination: {
+			page,
+			pageSize,
+			total,
+			totalPages: Math.ceil(total / pageSize)
+		}
+	};
+}
 
 /**
  * 获取用户关联的所有权限
- * @param userId 用户 ID
+...
  */
 export async function getUserPermissions(userId: string): Promise<PermissionValue[]> {
 	const result = await db
@@ -53,4 +87,31 @@ export async function hasPermissions(
 
 	// 如果没有定义任何限制，或者所有限制都通过了，返回 true
 	return true;
+}
+
+/**
+ * 用户是否被封禁
+ * @param userObj 用户对象或 user_id
+ */
+export async function userHasBeenBanned(userObj?: UserType | null | string): Promise<boolean> {
+	let u: UserType | undefined | null;
+
+	if (typeof userObj === 'string') {
+		u = await db.query.user.findFirst({
+			where: eq(user.id, userObj)
+		});
+	} else {
+		u = userObj;
+	}
+
+	if (u?.banned) {
+		const banExpired = u.banExpires && new Date(u.banExpires) < new Date();
+		if (banExpired) {
+			await db.update(user).set({ banned: false }).where(eq(user.id, u.id));
+			return false;
+		}
+		return true;
+	}
+
+	return false;
 }
