@@ -11,7 +11,7 @@ export function toDate(datetime: string | Date) {
 }
 
 export function i18nFromJSON(json: DbI18nField): string {
-	let loca = json[getLocale()];
+	const loca = json[getLocale()];
 
 	if (loca && typeof loca === 'string') {
 		return loca;

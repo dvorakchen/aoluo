@@ -8,23 +8,23 @@ import type { PermissionValue } from '$lib/shared';
  * @param roleIds 角色 ID 或 ID 数组
  */
 export async function getRolePermissions(roleIds: string | string[]): Promise<PermissionValue[]> {
-    const ids = Array.isArray(roleIds) ? roleIds : [roleIds];
+	const ids = Array.isArray(roleIds) ? roleIds : [roleIds];
 
-    if (ids.length === 0) return [];
+	if (ids.length === 0) return [];
 
-    const result = await db
-        .select({
-            permissions: role.permissions
-        })
-        .from(role)
-        .where(inArray(role.id, ids));
+	const result = await db
+		.select({
+			permissions: role.permissions
+		})
+		.from(role)
+		.where(inArray(role.id, ids));
 
-    const allPermissions = new Set<PermissionValue>();
-    result.forEach((r) => {
-        r.permissions.forEach((p) => {
-            allPermissions.add(p as PermissionValue);
-        });
-    });
+	const allPermissions = new Set<PermissionValue>();
+	result.forEach((r) => {
+		r.permissions.forEach((p) => {
+			allPermissions.add(p as PermissionValue);
+		});
+	});
 
-    return Array.from(allPermissions);
+	return Array.from(allPermissions);
 }

@@ -2,7 +2,6 @@
 	import { resolve } from '$app/paths';
 	import Table from '$lib/components/table.svelte';
 	import type { TeamWithManager } from '$lib/shared';
-	import { i18nFromJSON } from '$lib/shared/utils';
 	import { m } from '$lib/paraglide/messages';
 
 	let { data } = $props();

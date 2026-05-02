@@ -89,19 +89,21 @@ Apache-2.0
 数据库中的 i18n 使用了 JSON 格式
 
 ```ts
-export type DbI18nField = {
-	/**
-	 * 当没有区域指定的文本时候，默认显示这个文本
-	 */
-	default: string;
-	/**
-	 * 区域文本
-	 *
-	 * zh: 中文
-	 * en: English
-	 */
-	[K: string]: string;
-} | { [K: string]: string };
+export type DbI18nField =
+	| {
+			/**
+			 * 当没有区域指定的文本时候，默认显示这个文本
+			 */
+			default: string;
+			/**
+			 * 区域文本
+			 *
+			 * zh: 中文
+			 * en: English
+			 */
+			[K: string]: string;
+	  }
+	| { [K: string]: string };
 ```
 
 会以 JSON 格式存在数据库字段中，在客户端使用 `i18nFromJSON(DbI18nField)` 在客户端中提取出当前时区对应的文本
@@ -156,9 +158,9 @@ export type DbI18nField = {
 
 ```ts
 export type Col = {
-  // 列字段，组件会使用这个字段在 list 中拿到对应的数据
+	// 列字段，组件会使用这个字段在 list 中拿到对应的数据
 	field: string;
-  // 列显示的名字
+	// 列显示的名字
 	display: string;
 };
 ```

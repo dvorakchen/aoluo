@@ -32,7 +32,10 @@ export async function getUserPermissions(userId: string): Promise<PermissionValu
  * @param userId 用户 user_id
  * @param permissions 权限策略
  */
-export async function hasPermissions(userId: string, permissions: PermissionSchema): Promise<boolean> {
+export async function hasPermissions(
+	userId: string,
+	permissions: PermissionSchema
+): Promise<boolean> {
 	const userPerms = await getUserPermissions(userId);
 	const userPermSet = new Set(userPerms);
 

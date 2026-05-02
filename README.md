@@ -89,19 +89,21 @@ Uses the solution provided by `paraglide`.
 i18n in the database uses a JSON format:
 
 ```ts
-export type DbI18nField = {
-	/**
-	 * Default text to display when no locale-specific text is available.
-	 */
-	default: string;
-	/**
-	 * Locale-specific text.
-	 *
-	 * zh: Chinese
-	 * en: English
-	 */
-	[K: string]: string;
-} | { [K: string]: string };
+export type DbI18nField =
+	| {
+			/**
+			 * Default text to display when no locale-specific text is available.
+			 */
+			default: string;
+			/**
+			 * Locale-specific text.
+			 *
+			 * zh: Chinese
+			 * en: English
+			 */
+			[K: string]: string;
+	  }
+	| { [K: string]: string };
 ```
 
 This is stored in database fields in JSON format. Use `i18nFromJSON(DbI18nField)` on the client to extract the text corresponding to the current locale.
@@ -156,9 +158,9 @@ To display columns in the table, pass `columns`:
 
 ```ts
 export type Col = {
-  // Column field, the component will use this to retrieve data from 'list'
+	// Column field, the component will use this to retrieve data from 'list'
 	field: string;
-  // Display name of the column
+	// Display name of the column
 	display: string;
 };
 ```

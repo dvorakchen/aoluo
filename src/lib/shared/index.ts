@@ -39,16 +39,18 @@ export const NO_ASSIGNED_TEAM = '未分配Team';
  * }
  * ```
  */
-export type DbI18nField = {
-	/**
-	 * 当没有区域指定的文本时候，默认显示这个文本
-	 */
-	default: string;
-	/**
-	 * 区域文本
-	 *
-	 * zh: 中文
-	 * en: English
-	 */
-	[K: string]: string;
-} | { [K: string]: string };
+export type DbI18nField =
+	| {
+			/**
+			 * 当没有区域指定的文本时候，默认显示这个文本
+			 */
+			default: string;
+			/**
+			 * 区域文本
+			 *
+			 * zh: 中文
+			 * en: English
+			 */
+			[K: string]: string;
+	  }
+	| { [K: string]: string };

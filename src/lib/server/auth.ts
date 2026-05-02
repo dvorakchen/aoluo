@@ -34,10 +34,10 @@ export const auth = betterAuth({
 
 /**
  * 检查是否登录，是否过期，
- * 会在 请求函数中使用 
+ * 会在 请求函数中使用
  * @param user locals.user
  * @param session locals.session
- * @returns 
+ * @returns
  */
 export function checkIsLoggedIn(user?: User | null, session?: Session | null): boolean {
 	if (!user || !session) {

@@ -66,7 +66,6 @@
 						{m.team_members()}
 					</h3>
 					<Table
-						// checkable={true}
 						columns={[
 							{ field: 'member', display: m.member() },
 							{ field: 'username', display: m.username() },
