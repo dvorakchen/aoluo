@@ -1,4 +1,4 @@
-# Aoluo (傲罗)
+# Badana
 
 基于 SvelteKit 5 + Better Auth + Drizzle ORM 构建的全栈应用模板，集成了响应式 WebSocket 服务和完整的 Docker 部署方案。
 
@@ -71,3 +71,180 @@ docker compose up --build -d
 ## 📜 许可证
 
 Apache-2.0
+
+# 开发手册
+
+> 当要进行二次开发的时候，应该参考以下手册
+
+## 数据库
+
+使用 PostgreSQL，高度使用了 PG 数据库特有的能力，如`行内安全`，日期使用 `timestampz` 格式，方便记录时区信息
+
+如果你要使用其他数据库，可能会遇到不兼容的情况，需要自行调整
+
+## i18n
+
+使用的 `paraglide` 提供的方案。
+
+数据库中的 i18n 使用了 JSON 格式
+
+```ts
+export type DbI18nField = {
+	/**
+	 * 当没有区域指定的文本时候，默认显示这个文本
+	 */
+	default: string;
+	/**
+	 * 区域文本
+	 *
+	 * zh: 中文
+	 * en: English
+	 */
+	[K: string]: string;
+} | { [K: string]: string };
+```
+
+会以 JSON 格式存在数据库字段中，在客户端使用 `i18nFromJSON(DbI18nField)` 在客户端中提取出当前时区对应的文本
+
+## 样式
+
+使用 `DaisyUI`
+
+## 组件(Components)
+
+### table.svelte
+
+在客户端显示表格推荐使用 `table.svelte` 组件
+
+示例：
+
+```svelte
+<Table
+	checkable={true}
+	columns={[
+		{
+			field: 'name',
+			display: `Team Name`
+		},
+		{
+			field: 'manager',
+			display: 'Manager'
+		},
+		{
+			field: 'memberCount',
+			display: 'Member Count'
+		}
+	]}
+	{list}
+>
+	{#snippet name(row: RowType)}
+		{i18nFromJSON(row.name)}
+	{/snippet}
+
+	{#snippet manager(row: RowType)}
+		{row.manager?.displayUsername}
+	{/snippet}
+
+	{#snippet actions(row: RowType)}
+		<a class="btn" href={resolve(`/detail/${row.id}`)}>详情</a>
+	{/snippet}
+</Table>
+
+```
+
+在表格中要显示列，传入 `columns`:
+
+```ts
+export type Col = {
+  // 列字段，组件会使用这个字段在 list 中拿到对应的数据
+	field: string;
+  // 列显示的名字
+	display: string;
+};
+```
+
+表格的列表数据传入 `list`:
+
+```ts
+type list: T[]
+```
+
+如:
+
+```svelte
+<table
+	columns={[
+		{
+			field: 'name',
+			display: `Team Name`
+		},
+		{
+			field: 'manager',
+			display: 'Manager'
+		},
+		{
+			field: 'memberCount',
+			display: 'Member Count'
+		}
+	]}
+	list={[
+		{ name: 'Dev', manager: 'Alex', memberCount: '10' },
+		{ name: 'Resource', manager: 'Bab', memberCount: '5' }
+	]}
+></table>
+```
+
+默认情况下，在 `name` 这一列，会展示 `list` 那一行数据的 `name` 的值来展示
+
+也可以通过传入 `Snippet` 改变默认的展示行为
+
+```svelte
+<table
+	columns={[
+		{
+			field: 'name',
+			display: `Team Name`
+		},
+		{
+			field: 'manager',
+			display: 'Manager'
+		},
+		{
+			field: 'memberCount',
+			display: 'Member Count'
+		}
+	]}
+	list={[
+		{ name: 'Dev', manager: 'Alex', memberCount: '10' },
+		{ name: 'Resource', manager: 'Bab', memberCount: '5' }
+	]}
+>
+  <!-- 当展示 manager 的时候，会使用下面的 Snippet -->
+   <!-- 原本展示 Alex，现在展示 Bad Alex -->
+  {#snippet manager(row: RowType)}
+		{'Bad ' + row.manager}
+	{/snippet}
+</table>
+```
+
+但是 `actions` Snippet 是保留的，所以在列中不要使用 `actions` 这个 field
+
+给 `table` 传入 `checkable` 可以在表格左侧显示复选框
+
+```svelte
+<table checkable={true}></table>
+```
+
+使用 `actions` Snippet 在每行最右侧显示操作按钮
+
+```svelte
+<table>
+  <!--
+  ...
+  -->
+	{#snippet actions(row: RowType)}
+		<a class="btn" href={resolve(`/detail/${row.id}`)}>详情</a>
+    <button>删除</button>
+	{/snippet}
+</table>
+```

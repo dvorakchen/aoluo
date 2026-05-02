@@ -8,6 +8,8 @@ import { username } from 'better-auth/plugins';
 import { phoneNumber } from 'better-auth/plugins';
 import { logger } from '$lib/server/logger';
 import { env as pubenv } from '$env/dynamic/public';
+import type { Session, User } from '$lib/shared';
+import { DateTime } from 'luxon';
 
 const baseURL = pubenv.PUBLIC_ORIGIN;
 console.log(`[Better Auth] Initializing baseURL: ${baseURL}`);
@@ -29,3 +31,18 @@ export const auth = betterAuth({
 		// 不使用 better-ath 的 orginization 插件，不满足要求
 	]
 });
+
+/**
+ * 检查是否登录，是否过期，
+ * 会在 请求函数中使用 
+ * @param user locals.user
+ * @param session locals.session
+ * @returns 
+ */
+export function checkIsLoggedIn(user?: User | null, session?: Session | null): boolean {
+	if (!user || !session) {
+		return false;
+	}
+
+	return DateTime.fromJSDate(session.expiresAt) > DateTime.now();
+}

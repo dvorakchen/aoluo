@@ -51,4 +51,4 @@ export type DbI18nField = {
 	 * en: English
 	 */
 	[K: string]: string;
-};
+} | { [K: string]: string };

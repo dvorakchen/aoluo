@@ -1,5 +1,7 @@
 <script module>
 	import type { Snippet } from 'svelte';
+	import type { DbI18nField } from '$lib/shared';
+	import { i18nFromJSON } from '$lib/shared/utils';
 
 	/**
 	 * 一行的数据类型
@@ -27,7 +29,7 @@
 		/**
 		 * 是否使用在列头使用 checkbox
 		 */
-		checkable: boolean;
+		checkable?: boolean;
 		columns: Col[];
 		list: T[];
 		actions?: Snippet<[T]>;
@@ -65,6 +67,14 @@
 		const checked = (e.target as HTMLInputElement).checked;
 		rows.forEach((t) => (t.checked = checked));
 	}
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	function tryI18n(value: any) {
+		if (value && typeof value === 'object' && 'default' in value) {
+			return i18nFromJSON(value as DbI18nField);
+		}
+		return value;
+	}
 </script>
 
 <div class="overflow-x-auto">
@@ -90,6 +100,8 @@
 		</thead>
 		<tbody>
 			{#each rows as row, i (i)}
+				{@const rowData = row.row}
+
 				<tr class="hover:bg-base-300">
 					{#if checkable}
 						<td>
@@ -101,18 +113,18 @@
 					{#each columns as col (col)}
 						<td>
 							{#if snippets[col.field]}
-								{@render snippets[col.field](row.row)}
+								{@render snippets[col.field](rowData)}
 							{:else}
-								{row.row[col.field] ?? ''}
+								{tryI18n(rowData[col.field]) ?? ''}
 							{/if}
 						</td>
 					{/each}
-					<!-- 
+
 					{#if hasActions}
 						<td>
-							{@render actions?.(row)}
+							{@render actions?.(rowData)}
 						</td>
-					{/if} -->
+					{/if}
 				</tr>
 			{/each}
 		</tbody>

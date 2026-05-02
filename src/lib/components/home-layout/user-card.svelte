@@ -5,6 +5,7 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import UserAvatar from '../user-avatar.svelte';
+	import { i18nFromJSON } from '$lib/shared/utils';
 
 	async function handleLogout() {
 		await authClient.signOut();
@@ -47,7 +48,7 @@
 				<div class="flex">
 					<h1 class="truncate text-lg font-bold">{userStore.user?.displayUsername}</h1>
 					<span class="flex grow justify-end truncate">
-						{userStore.teams.map((t) => t.name).join(', ')}
+						{userStore.teams.map((t) => i18nFromJSON(t.name)).join(', ')}
 					</span>
 				</div>
 			</li>
