@@ -251,6 +251,23 @@ type list: T[]
 </table>
 ```
 
+### 输入框
+
+建议使用 Components 里的 `Input` 二次开发
+
+```svelte
+<!-- 一个空白的输入框 -->
+<Input />
+<!-- value 是响应式的 -->
+<Input {value} />
+<!-- 输入框内左侧显示一个标签 -->
+<Input label={'标签'} />
+<!-- 右侧显示一个用于清除内容的 X 按钮 -->
+<Input clearable />
+<!-- 可以映射任意属性到内部的 input 上 -->
+<Input name="username" type="number" data-tip="Tip" />
+```
+
 ## 测试
 
 建议组件测试和单元测试都使用 `.spec.ts` 扩展名，没什么原因就是统一

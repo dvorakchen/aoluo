@@ -141,15 +141,15 @@ Example:
 >
 	{#snippet name(row: RowType)}
 		{i18nFromJSON(row.name)}
-	{/snippet}
+	{#/snippet}
 
 	{#snippet manager(row: RowType)}
 		{row.manager?.displayUsername}
-	{/snippet}
+	{#/snippet}
 
 	{#snippet actions(row: RowType)}
 		<a class="btn" href={resolve(`/detail/${row.id}`)}>Details</a>
-	{/snippet}
+	{#/snippet}
 </Table>
 
 ```
@@ -225,7 +225,7 @@ You can also pass a `Snippet` to override the default display behavior:
   <!-- Originally displaying 'Alex', now displaying 'Bad Alex' -->
   {#snippet manager(row: RowType)}
 		{'Bad ' + row.manager}
-	{/snippet}
+	{#/snippet}
 </table>
 ```
 
@@ -247,8 +247,25 @@ Use the `actions` Snippet to display action buttons on the far right of each row
 	{#snippet actions(row: RowType)}
 		<a class="btn" href={resolve(`/detail/${row.id}`)}>Details</a>
     <button>Delete</button>
-	{/snippet}
+	{#/snippet}
 </table>
+```
+
+### Input
+
+It is recommended to use the `Input` component from the `Components` directory for secondary development.
+
+```svelte
+<!-- A blank input box -->
+<Input />
+<!-- value is reactive -->
+<Input {value} />
+<!-- Display a label on the left side of the input box -->
+<Input label={'Label'} />
+<!-- Display an X button on the right side to clear the content -->
+<Input clearable />
+<!-- Can map any attributes to the internal input element -->
+<Input name="username" type="number" data-tip="Tip" />
 ```
 
 ## Testing
