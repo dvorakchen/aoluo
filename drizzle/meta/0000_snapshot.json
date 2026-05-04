@@ -1,5 +1,5 @@
 {
-  "id": "ee26354b-6a56-43d0-aaa2-9eb3db9ddca7",
+  "id": "9a820dd3-beab-4c24-88a7-b68f42f2034c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -342,13 +342,22 @@
           "name": "ban_reason",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "''"
         },
         "ban_expires": {
           "name": "ban_expires",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "now()"
+        },
+        "removed": {
+          "name": "removed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         }
       },
       "indexes": {},

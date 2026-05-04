@@ -5,7 +5,7 @@
 ## 🌟 特性
 
 - **SvelteKit 5 (Runes)**: 利用最新符文系统实现极致的响应式性能。
-- **Better Auth**: 强大的身份验证方案，支持邮件/密码、组织管理及手机号登录。
+- **Better Auth**: 强大的身份验证方案，支持邮件/密码、手机号登录。
 - **Drizzle ORM**: 类型安全的数据库操作，支持迁移与自动生成。
 - **WebSocket 架构**:
   - **开发环境**: Vite 插件实现 HMR 与业务 WS 路径分流。
@@ -84,7 +84,7 @@ Apache-2.0
 
 ## i18n
 
-使用的 `paraglide` 提供的方案。
+使用的 `paraglide` 提供的方案。默认有中文 zh，英文 en 两种语言，有需要添加其他语言，推荐使用 AI 参考 `messages/{en,zh}.json` 翻译为其他语言，如 `de`，然后在 `project.inlang/settings.json` 中的 `locales` 中添加上新的语言，如 `de`
 
 数据库中的 i18n 使用了 JSON 格式
 
@@ -250,3 +250,9 @@ type list: T[]
 	{/snippet}
 </table>
 ```
+
+## 测试
+
+建议组件测试和单元测试都使用 `.spec.ts` 扩展名，没什么原因就是统一
+
+导入 `vitest/browser` 而不是已废弃的 `@vitest/browser/context`

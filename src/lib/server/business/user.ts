@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { role, userRole, user } from '$lib/server/db/schema';
-import { eq, count } from 'drizzle-orm';
+import { eq, count, and, ilike, type SQL } from 'drizzle-orm';
 import type {
 	PaginationResult,
 	PermissionSchema,
@@ -8,20 +8,50 @@ import type {
 	User as UserType
 } from '$lib/shared';
 
+export type UserFilter = {
+	displayUsername?: string;
+	email?: string;
+	phone?: string;
+	removed?: boolean;
+	banned?: boolean;
+};
+
 /**
  * 分页获取所有用户
  * @param page 当前页码
  * @param pageSize 每页条数
+ * @param filter 过滤条件
  */
 export async function getPaginatedUsers(
 	page: number = 1,
-	pageSize: number = 10
+	pageSize: number = 10,
+	filter?: UserFilter
 ): Promise<PaginationResult<UserType>> {
 	const offset = (page - 1) * pageSize;
 
+	const filters: SQL[] = [];
+
+	if (filter?.displayUsername) {
+		filters.push(ilike(user.displayUsername, `%${filter.displayUsername}%`));
+	}
+	if (filter?.email) {
+		filters.push(ilike(user.email, `%${filter.email}%`));
+	}
+	if (filter?.phone) {
+		filters.push(ilike(user.phoneNumber, `%${filter.phone}%`));
+	}
+	if (filter?.removed !== undefined) {
+		filters.push(eq(user.removed, filter.removed));
+	}
+	if (filter?.banned !== undefined) {
+		filters.push(eq(user.banned, filter.banned));
+	}
+
+	const where = filters.length > 0 ? and(...filters) : undefined;
+
 	const [list, totalRes] = await Promise.all([
-		db.select().from(user).limit(pageSize).offset(offset).orderBy(user.createdAt),
-		db.select({ value: count() }).from(user)
+		db.select().from(user).where(where).limit(pageSize).offset(offset).orderBy(user.createdAt),
+		db.select({ value: count() }).from(user).where(where)
 	]);
 
 	const total = totalRes[0].value;

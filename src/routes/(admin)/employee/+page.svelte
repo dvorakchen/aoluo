@@ -1,9 +1,12 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
+	import Pagination from '$lib/components/pagination.svelte';
 	import Table from '$lib/components/table.svelte';
 	import UserAvatar from '$lib/components/user-avatar.svelte';
 	import { m } from '$lib/paraglide/messages';
 	import type { User } from '$lib/shared';
+	import { page } from '$app/state';
+	import Input from '$lib/components/input.svelte';
+	import { toDateTime } from '$lib/shared/utils';
 
 	let { data } = $props();
 
@@ -26,8 +29,55 @@
 </script>
 
 <div class="mb-6 flex items-center justify-between">
-	<h1 class="text-2xl font-bold">{m.menu_hrm_employee()}</h1>
+	<h1 class="text-2xl font-bold">{m.employee_list()}</h1>
 </div>
+
+<form class="mx-4 mt-6 flex flex-col" method="GET">
+	<div class="flex gap-4">
+		<Input
+			label={m.username()}
+			clearable={true}
+			type="text"
+			name="displayusername"
+			value={page.url.searchParams.get('displayusername')}
+		/>
+		<Input
+			label={m.email()}
+			clearable={true}
+			type="text"
+			name="email"
+			value={page.url.searchParams.get('email')}
+		/>
+		<Input
+			label={m.phone()}
+			clearable={true}
+			type="text"
+			name="phone"
+			value={page.url.searchParams.get('phone')}
+		/>
+		<div class="filter">
+			<input class="filter-reset btn" type="radio" name="removed" aria-label="X" value="" />
+			<input class="btn" type="radio" name="removed" aria-label={m.resigned()} value="on" />
+			<input class="btn" type="radio" name="removed" aria-label={m.not_resigned()} value="off" />
+		</div>
+
+		<div class="filter">
+			<input class="filter-reset btn" type="radio" name="banned" aria-label="X" value="" />
+			<input class="btn" type="radio" name="banned" aria-label={m.banned_status()} value="on" />
+			<input
+				class="btn"
+				type="radio"
+				name="banned"
+				aria-label={m.not_banned_status()}
+				value="off"
+			/>
+		</div>
+		<input type="number" name="page" hidden />
+	</div>
+	<div class="flex justify-end">
+		<button class="btn btn-primary" type="submit">{m.search()}</button>
+	</div>
+</form>
 
 <Table
 	checkable={true}
@@ -35,6 +85,7 @@
 		{ field: 'display_name', display: m.display_name() },
 		{ field: 'email', display: m.email() },
 		{ field: 'phoneNumber', display: m.phone() },
+		{ field: 'status', display: m.status() },
 		{ field: 'createdAt', display: m.created_at() }
 	]}
 	{list}
@@ -42,22 +93,44 @@
 	{#snippet display_name(row: RowType)}
 		<div class="flex items-center gap-3">
 			<UserAvatar image={row.image} displayUsername={row.displayUsername ?? ''} />
-			<div class="font-bold">{row.displayUsername || row.name}</div>
+			<div class="font-bold">{row.displayUsername || row.username || row.name}</div>
 		</div>
 	{/snippet}
 
 	{#snippet email(row: RowType)}
-		<span class="text-sm opacity-70">{row.email}</span>
+		<a class="btn btn-link" href="mailto:{row.email}">{row.email}</a>
 	{/snippet}
 
 	{#snippet phoneNumber(row: RowType)}
 		<span>{row.phoneNumber || m.not_set()}</span>
 	{/snippet}
 
-	{#snippet actions()}
+	{#snippet status(row: RowType)}
+		{#if !row.removed && !row.banned}
+			<div class="badge badge-sm badge-success">{m.active()}</div>
+		{/if}
+		{#if row.banned}
+			<div class="badge badge-sm badge-error">{m.banned()}</div>
+		{/if}
+		{#if row.removed}
+			<div class="badge badge-sm badge-warning">{m.resigned()}</div>
+		{/if}
+	{/snippet}
+
+	{#snippet createdAt(row: RowType)}
+		<span>{toDateTime(row.createdAt)}</span>
+	{/snippet}
+
+	{#snippet actions(row: RowType)}
 		<div class="flex gap-2">
-			<a class="btn btn-ghost btn-xs" href={resolve(`/employee`)}>{m.details()}</a>
-			<button class="btn text-error btn-ghost btn-xs">{m.delete_team()}</button>
+			<!-- TODO: goto detail -->
+			<!-- <a class="btn btn-ghost" href={resolve(`/employee/${row.username}`)}>{m.details()}</a> -->
+			{row.username}
+			<button class="btn text-error btn-ghost">{m.delete_employee()}</button>
 		</div>
 	{/snippet}
 </Table>
+
+<div class="mt-6 flex">
+	<Pagination page={1} totalPages={30} />
+</div>

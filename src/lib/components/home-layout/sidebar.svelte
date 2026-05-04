@@ -29,7 +29,7 @@ Sidebar component for the admin dashboard.
 					title: m.menu_hrm_employee(),
 					Icon: LayoutDashboard,
 					links: [
-						{ label: 'Submenu 1', href: '/subm' },
+						{ label: m.employee_list(), href: resolve('/employee') },
 						{ label: 'Submenu 2', href: '/1' }
 					]
 				},

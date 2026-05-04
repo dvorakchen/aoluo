@@ -18,7 +18,7 @@ export function toDate(datetime: string | Date) {
  */
 export function toDateTime(datetime: string | Date) {
 	const dt = DateTime.fromJSDate(new Date(datetime));
-	return dt.toISO({ precision: 'day' }) + ' ' + dt.toFormat('HH:mm');
+	return dt.toISO({ precision: 'day', includeOffset: false }) + ' ' + dt.toFormat('HH:mm');
 }
 
 export function i18nFromJSON(json: DbI18nField): string {

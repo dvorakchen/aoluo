@@ -5,11 +5,11 @@ A full-stack application template built with SvelteKit 5 + Better Auth + Drizzle
 ## 🌟 Features
 
 - **SvelteKit 5 (Runes)**: Leverages the latest rune system for ultimate reactive performance.
-- **Better Auth**: Robust authentication solution supporting email/password, organization management, and phone login.
-- **Drizzle ORM**: Type-safe database operations with migration support.
+- **Better Auth**: Robust authentication solution supporting email/password and phone login.
+- **Drizzle ORM**: Type-safe database operations with migration support and automatic generation.
 - **WebSocket Architecture**:
-  - **Dev Environment**: Vite plugin with manual upgrade handling to separate business WS from HMR.
-  - **Production**: Custom Node.js server for high-performance WS support on the same port.
+  - **Dev Environment**: Vite plugin implementing HMR and business WS path separation.
+  - **Production**: Custom Node.js server for high-performance WS support.
 - **Dockerized Deployment**: Multi-stage Dockerfile and optimized Docker Compose configuration.
 
 ## 🚀 Quick Start
@@ -84,7 +84,7 @@ If you use other databases, you may encounter compatibility issues and need to a
 
 ## i18n
 
-Uses the solution provided by `paraglide`.
+Uses the solution provided by `paraglide`. Default languages are Chinese (zh) and English (en). To add other languages (e.g., `de`), translate `messages/{en,zh}.json` (AI recommendation), then add the new locale to the `locales` array in `project.inlang/settings.json`.
 
 i18n in the database uses a JSON format:
 
@@ -148,7 +148,7 @@ Example:
 	{/snippet}
 
 	{#snippet actions(row: RowType)}
-		<a class="btn" href={resolve(`/detail/${row.id}`)}>{m.details()}</a>
+		<a class="btn" href={resolve(`/detail/${row.id}`)}>Details</a>
 	{/snippet}
 </Table>
 
@@ -250,3 +250,9 @@ Use the `actions` Snippet to display action buttons on the far right of each row
 	{/snippet}
 </table>
 ```
+
+## Testing
+
+Use the `.spec.ts` extension for both component and unit tests for consistency.
+
+Import `userEvent` from `vitest/browser` instead of the deprecated `@vitest/browser/context`.

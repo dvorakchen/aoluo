@@ -26,14 +26,14 @@ export const auth = betterAuth({
 	database: drizzleAdapter(db, { provider: 'pg' }),
 	emailAndPassword: { enabled: true, autoSignIn: false },
 	plugins: [
-		sveltekitCookies(getRequestEvent), // make sure this is the last plugin in the array
 		username({}),
 		phoneNumber({
 			sendOTP: ({ phoneNumber, code }) => {
 				// TODO: Implement sending OTP code via SMS
 				logger.debug(`Send OTP code %s to phone number %s`, code, phoneNumber);
 			}
-		})
+		}),
+		sveltekitCookies(getRequestEvent) // make sure this is the last plugin in the array
 		// 不使用 better-ath 的 orginization 插件，不满足要求
 	],
 	user: {
@@ -52,7 +52,14 @@ export const auth = betterAuth({
 			banExpires: {
 				type: 'date',
 				required: false,
-				defaultValue: new Date()
+				defaultValue: () => new Date() // 默认值为 1970-01-01T00:00:00.000Z，表示永不过期
+			},
+			//离职员工
+			removed: {
+				type: 'boolean',
+				required: false,
+				defaultValue: false,
+				input: false
 			}
 		}
 	},

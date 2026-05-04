@@ -43,7 +43,7 @@
 	{#each menu as menuItem (menuItem.title)}
 		<!-- 这里使用的是 DaisyUI 的 Menu -->
 		<details
-			class="rounded-xl pr-2 hover:bg-base-200"
+			class="min-w-48 rounded-xl pr-2 hover:bg-base-200"
 			open={isMenuOpen(menuItem)}
 			ontoggle={(e) => {
 				const isOpen = e.currentTarget.open;
@@ -68,7 +68,7 @@
 {:else}
 	<a
 		href={menu.href}
-		class="transition-[margin] {isActive(menu.href) ? 'ml-2 menu-link-active' : ''}"
+		class="min-w-48 transition-[margin] {isActive(menu.href) ? 'ml-2 menu-link-active' : ''}"
 	>
 		<menu.Icon size={16} />
 		{menu.label}

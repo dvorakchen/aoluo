@@ -72,48 +72,79 @@ export async function seed() {
 			email: 'admin@qq.com',
 			username: 'admin',
 			displayUsername: '系统管理员',
+			phoneNumber: '13800138000',
 			roles: ['admin', 'employee']
 		},
 		{
 			email: 'laoban@example.com',
 			username: 'laoban',
 			displayUsername: '老板',
+			phoneNumber: '13800138001',
 			roles: ['boss', 'employee']
 		},
 		{
 			email: 'zhangsan@example.com',
 			username: 'zhangsan',
 			displayUsername: '张三',
+			phoneNumber: '13800138002',
 			roles: ['manager', 'employee']
 		},
 		{
 			email: 'lisi@example.com',
 			username: 'lisi',
 			displayUsername: '李四',
+			phoneNumber: '13800138003',
 			roles: ['manager', 'employee']
 		},
 		{
 			email: 'wangwu@example.com',
 			username: 'wangwu',
 			displayUsername: '王五',
+			phoneNumber: '13800138004',
 			roles: ['manager', 'employee']
 		},
 		{
 			email: 'zhaoliu@example.com',
 			username: 'zhaoliu',
 			displayUsername: '赵六',
+			phoneNumber: '13800138005',
 			roles: ['manager', 'employee']
 		},
 		{
 			email: 'dev@example.com',
 			username: 'dev',
 			displayUsername: '开发人员',
+			phoneNumber: '13800138006',
 			roles: ['dev', 'employee']
 		},
-		{ email: 'emp1@example.com', username: 'emp1', displayUsername: '员工甲', roles: ['employee'] },
-		{ email: 'emp2@example.com', username: 'emp2', displayUsername: '员工乙', roles: ['employee'] },
-		{ email: 'emp3@example.com', username: 'emp3', displayUsername: '员工丙', roles: ['employee'] },
-		{ email: 'emp4@example.com', username: 'emp4', displayUsername: '员工丁', roles: ['employee'] }
+		{
+			email: 'emp1@example.com',
+			username: 'emp1',
+			displayUsername: '员工甲',
+			phoneNumber: '13800138007',
+			roles: ['employee']
+		},
+		{
+			email: 'emp2@example.com',
+			username: 'emp2',
+			displayUsername: '员工乙',
+			phoneNumber: '13800138008',
+			roles: ['employee']
+		},
+		{
+			email: 'emp3@example.com',
+			username: 'emp3',
+			displayUsername: '员工丙',
+			phoneNumber: '13800138009',
+			roles: ['employee']
+		},
+		{
+			email: 'emp4@example.com',
+			username: 'emp4',
+			displayUsername: '员工丁',
+			phoneNumber: '13800138010',
+			roles: ['employee']
+		}
 	];
 
 	const userMap: Record<string, string> = {};
@@ -136,9 +167,20 @@ export async function seed() {
 				}
 			});
 			userId = result.user.id;
+			await db
+				.update(schema.user)
+				.set({ phoneNumber: u.phoneNumber })
+				.where(eq(schema.user.id, userId));
 			logger.info(`✅ User created: ${u.displayUsername}`);
 		} else {
 			userId = existing.id;
+			if (!existing.phoneNumber) {
+				await db
+					.update(schema.user)
+					.set({ phoneNumber: u.phoneNumber })
+					.where(eq(schema.user.id, userId));
+				logger.info(`✅ User phone updated: ${u.displayUsername}`);
+			}
 			logger.info(`ℹ️ User already exists: ${u.displayUsername}`);
 		}
 		userMap[u.username] = userId;

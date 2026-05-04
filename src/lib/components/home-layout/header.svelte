@@ -1,15 +1,10 @@
 <script lang="ts">
 	import { layoutStore } from '$lib/client/store/layout.svelte';
-	import { m } from '$lib/paraglide/messages';
 	import { ListIndentDecrease } from '@lucide/svelte';
 	import ThemeController from '$lib/components/theme-controller.svelte';
 	import ChangeLang from '$lib/components/change-lang.svelte';
 	import BellMessage from './bell-message.svelte';
 	import AiSearch from '$lib/components/ai-window/ai-search.svelte';
-
-	const menuI18n = $derived(
-		`menu_${layoutStore.activeMenu.toLowerCase()}`
-	) as unknown as 'menu_dashboard';
 
 	function handleCollapsed() {
 		layoutStore.sidebarWidth = layoutStore.sidebarWidth === 0 ? 300 : 0;
@@ -21,20 +16,6 @@
 		<!-- Sidebar toggle icon -->
 		<ListIndentDecrease />
 	</button>
-	<div class="px-4">
-		<h1 class="text-2xl font-bold">
-			{m[menuI18n]() || layoutStore.activeMenu}
-		</h1>
-		<h3>
-			<div class="breadcrumbs pt-0 text-sm">
-				<ul>
-					{#each layoutStore.breadcrumbs.list as crumb (crumb)}
-						<li>{crumb}</li>
-					{/each}
-				</ul>
-			</div>
-		</h3>
-	</div>
 	<div class="mr-4 mb-3 flex grow flex-row-reverse items-center gap-2">
 		<BellMessage />
 		<ThemeController />

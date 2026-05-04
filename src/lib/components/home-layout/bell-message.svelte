@@ -9,7 +9,7 @@
 		type TodoMessage
 	} from '$lib/client/store/bell-message.svelte';
 	import { m } from '$lib/paraglide/messages';
-	import { Bell, BookCheck, ListCheck, ListTodo, X } from '@lucide/svelte';
+	import { Bell, BookCheck, BrushCleaning, ListTodo, X } from '@lucide/svelte';
 	import { onMount } from 'svelte';
 
 	let isOpen = $state(false);
@@ -57,7 +57,7 @@
 						data-tip={m.all_read()}
 						onclick={readAll}
 					>
-						<ListCheck />
+						<BrushCleaning />
 					</button>
 				</div>
 				<button class="btn btn-square btn-soft btn-error" onclick={close}>

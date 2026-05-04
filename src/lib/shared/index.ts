@@ -1,6 +1,6 @@
 import type { auth } from '$lib/server/auth';
 import { type InferSelectModel } from 'drizzle-orm';
-import type * as schema from '../server/db/schema';
+import type * as schema from '$lib/server/db/schema';
 
 export * from './permissions';
 
@@ -54,3 +54,13 @@ export type DbI18nField =
 			[K: string]: string;
 	  }
 	| { [K: string]: string };
+
+/**
+ * 在页面 API 查询中，on 表示 true，off 表示 false
+ *
+ * 如：在筛选用户列表，需要选择是否筛选已离职的用户，on 表示只显示已离职的用户，off 表示只显示未离职的用户
+ */
+export const QUERY_FILTER_CHECKABLE_VALUE = {
+	on: 'on',
+	off: 'off'
+};

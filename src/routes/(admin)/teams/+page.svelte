@@ -24,30 +24,34 @@
 	});
 </script>
 
-<h1>{m.menu_company_team()}</h1>
-<Table
-	checkable={true}
-	columns={[
-		{
-			field: 'name',
-			display: m.team_name()
-		},
-		{
-			field: 'manager',
-			display: m.manager()
-		},
-		{
-			field: 'memberCount',
-			display: m.member_count()
-		}
-	]}
-	{list}
->
-	{#snippet manager(team: RowType)}
-		{team.manager?.displayUsername}
-	{/snippet}
+<h1 class="text-2xl font-bold">{m.menu_company_team()}</h1>
+<div class="divider"></div>
+<div class="card shadow-all">
+	<div class="card-body">
+		<Table
+			columns={[
+				{
+					field: 'name',
+					display: m.team_name()
+				},
+				{
+					field: 'manager',
+					display: m.manager()
+				},
+				{
+					field: 'memberCount',
+					display: m.member_count()
+				}
+			]}
+			{list}
+		>
+			{#snippet manager(team: RowType)}
+				{team.manager?.displayUsername}
+			{/snippet}
 
-	{#snippet actions(team: RowType)}
-		<a class="btn" href={resolve(`/teams/${team.id}`)}>{m.details()}</a>
-	{/snippet}
-</Table>
+			{#snippet actions(team: RowType)}
+				<a class="btn" href={resolve(`/teams/${team.id}`)}>{m.details()}</a>
+			{/snippet}
+		</Table>
+	</div>
+</div>
