@@ -268,6 +268,14 @@ type list: T[]
 <Input name="username" type="number" data-tip="Tip" />
 ```
 
+## 权限
+
+定义的权限是写死在代码里的，意味着你不能凭空变出一个全新的权限
+
+权限在 `shared/permissions.ts` 的 `PERMISSIONS` 中定义，在 `PERMISSION_LABELS` 中设置权限 i18n 的映射
+
+使用 `getPermissionLabel(permission)` 来获取本地化后的权限文本
+
 ## 测试
 
 建议组件测试和单元测试都使用 `.spec.ts` 扩展名，没什么原因就是统一

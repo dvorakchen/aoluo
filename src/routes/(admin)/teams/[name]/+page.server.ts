@@ -1,6 +1,6 @@
 import { redirect, error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getTeamById, getTeamMembers } from '$lib/server/business/team';
+import { getTeamByName, getTeamMembers } from '$lib/server/business/team';
 import { m } from '$lib/paraglide/messages';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
@@ -8,7 +8,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		return redirect(302, '/login');
 	}
 
-	const team = await getTeamById(params.id);
+	const team = await getTeamByName(params.name);
 
 	if (!team) {
 		return error(404, {

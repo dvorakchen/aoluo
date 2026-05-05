@@ -16,7 +16,13 @@ export async function seed() {
 		PERMISSIONS.team.read,
 		PERMISSIONS.team.create,
 		PERMISSIONS.team.update,
-		PERMISSIONS.team.delet
+		PERMISSIONS.team.delete,
+		PERMISSIONS.employee.read,
+		PERMISSIONS.employee.create,
+		PERMISSIONS.employee.update,
+		PERMISSIONS.employee.delete,
+		PERMISSIONS.employee.ban,
+		PERMISSIONS.employee.resign
 	];
 
 	// 2. 定义角色及其配置
@@ -31,7 +37,12 @@ export async function seed() {
 		},
 		manager: {
 			name: { default: '部门经理', zh: '部门经理', en: 'Manager' },
-			permissions: [PERMISSIONS.team.read, PERMISSIONS.team.update]
+			permissions: [
+				PERMISSIONS.team.read,
+				PERMISSIONS.team.update,
+				PERMISSIONS.employee.read,
+				PERMISSIONS.employee.update
+			]
 		},
 		dev: {
 			name: { default: '开发者', zh: '开发者', en: 'Developer' },
@@ -39,7 +50,7 @@ export async function seed() {
 		},
 		employee: {
 			name: { default: '普通员工', zh: '普通员工', en: 'Employee' },
-			permissions: [PERMISSIONS.team.read]
+			permissions: [PERMISSIONS.team.read, PERMISSIONS.employee.read]
 		}
 	};
 

@@ -11,7 +11,7 @@ declare global {
 		}
 
 		interface Error {
-			hint: string;
+			hint?: string;
 		}
 		// interface PageData {}
 		// interface PageState {}

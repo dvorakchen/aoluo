@@ -95,7 +95,7 @@
 		<!-- 侧边操作栏 -->
 		<div
 			class="flex flex-col gap-4"
-			{@attach guard(PermissionSchema.any(['TEAM_Update', 'TEAM_Delete']))}
+			{@attach guard(PermissionSchema.any(['TEAM_UPDATE', 'TEAM_DELETE']))}
 		>
 			<div class="card bg-base-100 shadow-all">
 				<div class="card-body">
@@ -104,11 +104,11 @@
 					</h2>
 					<div class="mt-2 flex flex-col gap-2">
 						<button class="btn btn-outline btn-primary">{m.edit_team_info()}</button>
-						<button class="btn btn-outline" {@attach guard('TEAM_Update')}
+						<button class="btn btn-outline" {@attach guard('TEAM_UPDATE')}
 							>{m.manage_members()}</button
 						>
 						<div class="divider"></div>
-						<button class="btn btn-outline btn-error" {@attach guard('TEAM_Delete')}
+						<button class="btn btn-outline btn-error" {@attach guard('TEAM_DELETE')}
 							>{m.delete_team()}</button
 						>
 					</div>

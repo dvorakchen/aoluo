@@ -50,7 +50,7 @@
 			{/snippet}
 
 			{#snippet actions(team: RowType)}
-				<a class="btn" href={resolve(`/teams/${team.id}`)}>{m.details()}</a>
+				<a class="btn" href={resolve(`/teams/${team.name.default}`)}>{m.details()}</a>
 			{/snippet}
 		</Table>
 	</div>

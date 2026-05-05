@@ -7,6 +7,7 @@ export * from './permissions';
 export type Session = typeof auth.$Infer.Session.session;
 export type User = typeof auth.$Infer.Session.user;
 
+export type Role = InferSelectModel<typeof schema.role>;
 export type Team = InferSelectModel<typeof schema.team>;
 
 export type TeamWithManager = Team & {

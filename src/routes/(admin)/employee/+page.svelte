@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import Pagination from '$lib/components/pagination.svelte';
 	import Table from '$lib/components/table.svelte';
 	import UserAvatar from '$lib/components/user-avatar.svelte';
@@ -7,6 +8,8 @@
 	import { page } from '$app/state';
 	import Input from '$lib/components/input.svelte';
 	import { toDateTime } from '$lib/shared/utils';
+	import UserStateBadge from '$lib/components/user-state-badge.svelte';
+	import { guard } from '$lib/client/attachments/permission-guard.js';
 
 	let { data } = $props();
 
@@ -106,15 +109,7 @@
 	{/snippet}
 
 	{#snippet status(row: RowType)}
-		{#if !row.removed && !row.banned}
-			<div class="badge badge-sm badge-success">{m.active()}</div>
-		{/if}
-		{#if row.banned}
-			<div class="badge badge-sm badge-error">{m.banned()}</div>
-		{/if}
-		{#if row.removed}
-			<div class="badge badge-sm badge-warning">{m.resigned()}</div>
-		{/if}
+		<UserStateBadge user={row} />
 	{/snippet}
 
 	{#snippet createdAt(row: RowType)}
@@ -123,10 +118,14 @@
 
 	{#snippet actions(row: RowType)}
 		<div class="flex gap-2">
-			<!-- TODO: goto detail -->
-			<!-- <a class="btn btn-ghost" href={resolve(`/employee/${row.username}`)}>{m.details()}</a> -->
-			{row.username}
-			<button class="btn text-error btn-ghost">{m.delete_employee()}</button>
+			<a
+				class="btn btn-ghost"
+				href={resolve(`/employee/${row.username}`)}
+				{@attach guard('EMPLOYEE_READ')}>{m.details()}</a
+			>
+			<!-- <button class="btn text-error btn-ghost" {@attach guard('EMPLOYEE_DELETE')}
+				>{m.delete_employee()}</button
+			> -->
 		</div>
 	{/snippet}
 </Table>

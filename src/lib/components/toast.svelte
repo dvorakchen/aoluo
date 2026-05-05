@@ -4,7 +4,7 @@
 	import { fade, fly } from 'svelte/transition';
 </script>
 
-<div class="toast toast-end toast-top z-200 flex-col-reverse">
+<div class="toast toast-end toast-top top-20 z-200 flex-col-reverse">
 	{#each toastStore.list as toast (toast.id)}
 		<div
 			animate:flip={{ duration: 300 }}

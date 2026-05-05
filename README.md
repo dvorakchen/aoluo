@@ -141,15 +141,15 @@ Example:
 >
 	{#snippet name(row: RowType)}
 		{i18nFromJSON(row.name)}
-	{#/snippet}
+	{/snippet}
 
 	{#snippet manager(row: RowType)}
 		{row.manager?.displayUsername}
-	{#/snippet}
+	{/snippet}
 
 	{#snippet actions(row: RowType)}
 		<a class="btn" href={resolve(`/detail/${row.id}`)}>Details</a>
-	{#/snippet}
+	{/snippet}
 </Table>
 
 ```
@@ -225,7 +225,7 @@ You can also pass a `Snippet` to override the default display behavior:
   <!-- Originally displaying 'Alex', now displaying 'Bad Alex' -->
   {#snippet manager(row: RowType)}
 		{'Bad ' + row.manager}
-	{#/snippet}
+	{/snippet}
 </table>
 ```
 
@@ -247,7 +247,7 @@ Use the `actions` Snippet to display action buttons on the far right of each row
 	{#snippet actions(row: RowType)}
 		<a class="btn" href={resolve(`/detail/${row.id}`)}>Details</a>
     <button>Delete</button>
-	{#/snippet}
+	{/snippet}
 </table>
 ```
 
@@ -268,8 +268,16 @@ It is recommended to use the `Input` component from the `Components` directory f
 <Input name="username" type="number" data-tip="Tip" />
 ```
 
+## Permissions
+
+Defined permissions are hardcoded, meaning you cannot create a completely new permission out of thin air.
+
+Permissions are defined in `shared/permissions.ts` within the `PERMISSIONS` object, and i18n mappings are set in `PERMISSION_LABELS`.
+
+Use `getPermissionLabel(permission)` to retrieve the localized permission text.
+
 ## Testing
 
 Use the `.spec.ts` extension for both component and unit tests for consistency.
 
-Import `userEvent` from `vitest/browser` instead of the deprecated `@vitest/browser/context`.
+Import from `vitest/browser` instead of the deprecated `@vitest/browser/context`.

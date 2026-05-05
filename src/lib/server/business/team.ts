@@ -53,9 +53,9 @@ export async function getPaginatedTeams(
 
 /**
  * 根据 ID 获取团队详情（包含负责人信息和人数）
- * @param id 团队 ID
+ * @param name 团队名称
  */
-export async function getTeamById(id: string): Promise<TeamWithManager | null> {
+export async function getTeamByName(name: string): Promise<TeamWithManager | null> {
 	const result = await db
 		.select({
 			team: team,
@@ -65,7 +65,7 @@ export async function getTeamById(id: string): Promise<TeamWithManager | null> {
 		.from(team)
 		.leftJoin(user, eq(team.managerId, user.id))
 		.leftJoin(teamUser, eq(team.id, teamUser.teamId))
-		.where(eq(team.id, id))
+		.where(sql`${team.name}->>'default' = ${name}`)
 		.groupBy(team.id, user.id)
 		.limit(1);
 

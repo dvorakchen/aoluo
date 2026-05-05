@@ -1,30 +1,27 @@
 import { db } from '$lib/server/db';
-import { role } from '$lib/server/db/schema';
-import { inArray } from 'drizzle-orm';
-import type { PermissionValue } from '$lib/shared';
+import { userRole } from '$lib/server/db/schema';
+import type { Role } from '$lib/shared';
+import { eq } from 'drizzle-orm';
 
 /**
- * 获取指定角色关联的权限
- * @param roleIds 角色 ID 或 ID 数组
+ * 获取用户拥有的所有角色
+ * @param userId 用户 ID
  */
-export async function getRolePermissions(roleIds: string | string[]): Promise<PermissionValue[]> {
-	const ids = Array.isArray(roleIds) ? roleIds : [roleIds];
-
-	if (ids.length === 0) return [];
-
-	const result = await db
-		.select({
-			permissions: role.permissions
-		})
-		.from(role)
-		.where(inArray(role.id, ids));
-
-	const allPermissions = new Set<PermissionValue>();
-	result.forEach((r) => {
-		r.permissions.forEach((p) => {
-			allPermissions.add(p as PermissionValue);
-		});
+export async function getRolesByUser(userId: string): Promise<Role[]> {
+	const result = await db.query.userRole.findMany({
+		where: eq(userRole.userId, userId),
+		with: {
+			role: true
+		}
 	});
 
-	return Array.from(allPermissions);
+	return result.map((ur) => ur.role);
+}
+
+/**
+ * 获取列表角色
+ */
+export async function getRoles(): Promise<Role[]> {
+	const result = await db.query.role.findMany();
+	return result;
 }
