@@ -10,7 +10,7 @@
 	{/if}
 	<input {...attr} bind:value />
 	{#if clearable}
-		<button class="label cursor-pointer" onclick={() => (value = '')}>
+		<button class="label cursor-pointer" onclick={() => (value = '')} type="button">
 			<X />
 		</button>
 	{/if}

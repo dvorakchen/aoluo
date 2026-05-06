@@ -108,6 +108,26 @@ export type DbI18nField =
 
 This is stored in database fields in JSON format. Use `i18nFromJSON(DbI18nField)` on the client to extract the text corresponding to the current locale.
 
+## Route Guards
+
+Configure which APIs do not require login authentication in `handleRouteProtected` within `hooks.server.ts`.
+
+## Dependency Injection
+
+The dependency injection framework used is `tsyringe`. Refer to the documentation for specific usage.
+
+Example:
+
+```ts
+@injectable()
+export class UserService {
+	doWork() {}
+}
+
+const userService = container.resolve(UserService);
+userService.doWork();
+```
+
 ## Styling
 
 Uses `DaisyUI`.

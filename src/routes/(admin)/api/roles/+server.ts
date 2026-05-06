@@ -1,13 +1,9 @@
-import { checkIsLoggedIn } from '$lib/server/auth';
-import { getRoles } from '$lib/server/business/role.js';
-import { json, redirect } from '@sveltejs/kit';
+import { RoleService } from '$lib/server/business/role';
+import { json } from '@sveltejs/kit';
+import { container } from 'tsyringe';
 
-export const GET = async ({ locals }) => {
-	const { user, session } = locals;
-	if (!checkIsLoggedIn(user, session)) {
-		return redirect(302, '/login');
-	}
-
-	const list = await getRoles();
+export const GET = async () => {
+	const roleService = container.resolve(RoleService);
+	const list = await roleService.getRoles();
 	return json({ list });
 };

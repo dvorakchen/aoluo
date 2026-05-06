@@ -13,9 +13,10 @@ import { DateTime } from 'luxon';
 import { APIError, createAuthMiddleware } from 'better-auth/api';
 import { eq } from 'drizzle-orm';
 import { user as userSchema } from '$lib/server/db/schema';
-import { userHasBeenBanned } from './business/user';
 import { m } from '$lib/paraglide/messages';
 import { toDateTime } from '$lib/shared/utils';
+import { container } from 'tsyringe';
+import { UserService } from '$lib/server/business/user';
 
 const baseURL = pubenv.PUBLIC_ORIGIN;
 console.log(`[Better Auth] Initializing baseURL: ${baseURL}`);
@@ -66,6 +67,7 @@ export const auth = betterAuth({
 	hooks: {
 		before: createAuthMiddleware(async (ctx) => {
 			// 拦截登录相关的端点
+			const userService = container.resolve(UserService);
 			if (ctx.path === '/sign-in/email' || ctx.path === '/sign-in/username') {
 				// 查询用户是否被 ban（需要根据 email/username 查用户）
 				const email = ctx.body?.email;
@@ -76,7 +78,8 @@ export const auth = betterAuth({
 					where: email ? eq(userSchema.email, email) : eq(userSchema.username, username)
 				});
 				// 检查封禁状态
-				if (await userHasBeenBanned(user)) {
+
+				if (await userService.userHasBeenBanned(user)) {
 					throw new APIError('FORBIDDEN', {
 						message: m.account_banned({ reason: user?.banReason || m.no_reason() })
 					});
@@ -97,7 +100,7 @@ export const auth = betterAuth({
 				// 查询 session 和 user 信息
 				const session = await ctx.context.internalAdapter.findSession(sessionCookieToken);
 
-				if (await userHasBeenBanned(session?.user?.id)) {
+				if (await userService.userHasBeenBanned(session?.user?.id)) {
 					ctx.setCookie(ctx.context.authCookies.sessionToken.name, '', {
 						maxAge: 0,
 						path: '/'

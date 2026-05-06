@@ -1,39 +1,30 @@
-import { error, fail, redirect } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import {
-	banUser,
-	getUserByUsername,
-	hasPermissions,
-	hireUser,
-	isPhoneNumberTaken,
-	resignUser,
-	unbanUser,
-	updateUser
-} from '$lib/server/business/user';
-import { checkIsLoggedIn } from '$lib/server/auth';
-import { getPermissionsByUserId } from '$lib/server/business/permission';
-import { getRolesByUser } from '$lib/server/business/role';
+import { UserService } from '$lib/server/business/user';
 import { logger } from '$lib/server/logger';
 import { PermissionSchema } from '$lib/shared/permissions';
 import { m } from '$lib/paraglide/messages';
+import { container } from 'tsyringe';
+import { ADMIN_USERNAME } from '$lib/shared';
+import { RoleService } from '$lib/server/business/role';
+import { PermissionService } from '$lib/server/business/permission';
 
-export const load: PageServerLoad = async ({ locals, params }) => {
-	const { user, session } = locals;
-	if (!checkIsLoggedIn(user, session)) {
-		return redirect(302, '/login');
-	}
+export const load: PageServerLoad = async ({ params }) => {
+	const userService = container.resolve(UserService);
 
 	const { username } = params;
-	const employee = await getUserByUsername(username);
+	const employee = await userService.getUserByUsername(username);
 
 	if (!employee) {
 		error(404, {
 			message: m.not_found({ name: m.employee() })
 		});
 	}
+	const roleService = container.resolve(RoleService);
+	const permissionService = container.resolve(PermissionService);
 
-	const roles = await getRolesByUser(employee.id);
-	const permissions = await getPermissionsByUserId(employee.id);
+	const roles = await roleService.getRolesByUser(employee.id);
+	const permissions = await permissionService.getPermissionsByUserId(employee.id);
 
 	return {
 		employee,
@@ -44,72 +35,74 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
 export const actions = {
 	hire: async ({ locals, params }) => {
-		const { user, session } = locals;
-		if (!checkIsLoggedIn(user, session)) {
-			return redirect(302, '/login');
-		}
+		const { user } = locals;
+		const userService = container.resolve(UserService);
 
-		if (!hasPermissions(user!.id, PermissionSchema.any(['EMPLOYEE_RESIGN']))) {
+		if (!userService.hasPermissions(user!.id, PermissionSchema.any(['EMPLOYEE_RESIGN']))) {
 			return fail(403, {
 				message: m.no_permission()
 			});
 		}
 
 		const username = params.username;
-		await hireUser(username);
+		await userService.hireUser(username);
 	},
 	resign: async ({ locals, params }) => {
-		const { user, session } = locals;
-		if (!checkIsLoggedIn(user, session)) {
-			return redirect(302, '/login');
-		}
+		const { user } = locals;
+		const userService = container.resolve(UserService);
 
-		if (!hasPermissions(user!.id, PermissionSchema.any(['EMPLOYEE_RESIGN']))) {
+		if (!userService.hasPermissions(user!.id, PermissionSchema.any(['EMPLOYEE_RESIGN']))) {
 			return fail(403, {
 				message: m.no_permission()
 			});
 		}
 
 		const username = params.username;
-		await resignUser(username);
+		// 禁止管理员自己被离职
+		if (user?.username === username || user?.username === ADMIN_USERNAME) {
+			return fail(403, {
+				message: m.no_permission()
+			});
+		}
+		await userService.resignUser(username);
 	},
 	ban: async ({ locals, params }) => {
-		const { user, session } = locals;
-		if (!checkIsLoggedIn(user, session)) {
-			return redirect(302, '/login');
-		}
+		const { user } = locals;
+		const userService = container.resolve(UserService);
 
-		if (!hasPermissions(user!.id, PermissionSchema.any(['EMPLOYEE_BAN']))) {
+		if (!userService.hasPermissions(user!.id, PermissionSchema.any(['EMPLOYEE_BAN']))) {
 			return fail(403, {
 				message: m.no_permission()
 			});
 		}
 
 		const username = params.username;
-		await banUser(username, user?.username + '-操作');
+		// 禁止管理员自己被禁用
+		if (user?.username === username || user?.username === ADMIN_USERNAME) {
+			return fail(403, {
+				message: m.no_permission()
+			});
+		}
+		await userService.banUser(username, user?.username + '-操作');
 	},
 	unban: async ({ locals, params }) => {
-		const { user, session } = locals;
-		if (!checkIsLoggedIn(user, session)) {
-			return redirect(302, '/login');
-		}
+		const { user } = locals;
+		const userService = container.resolve(UserService);
 
-		if (!hasPermissions(user!.id, PermissionSchema.any(['EMPLOYEE_BAN']))) {
+		if (!userService.hasPermissions(user!.id, PermissionSchema.any(['EMPLOYEE_BAN']))) {
 			return fail(403, {
 				message: m.no_permission()
 			});
 		}
 
 		const username = params.username;
-		await unbanUser(username);
+		await userService.unbanUser(username);
 	},
 	update: async ({ locals, request }) => {
-		const { user, session } = locals;
-		if (!checkIsLoggedIn(user, session)) {
-			return redirect(302, '/login');
-		}
+		const { user } = locals;
+		const userService = container.resolve(UserService);
 
-		if (!hasPermissions(user!.id, PermissionSchema.any(['EMPLOYEE_UPDATE']))) {
+		if (!userService.hasPermissions(user!.id, PermissionSchema.any(['EMPLOYEE_UPDATE']))) {
 			return fail(403, {
 				message: m.no_permission()
 			});
@@ -134,13 +127,13 @@ export const actions = {
 			});
 		}
 
-		if (await isPhoneNumberTaken(phoneNumber, userId)) {
+		if (await userService.isPhoneNumberTaken(phoneNumber, userId)) {
 			return fail(400, {
 				message: m.field_taken({ name: m.phone() })
 			});
 		}
 
-		await updateUser(
+		await userService.updateUser(
 			userId,
 			{
 				displayUsername,

@@ -1,16 +1,10 @@
-import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getPaginatedUsers } from '$lib/server/business/user';
-import { checkIsLoggedIn } from '$lib/server/auth';
 import { logger } from '$lib/server/logger';
 import { QUERY_FILTER_CHECKABLE_VALUE } from '$lib/shared';
+import { container } from 'tsyringe';
+import { UserService } from '$lib/server/business/user';
 
-export const load: PageServerLoad = async ({ locals, url }) => {
-	const { user, session } = locals;
-	if (!checkIsLoggedIn(user, session)) {
-		return redirect(302, '/login');
-	}
-
+export const load: PageServerLoad = async ({ url }) => {
 	const pageNum = parseInt(url.searchParams.get('page') ?? '1');
 	const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10');
 	const displayUsername = url.searchParams.get('displayusername') ?? undefined;
@@ -29,7 +23,8 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 
 	logger.debug(filter, 'User filter');
 
-	const page = await getPaginatedUsers(pageNum, pageSize, filter);
+	const userService = container.resolve(UserService);
+	const page = await userService.getPaginatedUsers(pageNum, pageSize, filter);
 
 	return {
 		users: page.list,

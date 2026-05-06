@@ -1,21 +1,12 @@
-import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-import { db } from '$lib/server/db';
-import * as schema from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { container } from 'tsyringe';
+import { UserService } from '$lib/server/business/user';
 
 export const load: LayoutServerLoad = async ({ locals }) => {
-	const user = locals.user;
-	if (!user) {
-		return redirect(302, '/login');
-	}
+	const user = locals.user!;
 
-	const userTeams = await db.query.teamUser.findMany({
-		where: eq(schema.teamUser.userId, user.id),
-		with: {
-			team: true
-		}
-	});
+	const userService = container.resolve(UserService);
+	const userTeams = await userService.getUserDetail(user.id, true);
 
 	const teams = userTeams.map((ut) => ut.team);
 

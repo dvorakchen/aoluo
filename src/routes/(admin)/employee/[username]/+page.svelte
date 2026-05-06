@@ -12,6 +12,7 @@
 	import Input from '$lib/components/input.svelte';
 	import RoleAssigner from '$lib/components/role-assigner.svelte';
 	import { toastStore } from '$lib/client/store/toast.svelte';
+	import { ADMIN_USERNAME } from '$lib/shared';
 
 	let { data }: PageProps = $props();
 	let employee = $derived(data.employee);
@@ -59,59 +60,64 @@
 				>
 					{m.edit_employee()}
 				</button>
-				<div class="flex gap-4">
-					<form
-						method="post"
-						use:enhance={() => {
-							profileLoading = true;
+				{#if employee.username !== ADMIN_USERNAME}
+					<div class="flex gap-4">
+						<form
+							method="post"
+							use:enhance={() => {
+								profileLoading = true;
 
-							return async ({ update }) => {
-								await update();
-								profileLoading = false;
-							};
-						}}
-					>
-						{#if employee.removed}
-							<button
-								class="btn btn-soft btn-info"
-								{@attach guard('EMPLOYEE_RESIGN')}
-								formaction="?/hire"
-								disabled={profileLoading}
-							>
-								{m.rehire()}
-							</button>
-						{:else}
-							<button
-								class="btn btn-soft btn-error"
-								{@attach guard('EMPLOYEE_RESIGN')}
-								formaction="?/resign"
-								disabled={profileLoading}
-							>
-								{m.resign()}
-							</button>
-						{/if}
+								return async ({ result, update }) => {
+									if (result.type === 'failure') {
+										toastStore.add((result.data?.message as string) ?? m.update_failed(), 'error');
+									}
+									await update();
+									profileLoading = false;
+								};
+							}}
+						>
+							{#if employee.removed}
+								<button
+									class="btn btn-soft btn-info"
+									{@attach guard('EMPLOYEE_RESIGN')}
+									formaction="?/hire"
+									disabled={profileLoading}
+								>
+									{m.rehire()}
+								</button>
+							{:else}
+								<button
+									class="btn btn-soft btn-error"
+									{@attach guard('EMPLOYEE_RESIGN')}
+									formaction="?/resign"
+									disabled={profileLoading}
+								>
+									{m.resign()}
+								</button>
+							{/if}
 
-						{#if employee.banned}
-							<button
-								class="btn btn-soft btn-info"
-								{@attach guard('EMPLOYEE_BAN')}
-								formaction="?/unban"
-								disabled={profileLoading}
-							>
-								{m.unban()}
-							</button>
-						{:else}
-							<button
-								class="btn btn-soft btn-error"
-								{@attach guard('EMPLOYEE_BAN')}
-								formaction="?/ban"
-								disabled={profileLoading}
-							>
-								{m.ban()}
-							</button>
-						{/if}
-					</form>
-				</div>
+							{#if employee.banned}
+								<button
+									class="btn btn-soft btn-info"
+									{@attach guard('EMPLOYEE_BAN')}
+									formaction="?/unban"
+									disabled={profileLoading}
+								>
+									{m.unban()}
+								</button>
+							{:else}
+								<button
+									class="btn btn-soft btn-error"
+									{@attach guard('EMPLOYEE_BAN')}
+									formaction="?/ban"
+									disabled={profileLoading}
+								>
+									{m.ban()}
+								</button>
+							{/if}
+						</form>
+					</div>
+				{/if}
 			</div>
 		</div>
 	</div>

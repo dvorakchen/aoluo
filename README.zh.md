@@ -108,6 +108,26 @@ export type DbI18nField =
 
 会以 JSON 格式存在数据库字段中，在客户端使用 `i18nFromJSON(DbI18nField)` 在客户端中提取出当前时区对应的文本
 
+## 路由守卫
+
+在 `hooks.server.ts` 的 `handleRouteProtected` 配置哪些 API 是不需要登录验证的
+
+## 依赖注入
+
+依赖注入框架使用的是 `tsyringe`，具体用法参考文档
+
+示例：
+
+```ts
+@injectable()
+export class UserService {
+	doWork() {}
+}
+
+const userService = container.resolve(UserService);
+userService.doWork();
+```
+
 ## 样式
 
 使用 `DaisyUI`

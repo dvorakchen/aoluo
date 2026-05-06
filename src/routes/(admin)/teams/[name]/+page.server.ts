@@ -1,14 +1,12 @@
-import { redirect, error } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getTeamByName, getTeamMembers } from '$lib/server/business/team';
+import { TeamService } from '$lib/server/business/team';
 import { m } from '$lib/paraglide/messages';
+import { container } from 'tsyringe';
 
-export const load: PageServerLoad = async ({ locals, params }) => {
-	if (!locals.user) {
-		return redirect(302, '/login');
-	}
-
-	const team = await getTeamByName(params.name);
+export const load: PageServerLoad = async ({ params }) => {
+	const teamService = container.resolve(TeamService);
+	const team = await teamService.getTeamByName(params.name);
 
 	if (!team) {
 		return error(404, {
@@ -17,7 +15,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		});
 	}
 
-	const members = await getTeamMembers(team.id);
+	const members = await teamService.getTeamMembers(team.id);
 
 	return {
 		team,

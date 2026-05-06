@@ -4,6 +4,8 @@ import type * as schema from '$lib/server/db/schema';
 
 export * from './permissions';
 
+export const ADMIN_USERNAME = 'admin';
+
 export type Session = typeof auth.$Infer.Session.session;
 export type User = typeof auth.$Infer.Session.user;
 
