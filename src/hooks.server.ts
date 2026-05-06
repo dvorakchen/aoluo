@@ -1,6 +1,6 @@
 import { sequence } from '@sveltejs/kit/hooks';
 import { building } from '$app/environment';
-import { auth } from '$lib/server/auth';
+import { auth, checkIsLoggedIn } from '$lib/server/auth';
 import { svelteKitHandler } from 'better-auth/svelte-kit';
 import type { Handle } from '@sveltejs/kit';
 import { getTextDirection } from '$lib/paraglide/runtime';
@@ -9,6 +9,26 @@ import { logger } from '$lib/server/logger';
 import { seed } from '$lib/server/db/seed';
 import { initWebSocket } from '$lib/server/websocket';
 import { APIError } from 'better-auth/api';
+
+/**
+ * 处理路由保护的 Handle。这个 Handle 会在每个请求前检查用户是否已登录，除非请求的路径在 anonymousPaths 中。
+ */
+const handleRouteProtected: Handle = async ({ event, resolve }) => {
+	const pathname = new URL(event.request.url).pathname;
+	const anonymousPaths = ['/', '/api/auth/sign-in/email', '/__data.json']; // 定义不需要认证的路径
+
+	if (anonymousPaths.some((path) => pathname === path)) {
+		return resolve(event); // 直接处理这些路径
+	}
+
+	const user = event.locals.user;
+	const session = event.locals.session;
+	if (!checkIsLoggedIn(user, session)) {
+		return new Response('Unauthorized', { status: 401 });
+	}
+
+	return resolve(event);
+};
 
 const handleParaglide: Handle = ({ event, resolve }) =>
 	paraglideMiddleware(event.request, ({ request, locale }) => {
@@ -76,7 +96,7 @@ export const handleError = ({ error, event }) => {
 	);
 };
 
-export const handle: Handle = sequence(handleLog, handleBetterAuth, handleParaglide);
+export const handle: Handle = sequence(handleLog, handleRouteProtected, handleBetterAuth, handleParaglide);
 
 await seed();
 
