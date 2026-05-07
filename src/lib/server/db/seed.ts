@@ -1,15 +1,43 @@
 import { db } from '$lib/server/db';
 import { logger } from '$lib/server/logger';
 import * as schema from './schema';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { auth } from '$lib/server/auth';
 import type { DbI18nField } from '$lib/shared';
 import { PERMISSIONS } from '$lib/shared';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+
+/**
+ * 执行数据库迁移
+ */
+export async function runMigrations() {
+	try {
+		logger.info('⏳ Running database migrations...');
+		await migrate(db, { migrationsFolder: 'drizzle' });
+		logger.info('✅ Database migrations completed.');
+	} catch (error) {
+		if (error instanceof Error && error.message.includes('ECONNREFUSED')) {
+			logger.warn('⚠️ Database connection refused during migrations. Skipping...');
+		} else {
+			logger.error(error, '❌ Database migrations failed');
+			// 在开发环境下不抛出错误，避免进程崩溃
+			if (process.env.NODE_ENV === 'production') throw error;
+		}
+	}
+}
 
 export async function seed() {
-	logger.info('⏳ Seeding database with full company structure and multiple roles...');
+	try {
+		logger.info('⏳ Seeding database...');
+		// 检查数据库是否可连接
+		await db.execute(sql`SELECT 1`);
+	} catch (error) {
+		logger.warn(error, '⚠️ Database not ready for seeding. Skipping...');
+		return;
+	}
 
 	const password = '123123123';
+	// ... 剩余代码保持不变 ...
 
 	// 1. 定义权限集合
 	const allPermissions = [

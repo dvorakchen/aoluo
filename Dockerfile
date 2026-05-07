@@ -42,6 +42,7 @@ ENV NODE_ENV=production
 COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/server.js ./server.js
+COPY --from=builder /app/drizzle ./drizzle
 
 # 安装生产依赖
 RUN pnpm install --prod --frozen-lockfile

@@ -8,7 +8,7 @@ import { redirect, type Handle } from '@sveltejs/kit';
 import { getTextDirection } from '$lib/paraglide/runtime';
 import { paraglideMiddleware } from '$lib/paraglide/server';
 import { logger } from '$lib/server/logger';
-import { seed } from '$lib/server/db/seed';
+import { runMigrations, seed } from '$lib/server/db/seed';
 import { initWebSocket } from '$lib/server/websocket';
 import { APIError } from 'better-auth/api';
 
@@ -103,6 +103,9 @@ export const handle: Handle = sequence(
 	handleParaglide
 );
 
-await seed();
+if (!building) {
+	await runMigrations();
+	await seed();
 
-initWebSocket();
+	initWebSocket();
+}

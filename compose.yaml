@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: aoluo-app
+    container_name: badana-app
     restart: always
     ports:
       - '3000:3000'
@@ -22,7 +22,7 @@ services:
 
   db:
     image: postgres:latest
-    container_name: aoluo-db
+    container_name: badana-db
     restart: always
     ports:
       - '5433:5432'

@@ -28,13 +28,29 @@ const webSocketServer = {
 	}
 };
 
+const tsyringePolyfill = {
+	name: 'tsyringe-polyfill',
+	transform(code: string, id: string) {
+		if (id.includes('tsyringe')) {
+			return {
+				code: `import 'reflect-metadata';\n${code}`,
+				map: null
+			};
+		}
+	}
+};
+
 export default defineConfig({
 	plugins: [
+		tsyringePolyfill,
 		tailwindcss(),
 		sveltekit(),
 		webSocketServer,
 		paraglideVitePlugin({ project: './project.inlang', outdir: './src/lib/paraglide' })
 	],
+	ssr: {
+		noExternal: ['tsyringe']
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [
