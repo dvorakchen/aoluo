@@ -45,6 +45,9 @@
 	"edit_team_info": "编辑部门信息",
 	"manage_members": "管理成员",
 	"delete_team": "删除部门",
+	"set_as_manager": "设为负责人",
+	"remove_from_team": "移出部门",
+	"add_member": "添加成员",
 	"created_at": "创建时间",
 	"last_updated": "最后更新",
 	"never_updated": "从未更新",
@@ -89,6 +92,7 @@
 	"confirm": "确认",
 	"cancel": "取消",
 	"no_permission": "你没有权限执行这个操作",
+	"no_assigned_permission": "该用户没有被分配任何权限",
 	"missing_field": "缺少 {name}",
 	"field_required": "{name}不能为空",
 	"field_taken": "{name}已被占用"

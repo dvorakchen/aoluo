@@ -19,14 +19,14 @@
 	});
 </script>
 
-<div class="">
+<div>
 	<span class="text-base-content/60">{m.role()}</span>
-	<div class="mt-2 flex flex-wrap gap-2">
-		<span class="text-sm font-medium">{m.assigned_roles()}: </span>
+	<div class="mt-2 flex flex-wrap items-center gap-2">
+		<span class="text-sm">{m.assigned_roles()}: </span>
 
 		{#each roles as role (role)}
 			<button
-				class="btn btn-xs btn-primary"
+				class="btn btn-sm btn-primary"
 				type="button"
 				onclick={() => (roles = roles.filter((r) => r.id !== role.id))}
 			>
@@ -35,11 +35,11 @@
 			</button>
 		{/each}
 	</div>
-	<div class="mt-2 flex flex-wrap gap-2">
-		<span class="text-sm font-medium">{m.unassigned_roles()}: </span>
+	<div class="mt-2 flex flex-wrap items-center gap-2">
+		<span class="text-sm">{m.unassigned_roles()}: </span>
 		{#each restRoles as role (role)}
 			<button
-				class="btn btn-xs btn-secondary"
+				class="btn btn-sm btn-secondary"
 				type="button"
 				onclick={() => (roles = [...roles, role])}
 			>

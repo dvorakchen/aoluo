@@ -140,7 +140,7 @@ export const actions = {
 				email,
 				phoneNumber
 			},
-			roles ? roles.split(',') : undefined
+			roles ? roles.split(',') : roles === '' ? [] : undefined
 		);
 
 		return {

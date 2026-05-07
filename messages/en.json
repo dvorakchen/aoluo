@@ -45,6 +45,9 @@
 	"edit_team_info": "Edit Team Info",
 	"manage_members": "Manage Members",
 	"delete_team": "Delete Team",
+	"set_as_manager": "Set as Manager",
+	"remove_from_team": "Remove from Team",
+	"add_member": "Add Member",
 	"created_at": "Created At",
 	"last_updated": "Last Updated",
 	"never_updated": "Never Updated",
@@ -89,6 +92,7 @@
 	"confirm": "Confirm",
 	"cancel": "Cancel",
 	"no_permission": "You do not have permission to perform this action",
+	"no_assigned_permission": "This user has no assigned permissions",
 	"missing_field": "Missing {name}",
 	"field_required": "{name} cannot be empty",
 	"field_taken": "{name} is already taken"

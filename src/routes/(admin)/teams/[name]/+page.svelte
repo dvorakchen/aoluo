@@ -16,6 +16,8 @@
 			return 0;
 		})
 	);
+
+	let edit = $state(false);
 </script>
 
 <div class="mb-6 flex items-center gap-4">
@@ -65,29 +67,33 @@
 						<Users size={20} />
 						{m.team_members()}
 					</h3>
-					<Table
-						columns={[
-							{ field: 'member', display: m.member() },
-							{ field: 'username', display: m.username() },
-							{ field: 'role', display: m.role() }
-						]}
-						list={members}
-					>
-						{#snippet member(row: User)}
-							<div class="flex items-center gap-3">
-								<UserAvatar image={row.image} displayUsername={row.displayUsername ?? ''} />
-								<div class="font-bold">{row.displayUsername}</div>
-							</div>
-						{/snippet}
+					{#if edit}
+						{@render editMembers()}
+					{:else}
+						<Table
+							columns={[
+								{ field: 'member', display: m.member() },
+								{ field: 'username', display: m.username() },
+								{ field: 'role', display: m.role() }
+							]}
+							list={members}
+						>
+							{#snippet member(row: User)}
+								<div class="flex items-center gap-3">
+									<UserAvatar image={row.image} displayUsername={row.displayUsername ?? ''} />
+									<div class="font-bold">{row.displayUsername}</div>
+								</div>
+							{/snippet}
 
-						{#snippet role(row: User)}
-							{#if row.id === team.managerId}
-								<div class="badge badge-sm badge-primary">{m.manager()}</div>
-							{:else}
-								<div class="badge badge-ghost badge-sm">{m.staff()}</div>
-							{/if}
-						{/snippet}
-					</Table>
+							{#snippet role(row: User)}
+								{#if row.id === team.managerId}
+									<div class="badge badge-sm badge-primary">{m.manager()}</div>
+								{:else}
+									<div class="badge badge-ghost badge-sm">{m.staff()}</div>
+								{/if}
+							{/snippet}
+						</Table>
+					{/if}
 				</div>
 			</div>
 		</div>
@@ -103,10 +109,17 @@
 						{m.actions()}
 					</h2>
 					<div class="mt-2 flex flex-col gap-2">
-						<button class="btn btn-outline btn-primary">{m.edit_team_info()}</button>
-						<button class="btn btn-outline" {@attach guard('TEAM_UPDATE')}
-							>{m.manage_members()}</button
-						>
+						<!-- <button class="btn btn-outline btn-primary">{m.edit_team_info()}</button> -->
+						{#if edit}
+							<button class="btn btn-outline" onclick={() => (edit = false)}>{m.cancel()}</button>
+						{:else}
+							<button
+								class="btn btn-outline"
+								onclick={() => (edit = true)}
+								{@attach guard('TEAM_UPDATE')}>{m.manage_members()}</button
+							>
+						{/if}
+
 						<div class="divider"></div>
 						<button class="btn btn-outline btn-error" {@attach guard('TEAM_DELETE')}
 							>{m.delete_team()}</button
@@ -132,3 +145,46 @@
 		</div>
 	</div>
 {/if}
+
+{#snippet editMembers()}
+	<div class="my-4">
+		{@render addMembers()}
+	</div>
+	<Table
+		columns={[
+			{ field: 'member', display: m.member() },
+			{ field: 'username', display: m.username() },
+			{ field: 'role', display: m.role() }
+		]}
+		list={members}
+	>
+		{#snippet member(row: User)}
+			<div class="flex items-center gap-3">
+				<UserAvatar image={row.image} displayUsername={row.displayUsername ?? ''} />
+				<div class="font-bold">{row.displayUsername}</div>
+			</div>
+		{/snippet}
+
+		{#snippet role(row: User)}
+			{#if row.id === team.managerId}
+				<div class="badge badge-sm badge-primary">{m.manager()}</div>
+			{:else}
+				<div class="badge badge-ghost badge-sm">{m.staff()}</div>
+			{/if}
+		{/snippet}
+
+		{#snippet actions(row: User)}
+			<div class="flex gap-2">
+				{#if row.id !== team.managerId}
+					<button class="btn btn-outline btn-primary">{m.set_as_manager()}</button>
+					<button class="btn btn-outline btn-error">{m.remove_from_team()}</button>
+				{/if}
+			</div>
+		{/snippet}
+	</Table>
+{/snippet}
+
+{#snippet addMembers()}
+	<button class="btn btn-primary">{m.add_member()}</button>
+	<!-- TODO: 选择用户的弹窗，做成组件，一个简单的用户选择窗口 -->
+{/snippet}

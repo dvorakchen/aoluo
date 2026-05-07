@@ -35,7 +35,7 @@
 	<h1 class="text-2xl font-bold">{m.employee_list()}</h1>
 </div>
 
-<form class="mx-4 mt-6 flex flex-col" method="GET">
+<form class="mx-4 mt-6 flex" method="GET">
 	<div class="flex gap-4">
 		<Input
 			label={m.username()}
@@ -77,7 +77,7 @@
 		</div>
 		<input type="number" name="page" hidden />
 	</div>
-	<div class="flex justify-end">
+	<div class="flex">
 		<button class="btn btn-primary" type="submit">{m.search()}</button>
 	</div>
 </form>
@@ -119,7 +119,7 @@
 	{#snippet actions(row: RowType)}
 		<div class="flex gap-2">
 			<a
-				class="btn btn-ghost"
+				class="btn btn-soft"
 				href={resolve(`/employee/${row.username}`)}
 				{@attach guard('EMPLOYEE_READ')}>{m.details()}</a
 			>

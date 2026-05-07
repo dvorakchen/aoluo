@@ -36,6 +36,11 @@ export async function seed() {
 		return;
 	}
 
+	if (await db.query.user.findFirst()) {
+		logger.info('ℹ️ Users already exist. Skipping seeding.');
+		return;
+	}
+
 	const password = '123123123';
 	// ... 剩余代码保持不变 ...
 
@@ -224,6 +229,9 @@ export async function seed() {
 		}
 		userMap[u.username] = userId;
 
+		if (existing) {
+			continue;
+		}
 		// 分配角色
 		for (const roleKey of u.roles) {
 			const roleId = roleIdMap[roleKey];
