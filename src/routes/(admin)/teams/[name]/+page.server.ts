@@ -1,10 +1,11 @@
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
 import { TeamService } from '$lib/server/business/team';
 import { m } from '$lib/paraglide/messages';
 import { container } from 'tsyringe';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load = async ({ params, depends }) => {
+	depends('user:list');
+
 	const teamService = container.resolve(TeamService);
 	const team = await teamService.getTeamByName(params.name);
 

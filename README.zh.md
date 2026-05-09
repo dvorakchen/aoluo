@@ -288,6 +288,30 @@ type list: T[]
 <Input name="username" type="number" data-tip="Tip" />
 ```
 
+### 模态框
+
+模态框使用 `modal.svelte`
+
+```svelte
+<script lang="ts">
+	let open = $state(false);
+</script>
+
+<!-- open 用户控制显示或者不显示，当模态框不显示的时候，会卸载模态框 -->
+<!-- className 里直接指定 content 的样式 -->
+<Modal bind:open className="grid ...">
+	<!-- title snippet 是模态框的标题 -->
+	{#snippet title()}
+		Title
+	{/snippet}
+
+	<!-- content snippet 是模态框的内容 -->
+	{#snippet content()}
+		内容！
+	{/snippet}
+</Modal>
+```
+
 ## 权限
 
 定义的权限是写死在代码里的，意味着你不能凭空变出一个全新的权限

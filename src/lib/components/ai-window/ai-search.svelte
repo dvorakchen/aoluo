@@ -8,8 +8,9 @@
 	import ChatListBox from './chat-list-box.svelte';
 	import type { RxDataAiChat } from '$lib/client/websocket/model';
 	import { subscribeAiChatRx } from './ai-search';
+	import Modal from '$lib/components/modal.svelte';
 
-	let dialog = $state<HTMLDialogElement>();
+	let open = $state(false);
 	let chatContext: ChatContext = ChatContext.new();
 
 	onMount(() => {
@@ -30,7 +31,7 @@
 	};
 
 	function openDialog() {
-		dialog?.showModal();
+		open = true;
 		focusUserInput();
 	}
 
@@ -42,7 +43,6 @@
 	}
 
 	function onSend(txt: string, imgs: string[]) {
-		chatContext.end();
 		chatContext.chatList.push(ChatBubble.fromUser(txt, imgs));
 
 		wsClient.send('ai-chat', {
@@ -68,18 +68,15 @@
 	<kbd class="kbd kbd-sm">⌘</kbd>
 	<kbd class="kbd kbd-sm">K</kbd>
 </label>
-<!-- You can open the modal using ID.showModal() method -->
-<dialog bind:this={dialog} class="modal">
-	<div class="modal-box h-11/12 w-11/12 max-w-5xl">
-		<div class="flex h-full flex-col">
-			<form method="dialog">
-				<button class="btn absolute top-2 right-2 btn-circle btn-ghost btn-sm"> ✕ </button>
-			</form>
-			<h3 class="text-lg font-bold">🤖{m.ai_assistant()}</h3>
 
-			<ChatListBox {chatContext} />
+<Modal bind:open className="flex flex-col h-[80vh] w-4xl">
+	{#snippet title()}
+		🤖{m.ai_assistant()}
+	{/snippet}
 
-			<UserInput {onSend} />
-		</div>
-	</div>
-</dialog>
+	{#snippet content()}
+		<ChatListBox {chatContext} />
+
+		<UserInput {onSend} />
+	{/snippet}
+</Modal>

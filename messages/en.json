@@ -88,6 +88,9 @@
 	"unban": "Unban",
 	"ban": "Ban",
 	"update_failed": "Update Failed",
+	"add_success": "Added successfully",
+	"remove_success": "Removed successfully",
+	"update_success": "Updated successfully",
 	"permissions": "Permissions",
 	"confirm": "Confirm",
 	"cancel": "Cancel",
@@ -95,5 +98,16 @@
 	"no_assigned_permission": "This user has no assigned permissions",
 	"missing_field": "Missing {name}",
 	"field_required": "{name} cannot be empty",
-	"field_taken": "{name} is already taken"
+	"field_taken": "{name} is already taken",
+	"invalid_request": "Invalid request parameters",
+	"user_picker_no_selected": "No users selected",
+	"user_picker_selected_count": "Selected ({count})",
+	"user_picker_clear_all": "Clear All",
+	"user_picker_select_hint": "Please select users from the list below...",
+	"user_picker_confirm": "Confirm Finish",
+	"user_picker_excluded": "Excluded",
+	"user_picker_selected": "Selected",
+	"user_picker_select": "Select",
+	"user_picker_empty": "No more users available",
+	"user_picker_unpick_title": "Click to unpick"
 }

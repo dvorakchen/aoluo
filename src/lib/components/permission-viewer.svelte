@@ -38,7 +38,7 @@
 				{categoryLabels[category]?.() ?? category}{m.permissions()}
 			</h2>
 			<div class="ml-4 flex flex-wrap gap-2">
-				{#each perms as perm (perm)}
+				{#each perms as perm (category + perm)}
 					<div class="badge badge-info">
 						{getPermissionLabel(perm)}
 					</div>

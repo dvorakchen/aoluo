@@ -1,6 +1,6 @@
 import { DBService } from '$lib/server/db';
 import { role, userRole, user, teamUser } from '$lib/server/db/schema';
-import { eq, count, and, ilike, type SQL, inArray, sql } from 'drizzle-orm';
+import { eq, count, and, ilike, type SQL, inArray, sql, notInArray } from 'drizzle-orm';
 import type {
 	PaginationResult,
 	PermissionSchema,
@@ -22,6 +22,10 @@ export type UserFilter = {
 	phone?: string;
 	removed?: boolean;
 	banned?: boolean;
+	/**
+	 * 排除那些用户不查询，userId 数组
+	 */
+	excludes?: string[];
 };
 
 @injectable()
@@ -75,6 +79,9 @@ export class UserService {
 		}
 		if (filter?.banned !== undefined) {
 			filters.push(eq(user.banned, filter.banned));
+		}
+		if (filter?.excludes !== undefined && filter?.excludes.length > 0) {
+			filters.push(notInArray(user.id, filter.excludes));
 		}
 
 		const where = filters.length > 0 ? and(...filters) : undefined;

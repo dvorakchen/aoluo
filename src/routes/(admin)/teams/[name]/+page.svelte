@@ -1,13 +1,20 @@
 <script lang="ts">
+	import { invalidate } from '$app/navigation';
 	import { guard } from '$lib/client/attachments/permission-guard.js';
+	import { http } from '$lib/client/http';
+	import { toastStore } from '$lib/client/store/toast.svelte.js';
+	import Modal from '$lib/components/modal.svelte';
 	import Table from '$lib/components/table.svelte';
 	import UserAvatar from '$lib/components/user-avatar.svelte';
+	import UserPicker from '$lib/components/user-picker.svelte';
 	import { m } from '$lib/paraglide/messages';
 	import { PermissionSchema, type User } from '$lib/shared/index.js';
 	import { i18nFromJSON, toDate } from '$lib/shared/utils.js';
 	import { MoveLeft, Users, User as UserIcon } from '@lucide/svelte';
+	import { FetchError } from 'ofetch';
 
 	let { data } = $props();
+
 	const team = $derived(data.team);
 	const members = $derived(
 		data.members.sort((a, b) => {
@@ -18,6 +25,74 @@
 	);
 
 	let edit = $state(false);
+	let open = $state(false);
+
+	/**
+	 * 选择了用户加入这个部门
+	 * @param user
+	 */
+	async function onPick(users: readonly User[]) {
+		if (users.length <= 0) {
+			return;
+		}
+
+		open = false;
+		const userIds = users.map((u) => u.id);
+		try {
+			await http('teams/join', {
+				method: 'post',
+				body: {
+					teamId: team.id,
+					userIds
+				}
+			});
+			toastStore.add(m.add_success(), 'info');
+			invalidate('user:list');
+		} catch (e: unknown) {
+			if (e instanceof FetchError) {
+				toastStore.add(e.data.message, 'error');
+			}
+			console.error(e);
+		}
+	}
+
+	async function handleRemove(user: User) {
+		try {
+			await http('teams/remove', {
+				method: 'delete',
+				body: {
+					teamId: team.id,
+					userIds: [user.id]
+				}
+			});
+			toastStore.add(m.remove_success(), 'warning');
+			invalidate('user:list');
+		} catch (e: unknown) {
+			if (e instanceof FetchError) {
+				toastStore.add(e.data.message, 'error');
+			}
+			console.error(e);
+		}
+	}
+
+	async function handleSetManager(user: User) {
+		try {
+			await http('teams/manager', {
+				method: 'put',
+				body: {
+					teamId: team.id,
+					managerId: user.id
+				}
+			});
+			toastStore.add(m.update_success(), 'info');
+			invalidate('user:list');
+		} catch (e: unknown) {
+			if (e instanceof FetchError) {
+				toastStore.add(e.data.message, 'error');
+			}
+			console.error(e);
+		}
+	}
 </script>
 
 <div class="mb-6 flex items-center gap-4">
@@ -176,8 +251,12 @@
 		{#snippet actions(row: User)}
 			<div class="flex gap-2">
 				{#if row.id !== team.managerId}
-					<button class="btn btn-outline btn-primary">{m.set_as_manager()}</button>
-					<button class="btn btn-outline btn-error">{m.remove_from_team()}</button>
+					<button class="btn btn-outline btn-primary" onclick={() => handleSetManager(row)}
+						>{m.set_as_manager()}</button
+					>
+					<button class="btn btn-outline btn-error" onclick={() => handleRemove(row)}
+						>{m.remove_from_team()}</button
+					>
 				{/if}
 			</div>
 		{/snippet}
@@ -185,6 +264,14 @@
 {/snippet}
 
 {#snippet addMembers()}
-	<button class="btn btn-primary">{m.add_member()}</button>
-	<!-- TODO: 选择用户的弹窗，做成组件，一个简单的用户选择窗口 -->
+	<button class="btn btn-primary" onclick={() => (open = true)}>{m.add_member()}</button>
+	<Modal bind:open className="min-h-96 w-xl">
+		{#snippet title()}
+			{m.add_member()}
+		{/snippet}
+
+		{#snippet content()}
+			<UserPicker excludes={members} {onPick} />
+		{/snippet}
+	</Modal>
 {/snippet}

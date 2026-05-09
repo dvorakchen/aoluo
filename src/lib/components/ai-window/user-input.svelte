@@ -12,6 +12,9 @@
 		userInput?.focus();
 	}
 
+	/**
+	 * 用户输入框重置，可以输入
+	 */
 	export function reset() {
 		btnPending = false;
 	}

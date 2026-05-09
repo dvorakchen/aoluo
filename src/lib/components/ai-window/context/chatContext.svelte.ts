@@ -15,10 +15,16 @@ export class ChatContext {
 		return this._handling;
 	}
 
+	/**
+	 * AI 开始处理
+	 */
 	start() {
 		this._handling = true;
 	}
 
+	/**
+	 * AI 结束处理
+	 */
 	end() {
 		this._handling = false;
 	}

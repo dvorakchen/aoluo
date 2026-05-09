@@ -88,6 +88,9 @@
 	"unban": "解禁",
 	"ban": "封禁",
 	"update_failed": "更新失败",
+	"add_success": "添加成功",
+	"remove_success": "移除成功",
+	"update_success": "更新成功",
 	"permissions": "权限",
 	"confirm": "确认",
 	"cancel": "取消",
@@ -95,5 +98,16 @@
 	"no_assigned_permission": "该用户没有被分配任何权限",
 	"missing_field": "缺少 {name}",
 	"field_required": "{name}不能为空",
-	"field_taken": "{name}已被占用"
+	"field_taken": "{name}已被占用",
+	"invalid_request": "请求参数无效",
+	"user_picker_no_selected": "暂未选择用户",
+	"user_picker_selected_count": "已选择 ({count})",
+	"user_picker_clear_all": "清空全部",
+	"user_picker_select_hint": "请在下方列表选择用户...",
+	"user_picker_confirm": "确定完成",
+	"user_picker_excluded": "已排除",
+	"user_picker_selected": "已选中",
+	"user_picker_select": "选择",
+	"user_picker_empty": "暂无更多可选用户",
+	"user_picker_unpick_title": "点击取消选择"
 }

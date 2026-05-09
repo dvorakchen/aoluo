@@ -1,6 +1,6 @@
 import { DBService } from '$lib/server/db';
 import { team, user, teamUser } from '$lib/server/db/schema';
-import { count, eq, sql } from 'drizzle-orm';
+import { and, count, eq, inArray, sql } from 'drizzle-orm';
 import type { PaginationResult, TeamWithManager, User } from '$lib/shared';
 import { injectable } from 'tsyringe';
 
@@ -101,5 +101,63 @@ export class TeamService {
 			.where(eq(teamUser.teamId, teamId));
 
 		return result.map((r) => r.user);
+	}
+
+	/**
+	 * 将多个用户加入团队
+	 * @param teamId 团队 ID
+	 * @param userIds 用户 ID 数组
+	 */
+	async addUsersToTeam(teamId: string, userIds: string[]) {
+		if (userIds.length === 0) return;
+
+		await this.db
+			.insert(teamUser)
+			.values(
+				userIds.map((userId) => ({
+					teamId,
+					userId
+				}))
+			)
+			.onConflictDoNothing(); // 如果已经在团队里了就忽略
+	}
+
+	/**
+	 * 将多个用户从团队中移除
+	 * @param teamId 团队 ID
+	 * @param userIds 用户 ID 数组
+	 */
+	async removeUsersFromTeam(teamId: string, userIds: string[]) {
+		if (userIds.length === 0) return;
+
+		await this.db
+			.delete(teamUser)
+			.where(and(eq(teamUser.teamId, teamId), inArray(teamUser.userId, userIds)));
+	}
+
+	/**
+	 * 修改团队负责人
+	 * @param teamId 团队 ID
+	 * @param managerId 负责人 ID
+	 */
+	async updateTeamManager(teamId: string, managerId: string) {
+		await this.db.transaction(async (tx) => {
+			// 1. 更新团队表
+			await tx.update(team).set({ managerId }).where(eq(team.id, teamId));
+
+			// 2. 检查负责受是否已经在团队中
+			const existing = await tx
+				.select()
+				.from(teamUser)
+				.where(and(eq(teamUser.teamId, teamId), eq(teamUser.userId, managerId)))
+				.limit(1);
+
+			if (existing.length === 0) {
+				await tx.insert(teamUser).values({
+					teamId,
+					userId: managerId
+				});
+			}
+		});
 	}
 }
