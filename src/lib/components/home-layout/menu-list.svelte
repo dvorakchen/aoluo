@@ -9,7 +9,7 @@
 	 */
 	export type MenuListDateType = {
 		topTitle: string;
-		menu: MenuLink | MenuType[];
+		menu: (MenuLink | MenuType)[];
 	};
 </script>
 

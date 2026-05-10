@@ -80,6 +80,10 @@
 	"permission_employee_delete": "删除员工",
 	"permission_employee_ban": "封禁员工",
 	"permission_employee_resign": "办理员工离职",
+	"permission_role_read": "查看角色",
+	"permission_role_create": "创建角色",
+	"permission_role_update": "更新角色",
+	"permission_role_delete": "删除角色",
 	"copy": "复制",
 	"assigned_roles": "已分配角色",
 	"unassigned_roles": "未分配角色",
@@ -111,5 +115,14 @@
 	"user_picker_empty": "暂无更多可选用户",
 	"user_picker_unpick_title": "点击取消选择",
 	"delete": "删除",
-	"confirm_delete": "确认删除？"
+	"confirm_delete": "确认删除？",
+	"role_management_desc": "管理系统角色及其关联的权限",
+	"create_role": "创建新角色",
+	"delete_role": "删除角色",
+	"role_create_desc": "创建一个具有特定权限集的新系统角色",
+	"basic_info": "基本信息",
+	"name_zh": "中文名称 (zh)",
+	"name_en": "英文名称 (en)",
+	"placeholder_name_zh": "例如：初级管理员",
+	"placeholder_name_en": "例如：Junior Admin"
 }

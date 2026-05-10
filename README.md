@@ -328,6 +328,22 @@ For actions requiring deletion confirmation, use `delete-confirm.svelte`.
 This component can also be used for other dangerous actions requiring confirmation.
 ```
 
+### UserAvatar
+
+The `UserAvatar` component is used to display user profile pictures or placeholders.
+
+```svelte
+<!-- Display avatar image -->
+<UserAvatar image="https://example.com/avatar.png" displayUsername="John Doe" size="40px" />
+
+<!-- Display placeholder with the first letter of the username -->
+<UserAvatar displayUsername="Admin" size="32px" />
+```
+
+- `image`: (Optional) URL of the avatar image.
+- `displayUsername`: (Required) Display name of the user.
+- `size`: (Optional) CSS width/height of the avatar, default is `32px`.
+
 ## Permissions
 
 Defined permissions are hardcoded, meaning you cannot create a completely new permission out of thin air.

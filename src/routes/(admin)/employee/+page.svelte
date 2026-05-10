@@ -78,7 +78,7 @@
 		<input type="number" name="page" hidden />
 	</div>
 	<div class="flex">
-		<button class="btn btn-primary" type="submit">{m.search()}</button>
+		<button class="btn shadow btn-primary" type="submit">{m.search()}</button>
 	</div>
 </form>
 

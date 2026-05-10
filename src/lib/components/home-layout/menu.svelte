@@ -1,4 +1,6 @@
 <script lang="ts" module>
+	import { type Component } from 'svelte';
+
 	export type MenuLink = {
 		Icon?: Component;
 		label: string;
@@ -7,21 +9,24 @@
 
 	export type MenuType = {
 		open?: boolean;
-		Icon: Component<{ size: number }>;
-		title: string;
+		Icon: Component;
+		label: string;
 		links: MenuLink[];
 	};
 
 	/**
-	 * list 里的 title 不可以重复
+	 * list 里的 label 不可以重复
 	 */
 	export type MenuProps = {
-		menu: MenuLink | MenuType[];
+		menu: (MenuLink | MenuType)[];
 	};
+
+	export function isMenuType(item: MenuLink | MenuType): item is MenuType {
+		return 'links' in item;
+	}
 </script>
 
 <script lang="ts">
-	import { type Component } from 'svelte';
 	import { page } from '$app/state';
 
 	const { menu }: MenuProps = $props();
@@ -33,15 +38,18 @@
 		return page.url.pathname.startsWith(href);
 	}
 
-	function isMenuOpen(menu: MenuType) {
-		const linkActive = menu.links.some((link) => isActive(link.href));
-		return menu.open || linkActive;
+	function isMenuOpen(menuItem: MenuLink | MenuType) {
+		if (isMenuType(menuItem)) {
+			const linkActive = menuItem.links.some((link) => isActive(link.href));
+			return menuItem.open || linkActive;
+		}
+		return false;
 	}
 </script>
 
-{#if Array.isArray(menu)}
-	{#each menu as menuItem (menuItem.title)}
-		<!-- 这里使用的是 DaisyUI 的 Menu -->
+{#each menu as menuItem (menuItem.label)}
+	{#if isMenuType(menuItem)}
+		<!-- 这里使用的是 DaisyUI 的 Menu - 带有子菜单 -->
 		<details
 			class="min-w-48 rounded-xl pr-2 hover:bg-base-200"
 			open={isMenuOpen(menuItem)}
@@ -52,7 +60,7 @@
 		>
 			<summary class="bg-transparent">
 				<menuItem.Icon size={18} />
-				<span class="text font-medium">{menuItem.title}</span>
+				<span class="text font-medium">{menuItem.label}</span>
 			</summary>
 			<ul class="pb-4">
 				{#each menuItem.links as link (link.label + link.href)}
@@ -64,13 +72,14 @@
 				{/each}
 			</ul>
 		</details>
-	{/each}
-{:else}
-	<a
-		href={menu.href}
-		class="min-w-48 transition-[margin] {isActive(menu.href) ? 'ml-2 menu-link-active' : ''}"
-	>
-		<menu.Icon size={16} />
-		{menu.label}
-	</a>
-{/if}
+	{:else}
+		<!-- 这里使用的是 DaisyUI 的 Menu - 直接链接 -->
+		<a
+			href={menuItem.href}
+			class="min-w-48 transition-[margin] {isActive(menuItem.href) ? 'ml-2 menu-link-active' : ''}"
+		>
+			<menuItem.Icon size={16} />
+			{menuItem.label}
+		</a>
+	{/if}
+{/each}

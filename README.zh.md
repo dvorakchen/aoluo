@@ -328,6 +328,22 @@ type list: T[]
 其他需要确认的危险操作按钮都可以使用这个组件
 ```
 
+### 用户头像 (UserAvatar)
+
+`UserAvatar` 组件用于显示用户头像或占位图。
+
+```svelte
+<!-- 显示头像图片 -->
+<UserAvatar image="https://example.com/avatar.png" displayUsername="张三" size="40px" />
+
+<!-- 显示首字母占位图 -->
+<UserAvatar displayUsername="Admin" size="32px" />
+```
+
+- `image`: (可选) 头像图片的 URL。
+- `displayUsername`: (必填) 用户的显示名称。
+- `size`: (可选) 头像的 CSS 宽高，默认为 `32px`。
+
 ## 权限
 
 定义的权限是写死在代码里的，意味着你不能凭空变出一个全新的权限

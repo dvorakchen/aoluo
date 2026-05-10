@@ -1,6 +1,11 @@
 <!-- 权限预览 -->
 <script lang="ts">
-	import { getPermissionLabel, PERMISSIONS, type PermissionValue } from '$lib/shared';
+	import {
+		getPermissionLabel,
+		PERMISSIONS,
+		PERMISSION_CATEGORY_LABELS,
+		type PermissionValue
+	} from '$lib/shared';
 	import { m } from '$lib/paraglide/messages';
 
 	let { permissions }: { permissions: PermissionValue[] } = $props();
@@ -21,21 +26,14 @@
 		}
 		return groups;
 	});
-
-	/**
-	 * 权限类别对应的标签
-	 */
-	const categoryLabels: Record<string, () => string> = {
-		team: () => m.team(),
-		employee: () => m.employee()
-	};
 </script>
 
 <div class="flex flex-col gap-4">
 	{#each Object.entries(groupedPermissions) as [category, perms] (category)}
 		<div class="flex flex-col gap-2">
 			<h2 class="font-bold tracking-wider uppercase">
-				{categoryLabels[category]?.() ?? category}{m.permissions()}
+				{PERMISSION_CATEGORY_LABELS[category as keyof typeof PERMISSIONS]?.() ??
+					category}{m.permissions()}
 			</h2>
 			<div class="ml-4 flex flex-wrap gap-2">
 				{#each perms as perm (category + perm)}

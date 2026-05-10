@@ -29,6 +29,15 @@ export const PERMISSIONS = {
 		 * 可以让员工离职，禁止登录系统
 		 */
 		resign: 'EMPLOYEE_RESIGN'
+	},
+	/**
+	 * 角色管理
+	 */
+	role: {
+		read: 'ROLE_READ',
+		create: 'ROLE_CREATE',
+		update: 'ROLE_UPDATE',
+		delete: 'ROLE_DELETE'
 	}
 } as const;
 
@@ -52,7 +61,11 @@ export const PERMISSION_LABELS: Record<PermissionValue, () => string> = {
 	[PERMISSIONS.employee.update]: () => m.permission_employee_update(),
 	[PERMISSIONS.employee.delete]: () => m.permission_employee_delete(),
 	[PERMISSIONS.employee.ban]: () => m.permission_employee_ban(),
-	[PERMISSIONS.employee.resign]: () => m.permission_employee_resign()
+	[PERMISSIONS.employee.resign]: () => m.permission_employee_resign(),
+	[PERMISSIONS.role.read]: () => m.permission_role_read(),
+	[PERMISSIONS.role.create]: () => m.permission_role_create(),
+	[PERMISSIONS.role.update]: () => m.permission_role_update(),
+	[PERMISSIONS.role.delete]: () => m.permission_role_delete()
 };
 
 /**
@@ -61,6 +74,15 @@ export const PERMISSION_LABELS: Record<PermissionValue, () => string> = {
 export function getPermissionLabel(permission: PermissionValue): string {
 	return PERMISSION_LABELS[permission]?.() ?? permission;
 }
+
+/**
+ * 权限分类对应的 i18n 标签
+ */
+export const PERMISSION_CATEGORY_LABELS: Record<keyof typeof PERMISSIONS, () => string> = {
+	team: () => m.team(),
+	employee: () => m.employee(),
+	role: () => m.role()
+};
 
 /**
  * 权限策略

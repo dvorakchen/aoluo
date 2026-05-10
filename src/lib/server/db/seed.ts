@@ -55,7 +55,11 @@ export async function seed() {
 		PERMISSIONS.employee.update,
 		PERMISSIONS.employee.delete,
 		PERMISSIONS.employee.ban,
-		PERMISSIONS.employee.resign
+		PERMISSIONS.employee.resign,
+		PERMISSIONS.role.read,
+		PERMISSIONS.role.create,
+		PERMISSIONS.role.update,
+		PERMISSIONS.role.delete
 	];
 
 	// 2. 定义角色及其配置
@@ -74,7 +78,8 @@ export async function seed() {
 				PERMISSIONS.team.read,
 				PERMISSIONS.team.update,
 				PERMISSIONS.employee.read,
-				PERMISSIONS.employee.update
+				PERMISSIONS.employee.update,
+				PERMISSIONS.role.read
 			]
 		},
 		dev: {

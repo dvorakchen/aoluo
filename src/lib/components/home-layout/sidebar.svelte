@@ -16,17 +16,19 @@ Sidebar component for the admin dashboard.
 	const menuList: MenuListDateType[] = [
 		{
 			topTitle: m.menu_overview(),
-			menu: {
-				Icon: LayoutDashboard,
-				label: m.menu_overview_dashboard(),
-				href: resolve('/')
-			}
+			menu: [
+				{
+					Icon: LayoutDashboard,
+					label: m.menu_overview_dashboard(),
+					href: resolve('/')
+				}
+			]
 		},
 		{
 			topTitle: m.menu_hrm(),
 			menu: [
 				{
-					title: m.menu_hrm_employee(),
+					label: m.menu_hrm_employee(),
 					Icon: LayoutDashboard,
 					links: [
 						{ label: m.employee_list(), href: resolve('/employee') },
@@ -34,7 +36,7 @@ Sidebar component for the admin dashboard.
 					]
 				},
 				{
-					title: m.menu_hrm_leave(),
+					label: m.menu_hrm_leave(),
 					Icon: LayoutDashboard,
 					links: [
 						{ label: 'Submenu 1', href: '/1' },
@@ -44,18 +46,15 @@ Sidebar component for the admin dashboard.
 			]
 		},
 		{
-			topTitle: 'AI 管理',
+			topTitle: '系统管理',
 			menu: [
 				{
-					title: 'AI1',
+					label: '角色管理',
 					Icon: LayoutDashboard,
-					links: [
-						{ label: 'Submenu 1', href: '/1' },
-						{ label: 'Submenu 2', href: '/1' }
-					]
+					href: resolve('/roles')
 				},
 				{
-					title: 'AI2',
+					label: 'AI 管理',
 					Icon: LayoutDashboard,
 					links: [
 						{ label: 'Submenu 1', href: '/1' },
@@ -66,17 +65,19 @@ Sidebar component for the admin dashboard.
 		},
 		{
 			topTitle: m.menu_company(),
-			menu: {
-				Icon: GitFork,
-				label: m.menu_company_team(),
-				href: resolve('/teams')
-			}
+			menu: [
+				{
+					Icon: GitFork,
+					label: m.menu_company_team(),
+					href: resolve('/teams')
+				}
+			]
 		},
 		{
 			topTitle: '设置',
 			menu: [
 				{
-					title: '设置1',
+					label: '设置1',
 					Icon: LayoutDashboard,
 					links: [
 						{ label: 'Submenu 1', href: '/1' },
@@ -84,7 +85,7 @@ Sidebar component for the admin dashboard.
 					]
 				},
 				{
-					title: '设置2',
+					label: '设置2',
 					Icon: LayoutDashboard,
 					links: [
 						{ label: 'Submenu 1', href: '/1' },

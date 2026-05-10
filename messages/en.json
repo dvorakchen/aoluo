@@ -80,6 +80,10 @@
 	"permission_employee_delete": "Delete Employee",
 	"permission_employee_ban": "Ban Employee",
 	"permission_employee_resign": "Resign Employee",
+	"permission_role_read": "View Role",
+	"permission_role_create": "Create Role",
+	"permission_role_update": "Update Role",
+	"permission_role_delete": "Delete Role",
 	"copy": "Copy",
 	"assigned_roles": "Assigned Roles",
 	"unassigned_roles": "Unassigned Roles",
@@ -111,5 +115,14 @@
 	"user_picker_empty": "No more users available",
 	"user_picker_unpick_title": "Click to unpick",
 	"delete": "Delete",
-	"confirm_delete": "Confirm Delete?"
+	"confirm_delete": "Confirm Delete?",
+	"role_management_desc": "Manage system roles and their associated permissions",
+	"create_role": "Create New Role",
+	"delete_role": "Delete Role",
+	"role_create_desc": "Create a new system role with a specific set of permissions",
+	"basic_info": "Basic Information",
+	"name_zh": "Chinese Name (zh)",
+	"name_en": "English Name (en)",
+	"placeholder_name_zh": "e.g. Junior Admin",
+	"placeholder_name_en": "e.g. Junior Admin"
 }

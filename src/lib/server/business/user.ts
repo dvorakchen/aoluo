@@ -267,6 +267,22 @@ export class UserService {
 	}
 
 	/**
+	 * 获取属于该角色的在职员工
+	 */
+	async getUsersByRoleId(roleId: string) {
+		const result = await this.db
+			.select({
+				user: user
+			})
+			.from(userRole)
+			.innerJoin(user, eq(userRole.userId, user.id))
+			.where(and(eq(userRole.roleId, roleId), eq(user.removed, false)))
+			.execute();
+
+		return result.map((r) => r.user);
+	}
+
+	/**
 	 * 手机号是否占用
 	 * @param phone 手机号
 	 * @param excludeUserId 排除的用户 ID（用于更新时排除自己）
