@@ -312,6 +312,22 @@ type list: T[]
 </Modal>
 ```
 
+### 删除确认框
+
+删除需要确认，使用 `delete-confirm.svelte`
+
+```svelte
+<DeleteConfirm
+	label={'删除按钮'}
+	confirmLabel={'确认删除'}
+	onDelete={() => {
+		'删除函数';
+	}}
+/>
+
+其他需要确认的危险操作按钮都可以使用这个组件
+```
+
 ## 权限
 
 定义的权限是写死在代码里的，意味着你不能凭空变出一个全新的权限

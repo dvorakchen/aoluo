@@ -109,5 +109,7 @@
 	"user_picker_selected": "Selected",
 	"user_picker_select": "Select",
 	"user_picker_empty": "No more users available",
-	"user_picker_unpick_title": "Click to unpick"
+	"user_picker_unpick_title": "Click to unpick",
+	"delete": "Delete",
+	"confirm_delete": "Confirm Delete?"
 }

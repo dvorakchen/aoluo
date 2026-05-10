@@ -288,6 +288,46 @@ It is recommended to use the `Input` component from the `Components` directory f
 <Input name="username" type="number" data-tip="Tip" />
 ```
 
+### Modal
+
+Use `modal.svelte` for modal dialogs.
+
+```svelte
+<script lang="ts">
+	let open = $state(false);
+</script>
+
+<!-- 'open' controls visibility; the modal unmounts when hidden -->
+<!-- Use 'className' to specify content styles directly -->
+<Modal bind:open className="grid ...">
+	<!-- 'title' snippet for the modal header -->
+	{#snippet title()}
+		Title
+	{/snippet}
+
+	<!-- 'content' snippet for the modal body -->
+	{#snippet content()}
+		Content!
+	{/snippet}
+</Modal>
+```
+
+### DeleteConfirm
+
+For actions requiring deletion confirmation, use `delete-confirm.svelte`.
+
+```svelte
+<DeleteConfirm
+	label={'Delete'}
+	confirmLabel={'Confirm Delete?'}
+	onDelete={() => {
+		// delete function
+	}}
+/>
+
+This component can also be used for other dangerous actions requiring confirmation.
+```
+
 ## Permissions
 
 Defined permissions are hardcoded, meaning you cannot create a completely new permission out of thin air.

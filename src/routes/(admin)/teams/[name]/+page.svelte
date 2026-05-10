@@ -3,6 +3,7 @@
 	import { guard } from '$lib/client/attachments/permission-guard.js';
 	import { http } from '$lib/client/http';
 	import { toastStore } from '$lib/client/store/toast.svelte.js';
+	import DeleteConfirm from '$lib/components/delete-confirm.svelte';
 	import Modal from '$lib/components/modal.svelte';
 	import Table from '$lib/components/table.svelte';
 	import UserAvatar from '$lib/components/user-avatar.svelte';
@@ -254,9 +255,7 @@
 					<button class="btn btn-outline btn-primary" onclick={() => handleSetManager(row)}
 						>{m.set_as_manager()}</button
 					>
-					<button class="btn btn-outline btn-error" onclick={() => handleRemove(row)}
-						>{m.remove_from_team()}</button
-					>
+					<DeleteConfirm label={m.remove_from_team()} onDelete={() => handleRemove(row)} />
 				{/if}
 			</div>
 		{/snippet}

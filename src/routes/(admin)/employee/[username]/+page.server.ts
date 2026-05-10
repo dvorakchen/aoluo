@@ -59,7 +59,7 @@ export const actions = {
 
 		const username = params.username;
 		// 禁止管理员自己被离职
-		if (user?.username === username || user?.username === ADMIN_USERNAME) {
+		if (user?.username === username || username === ADMIN_USERNAME) {
 			return fail(403, {
 				message: m.no_permission()
 			});
@@ -78,7 +78,7 @@ export const actions = {
 
 		const username = params.username;
 		// 禁止管理员自己被禁用
-		if (user?.username === username || user?.username === ADMIN_USERNAME) {
+		if (user?.username === username || username === ADMIN_USERNAME) {
 			return fail(403, {
 				message: m.no_permission()
 			});

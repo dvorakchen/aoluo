@@ -109,5 +109,7 @@
 	"user_picker_selected": "已选中",
 	"user_picker_select": "选择",
 	"user_picker_empty": "暂无更多可选用户",
-	"user_picker_unpick_title": "点击取消选择"
+	"user_picker_unpick_title": "点击取消选择",
+	"delete": "删除",
+	"confirm_delete": "确认删除？"
 }
