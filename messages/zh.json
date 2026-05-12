@@ -117,12 +117,15 @@
 	"delete": "删除",
 	"confirm_delete": "确认删除？",
 	"role_management_desc": "管理系统角色及其关联的权限",
+	"team_management_desc": "管理公司的部门组织架构及成员",
 	"create_role": "创建新角色",
+	"create_team": "创建新部门",
 	"delete_role": "删除角色",
 	"role_create_desc": "创建一个具有特定权限集的新系统角色",
 	"basic_info": "基本信息",
 	"name_zh": "中文名称 (zh)",
 	"name_en": "英文名称 (en)",
 	"placeholder_name_zh": "例如：初级管理员",
-	"placeholder_name_en": "例如：Junior Admin"
+	"placeholder_name_en": "例如：Junior Admin",
+	"placeholder_team_name": "新部门名称"
 }

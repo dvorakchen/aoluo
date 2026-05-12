@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { invalidate } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { guard } from '$lib/client/attachments/permission-guard.js';
 	import { http } from '$lib/client/http';
 	import { toastStore } from '$lib/client/store/toast.svelte.js';
@@ -87,6 +88,21 @@
 			});
 			toastStore.add(m.update_success(), 'info');
 			invalidate('user:list');
+		} catch (e: unknown) {
+			if (e instanceof FetchError) {
+				toastStore.add(e.data.message, 'error');
+			}
+			console.error(e);
+		}
+	}
+
+	async function handleDeleteTeam() {
+		try {
+			await http(`teams/${team.id}`, {
+				method: 'delete'
+			});
+			toastStore.add(m.update_success(), 'info');
+			goto(resolve('/teams'));
 		} catch (e: unknown) {
 			if (e instanceof FetchError) {
 				toastStore.add(e.data.message, 'error');
@@ -197,9 +213,9 @@
 						{/if}
 
 						<div class="divider"></div>
-						<button class="btn btn-outline btn-error" {@attach guard('TEAM_DELETE')}
-							>{m.delete_team()}</button
-						>
+						<div {@attach guard('TEAM_DELETE')}>
+							<DeleteConfirm onDelete={handleDeleteTeam} />
+						</div>
 					</div>
 				</div>
 			</div>

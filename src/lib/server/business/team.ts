@@ -1,7 +1,7 @@
 import { DBService } from '$lib/server/db';
 import { team, user, teamUser } from '$lib/server/db/schema';
 import { and, count, eq, inArray, sql } from 'drizzle-orm';
-import type { PaginationResult, TeamWithManager, User } from '$lib/shared';
+import type { DbI18nField, PaginationResult, TeamWithManager, User } from '$lib/shared';
 import { injectable } from 'tsyringe';
 
 @injectable()
@@ -159,5 +159,50 @@ export class TeamService {
 				});
 			}
 		});
+	}
+
+	/**
+	 * 检查团队名是否已存在
+	 */
+	async isTeamNameTaken(name: string): Promise<boolean> {
+		const existing = await this.db.query.team.findFirst({
+			where: (table, { sql }) => sql`${table.name}->>'default' = ${name}`
+		});
+		return !!existing;
+	}
+
+	/**
+	 * 创建新团队
+	 * @param data 团队数据
+	 */
+	async createTeam(data: { name: DbI18nField; managerId?: string }) {
+		return await this.db.transaction(async (tx) => {
+			const defaultName = data.name.default;
+
+			const existing = await tx.query.team.findFirst({
+				where: (table, { sql }) => sql`${table.name}->>'default' = ${defaultName}`
+			});
+
+			if (existing) {
+				throw new Error('TEAM_NAME_TAKEN');
+			}
+
+			const [inserted] = await tx.insert(team).values(data).returning();
+			if (data.managerId) {
+				await tx.insert(teamUser).values({
+					teamId: inserted.id,
+					userId: data.managerId
+				});
+			}
+			return inserted;
+		});
+	}
+
+	/**
+	 * 删除团队
+	 * @param id 团队 ID
+	 */
+	async deleteTeam(id: string) {
+		await this.db.delete(team).where(eq(team.id, id)).execute();
 	}
 }

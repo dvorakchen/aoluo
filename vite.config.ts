@@ -5,6 +5,7 @@ import { playwright } from '@vitest/browser-playwright';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { WebSocketServer } from 'ws';
 import type { ViteDevServer } from 'vite';
+import type { WebSocketServerEnhance } from '$lib/server/websocket';
 
 const webSocketServer = {
 	name: 'vite-plugin-websocket',
@@ -14,7 +15,7 @@ const webSocketServer = {
 
 		// 1. 创建独立 WS 服务
 		const wss = new WebSocketServer({ noServer: true });
-		global.wss = wss;
+		global.wss = wss as WebSocketServerEnhance;
 
 		// 2. 手动分流 upgrade 请求
 		http.on('upgrade', (request, socket, head) => {

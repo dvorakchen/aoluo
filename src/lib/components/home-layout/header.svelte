@@ -11,7 +11,7 @@
 	}
 </script>
 
-<nav class="navbar w-full border-b border-b-base-300 bg-base-100 pt-4 pr-0 pb-0 shadow-sm">
+<nav class="navbar w-full border-b border-b-base-300 bg-base-100 pt-2 pr-0 pb-0 shadow-sm">
 	<button aria-label="open sidebar" class="btn mb-2 btn-square btn-ghost" onclick={handleCollapsed}>
 		<!-- Sidebar toggle icon -->
 		<ListIndentDecrease />

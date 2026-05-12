@@ -1,0 +1,1 @@
+当要使用 i18n 的类型，应该是 `$lib/shared` 的 `DbI18nField`

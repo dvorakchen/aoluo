@@ -67,3 +67,8 @@ export const QUERY_FILTER_CHECKABLE_VALUE = {
 	on: 'on',
 	off: 'off'
 };
+
+/**
+ * N/A 表示没有
+ */
+export const NA = 'N/A';

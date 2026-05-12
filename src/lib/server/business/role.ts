@@ -1,6 +1,6 @@
 import { DBService } from '$lib/server/db';
 import { role, user, userRole } from '$lib/server/db/schema';
-import type { Role } from '$lib/shared';
+import type { DbI18nField, Role } from '$lib/shared';
 import { eq, count, and } from 'drizzle-orm';
 import { injectable } from 'tsyringe';
 
@@ -84,7 +84,7 @@ export class RoleService {
 	/**
 	 * 创建新角色
 	 */
-	async createRole(data: { name: { [key: string]: string }; permissions: string[] }) {
+	async createRole(data: { name: DbI18nField; permissions: string[] }) {
 		const [inserted] = await this.db.insert(role).values(data).returning();
 		return inserted;
 	}
@@ -92,7 +92,7 @@ export class RoleService {
 	/**
 	 * 更新角色信息
 	 */
-	async updateRole(id: string, data: { name?: { [key: string]: string }; permissions?: string[] }) {
+	async updateRole(id: string, data: { name?: DbI18nField; permissions?: string[] }) {
 		await this.db.update(role).set(data).where(eq(role.id, id)).execute();
 	}
 

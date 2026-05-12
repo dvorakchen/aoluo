@@ -1,5 +1,5 @@
 import type { User, Session } from '$lib/shared';
-import type { WebSocketServer } from 'ws';
+import type { WebSocketServerEnhance } from '$lib/server/websocket';
 
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
@@ -19,7 +19,7 @@ declare global {
 	}
 
 	// 扩展 globalThis
-	var wss: WebSocketServer | undefined;
+	var wss: WebSocketServerEnhance | undefined;
 }
 
 export {};

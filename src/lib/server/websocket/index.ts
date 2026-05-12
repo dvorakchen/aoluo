@@ -1,8 +1,12 @@
-import { type WebSocket } from 'ws';
+import { WebSocketServer, type WebSocket } from 'ws';
 import { logger } from '$lib/server/logger';
 import type { TxDataAiChat } from '$lib/client/websocket/model';
 import type { RxData, TxData } from './model';
 import { setTimeout } from 'node:timers/promises';
+
+export type WebSocketServerEnhance = WebSocketServer & {
+	_initialized: boolean;
+};
 
 /**
  * 启动 WebSocket 服务器逻辑
@@ -13,6 +17,10 @@ export function initWebSocket() {
 	if (!wss) {
 		logger.warn('❌ 没有找到 WebSocket 客户端');
 		return;
+	}
+
+	if (wss._initialized) {
+		return wss;
 	}
 
 	wss.on('connection', (ws: WebSocket) => {
@@ -31,6 +39,7 @@ export function initWebSocket() {
 		ws.on('error', (err) => logger.error(err, `WebSocket 错误`));
 	});
 
+	wss._initialized = true;
 	return wss;
 }
 

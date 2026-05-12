@@ -117,12 +117,15 @@
 	"delete": "Delete",
 	"confirm_delete": "Confirm Delete?",
 	"role_management_desc": "Manage system roles and their associated permissions",
+	"team_management_desc": "Manage company's organizational structure and members",
 	"create_role": "Create New Role",
+	"create_team": "Create New Team",
 	"delete_role": "Delete Role",
 	"role_create_desc": "Create a new system role with a specific set of permissions",
 	"basic_info": "Basic Information",
 	"name_zh": "Chinese Name (zh)",
 	"name_en": "English Name (en)",
 	"placeholder_name_zh": "e.g. Junior Admin",
-	"placeholder_name_en": "e.g. Junior Admin"
+	"placeholder_name_en": "e.g. Junior Admin",
+	"placeholder_team_name": "New Team Name"
 }
