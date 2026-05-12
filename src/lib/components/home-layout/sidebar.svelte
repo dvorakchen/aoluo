@@ -12,6 +12,8 @@ Sidebar component for the admin dashboard.
 	import MenuList, { type MenuListDateType } from './menu-list.svelte';
 	import UserCard from './user-card.svelte';
 	import { GitFork, LayoutDashboard } from '@lucide/svelte';
+	import { PermissionSchema } from '$lib/shared';
+	import { hasPermissions } from '$lib/client/permission/attachments/permission-guard';
 
 	const menuList: MenuListDateType[] = [
 		{
@@ -20,7 +22,7 @@ Sidebar component for the admin dashboard.
 				{
 					Icon: LayoutDashboard,
 					label: m.menu_overview_dashboard(),
-					href: resolve('/')
+					link: resolve('/')
 				}
 			]
 		},
@@ -31,16 +33,17 @@ Sidebar component for the admin dashboard.
 					label: m.menu_hrm_employee(),
 					Icon: LayoutDashboard,
 					links: [
-						{ label: m.employee_list(), href: resolve('/employee') },
-						{ label: 'Submenu 2', href: '/1' }
-					]
+						{ label: m.employee_list(), link: resolve('/employee') },
+						{ label: 'Submenu 2', link: '/1' }
+					],
+					permissions: PermissionSchema.all(['EMPLOYEE_READ'])
 				},
 				{
 					label: m.menu_hrm_leave(),
 					Icon: LayoutDashboard,
 					links: [
-						{ label: 'Submenu 1', href: '/1' },
-						{ label: 'Submenu 2', href: '/1' }
+						{ label: 'Submenu 1', link: '/1' },
+						{ label: 'Submenu 2', link: '/1' }
 					]
 				}
 			]
@@ -51,14 +54,14 @@ Sidebar component for the admin dashboard.
 				{
 					label: '角色管理',
 					Icon: LayoutDashboard,
-					href: resolve('/roles')
+					link: resolve('/roles')
 				},
 				{
 					label: 'AI 管理',
 					Icon: LayoutDashboard,
 					links: [
-						{ label: 'Submenu 1', href: '/1' },
-						{ label: 'Submenu 2', href: '/1' }
+						{ label: 'Submenu 1', link: '/1' },
+						{ label: 'Submenu 2', link: '/1' }
 					]
 				}
 			]
@@ -69,7 +72,8 @@ Sidebar component for the admin dashboard.
 				{
 					Icon: GitFork,
 					label: m.menu_company_team(),
-					href: resolve('/teams')
+					link: resolve('/teams'),
+					permissions: PermissionSchema.any(['TEAM_READ'])
 				}
 			]
 		},
@@ -80,16 +84,16 @@ Sidebar component for the admin dashboard.
 					label: '设置1',
 					Icon: LayoutDashboard,
 					links: [
-						{ label: 'Submenu 1', href: '/1' },
-						{ label: 'Submenu 2', href: '/1' }
+						{ label: 'Submenu 1', link: '/1' },
+						{ label: 'Submenu 2', link: '/1' }
 					]
 				},
 				{
 					label: '设置2',
 					Icon: LayoutDashboard,
 					links: [
-						{ label: 'Submenu 1', href: '/1' },
-						{ label: 'Submenu 2', href: '/1' }
+						{ label: 'Submenu 1', link: '/1' },
+						{ label: 'Submenu 2', link: '/1' }
 					]
 				}
 			]
@@ -111,7 +115,15 @@ Sidebar component for the admin dashboard.
 
 	<div class="mb-8 grow">
 		{#each menuList as menu (menu.topTitle)}
-			<MenuList topTitle={menu.topTitle} menu={menu.menu}></MenuList>
+			{#if menu.permissions}
+				{#await hasPermissions(menu.permissions) then value}
+					{#if value}
+						<MenuList topTitle={menu.topTitle} menu={menu.menu}></MenuList>
+					{/if}
+				{/await}
+			{:else}
+				<MenuList topTitle={menu.topTitle} menu={menu.menu}></MenuList>
+			{/if}
 		{/each}
 	</div>
 

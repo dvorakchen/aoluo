@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { guard } from '$lib/client/attachments/permission-guard.js';
+	import { guard } from '$lib/client/permission/attachments/permission-guard.js';
 	import Copy from '$lib/components/copy.svelte';
 	import UserAvatar from '$lib/components/user-avatar.svelte';
 	import UserStateBadge from '$lib/components/user-state-badge.svelte';

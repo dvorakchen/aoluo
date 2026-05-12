@@ -7,7 +7,7 @@
 	import type { RoleWithUserCount } from '$lib/server/business/role';
 	import { ShieldCheck, UserCog, Users } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
-	import { guard } from '$lib/client/attachments/permission-guard';
+	import { guard } from '$lib/client/permission/attachments/permission-guard.js';
 
 	let { data } = $props();
 

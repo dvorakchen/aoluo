@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto, invalidate } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { guard } from '$lib/client/attachments/permission-guard.js';
+	import { guard } from '$lib/client/permission/attachments/permission-guard.js';
 	import { http } from '$lib/client/http';
 	import { toastStore } from '$lib/client/store/toast.svelte.js';
 	import DeleteConfirm from '$lib/components/delete-confirm.svelte';

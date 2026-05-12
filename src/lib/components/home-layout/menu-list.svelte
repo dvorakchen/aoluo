@@ -3,13 +3,27 @@
 -->
 
 <script module>
+	import type { PermissionSchema, PermissionValue } from '$lib/shared';
+
 	/**
+	 * MenuListDateType 是一个菜单组，归纳多个菜单，以在视觉上有分类效果，
+	 * 如菜单：员工管理、请假管理。会被归到 '人事管理'
 	 * topTitle 不可以重复
 	 * list 里的 title 不可以重复
 	 */
 	export type MenuListDateType = {
+		/**
+		 * 菜单组的标题
+		 */
 		topTitle: string;
+		/**
+		 * 菜单
+		 */
 		menu: (MenuLink | MenuType)[];
+		/**
+		 * 权限，满足权限的当前用户才会显示菜单
+		 */
+		permissions?: PermissionSchema | PermissionValue | null;
 	};
 </script>
 

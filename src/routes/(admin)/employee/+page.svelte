@@ -9,7 +9,7 @@
 	import Input from '$lib/components/input.svelte';
 	import { toDateTime } from '$lib/shared/utils';
 	import UserStateBadge from '$lib/components/user-state-badge.svelte';
-	import { guard } from '$lib/client/attachments/permission-guard.js';
+	import { guard } from '$lib/client/permission/attachments/permission-guard.js';
 
 	let { data } = $props();
 

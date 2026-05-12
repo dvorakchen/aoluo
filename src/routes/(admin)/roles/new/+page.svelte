@@ -12,7 +12,7 @@
 	import { enhance } from '$app/forms';
 	import type { ActionData } from './$types';
 	import { toastStore } from '$lib/client/store/toast.svelte';
-	import { guard } from '$lib/client/attachments/permission-guard';
+	import { guard } from '$lib/client/permission/attachments/permission-guard';
 
 	let { form }: { form: ActionData } = $props();
 

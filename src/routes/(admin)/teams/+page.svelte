@@ -9,7 +9,7 @@
 	import Input from '$lib/components/input.svelte';
 	import { enhance } from '$app/forms';
 	import { toastStore } from '$lib/client/store/toast.svelte';
-	import { guard } from '$lib/client/attachments/permission-guard';
+	import { guard } from '$lib/client/permission/attachments/permission-guard.js';
 
 	let { data } = $props();
 

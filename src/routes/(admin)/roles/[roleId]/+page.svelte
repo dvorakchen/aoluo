@@ -13,7 +13,7 @@
 	} from '$lib/shared/permissions';
 	import DeleteConfirm from '$lib/components/delete-confirm.svelte';
 	import { http } from '$lib/client/http/index.js';
-	import { guard } from '$lib/client/attachments/permission-guard.js';
+	import { guard } from '$lib/client/permission/attachments/permission-guard.js';
 	import { toastStore } from '$lib/client/store/toast.svelte.js';
 	import { invalidateAll, goto } from '$app/navigation';
 	import { FetchError } from 'ofetch';
