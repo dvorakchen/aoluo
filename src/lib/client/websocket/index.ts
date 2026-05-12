@@ -64,7 +64,7 @@ export function createWebSocketClient(url: string) {
 
 		socket.onopen = () => {
 			isConnected = true;
-			console.log('🌐 WebSocket 已连接');
+			console.debug('🌐 WebSocket 已连接');
 		};
 
 		socket.onmessage = (event) => {
@@ -74,7 +74,7 @@ export function createWebSocketClient(url: string) {
 					return;
 				}
 				const data: RecevieData = JSON.parse(event.data);
-				console.log(`WebSocket recev: `, data);
+				console.debug(`WebSocket recev: `, data);
 				if (data.type) {
 					publish(data.type, data.payload);
 				}
@@ -86,7 +86,7 @@ export function createWebSocketClient(url: string) {
 		socket.onclose = () => {
 			isConnected = false;
 			socket = null;
-			console.log('🌐 WebSocket 已断开');
+			console.debug('🌐 WebSocket 已断开');
 		};
 	}
 
@@ -99,7 +99,7 @@ export function createWebSocketClient(url: string) {
 				type,
 				payload
 			};
-			console.log('send: ', data);
+			console.debug('send: ', data);
 			socket.send(JSON.stringify(data));
 		} else {
 			console.warn('WebSocket 未连接，无法发送消息');

@@ -20,7 +20,7 @@
 	});
 
 	const subscribe = (payload: RxDataAiChat) => {
-		console.log('接收到 ai-chat 订阅: ', payload);
+		console.debug('接收到 ai-chat 订阅: ', payload);
 
 		if (payload.type === 'end' || payload.type === 'unknow') {
 			chatContext.end();

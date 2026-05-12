@@ -20,7 +20,7 @@ import { container } from 'tsyringe';
 import { UserService } from '$lib/server/business/user';
 
 const baseURL = pubenv.PUBLIC_ORIGIN;
-console.log(`[Better Auth] Initializing baseURL: ${baseURL}`);
+logger.info(`[Better Auth] Initializing baseURL: ${baseURL}`);
 
 export const auth = betterAuth({
 	baseURL,
