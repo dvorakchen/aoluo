@@ -10,6 +10,7 @@
 	import { toDateTime } from '$lib/shared/utils';
 	import UserStateBadge from '$lib/components/user-state-badge.svelte';
 	import { guard } from '$lib/client/permission/attachments/permission-guard.js';
+	import { UserCog, Users } from '@lucide/svelte';
 
 	let { data } = $props();
 
@@ -31,8 +32,14 @@
 	});
 </script>
 
-<div class="mb-6 flex items-center justify-between">
-	<h1 class="text-2xl font-bold">{m.employee_list()}</h1>
+<div class="mb-8 flex items-center gap-4">
+	<div class="rounded-xl bg-primary/10 p-3">
+		<Users class="text-primary" size={28} />
+	</div>
+	<div>
+		<h1 class="text-2xl font-bold tracking-tight">{m.employee_list()}</h1>
+		<p class="text-sm font-medium opacity-60">{m.menu_hrm_employee()}</p>
+	</div>
 </div>
 
 <form class="mx-4 mt-6 flex" method="GET">
@@ -59,16 +66,46 @@
 			value={page.url.searchParams.get('phone')}
 		/>
 		<div class="filter">
-			<input class="filter-reset btn" type="radio" name="removed" aria-label="X" value="" />
-			<input class="btn" type="radio" name="removed" aria-label={m.resigned()} value="on" />
-			<input class="btn" type="radio" name="removed" aria-label={m.not_resigned()} value="off" />
+			<input
+				class="filter-reset btn btn-outline btn-secondary"
+				type="radio"
+				name="removed"
+				aria-label="X"
+				value=""
+			/>
+			<input
+				class="btn checked:btn-secondary"
+				type="radio"
+				name="removed"
+				aria-label={m.resigned()}
+				value="on"
+			/>
+			<input
+				class="btn checked:btn-secondary"
+				type="radio"
+				name="removed"
+				aria-label={m.not_resigned()}
+				value="off"
+			/>
 		</div>
 
 		<div class="filter">
-			<input class="filter-reset btn" type="radio" name="banned" aria-label="X" value="" />
-			<input class="btn" type="radio" name="banned" aria-label={m.banned_status()} value="on" />
 			<input
-				class="btn"
+				class="filter-reset btn btn-outline btn-secondary"
+				type="radio"
+				name="banned"
+				aria-label="X"
+				value=""
+			/>
+			<input
+				class="btn checked:btn-secondary"
+				type="radio"
+				name="banned"
+				aria-label={m.banned_status()}
+				value="on"
+			/>
+			<input
+				class="btn checked:btn-secondary"
 				type="radio"
 				name="banned"
 				aria-label={m.not_banned_status()}
@@ -121,8 +158,10 @@
 			<a
 				class="btn btn-soft"
 				href={resolve(`/employee/${row.username}`)}
-				{@attach guard('EMPLOYEE_READ')}>{m.details()}</a
+				{@attach guard('EMPLOYEE_READ')}
 			>
+				<UserCog size={18} />{m.details()}
+			</a>
 			<!-- <button class="btn text-error btn-ghost" {@attach guard('EMPLOYEE_DELETE')}
 				>{m.delete_employee()}</button
 			> -->

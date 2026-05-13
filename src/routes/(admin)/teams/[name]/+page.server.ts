@@ -3,9 +3,7 @@ import { TeamService } from '$lib/server/business/team';
 import { m } from '$lib/paraglide/messages';
 import { container } from 'tsyringe';
 
-export const load = async ({ params, depends }) => {
-	depends('user:list');
-
+export const load = async ({ params }) => {
 	const teamService = container.resolve(TeamService);
 	const team = await teamService.getTeamByName(params.name);
 

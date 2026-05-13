@@ -80,11 +80,7 @@
 
 				{#snippet actions(row: Role)}
 					<div class="flex gap-2">
-						<a
-							class="tooltip btn btn-ghost"
-							href={resolve(`/roles/${row.id}`)}
-							data-tip={m.details()}
-						>
+						<a class="tooltip btn" href={resolve(`/roles/${row.id}`)} data-tip={m.details()}>
 							<UserCog size={18} />{m.details()}
 						</a>
 					</div>

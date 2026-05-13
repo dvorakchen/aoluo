@@ -3,7 +3,7 @@
 	import Table from '$lib/components/table.svelte';
 	import type { TeamWithManager } from '$lib/shared';
 	import { m } from '$lib/paraglide/messages';
-	import { Users, Plus, LayoutGrid, Info } from '@lucide/svelte';
+	import { Users, Plus, LayoutGrid, Info, UserCog } from '@lucide/svelte';
 	import { i18nFromJSON } from '$lib/shared/utils';
 	import Modal from '$lib/components/modal.svelte';
 	import Input from '$lib/components/input.svelte';
@@ -109,7 +109,7 @@
 						class="btn text-primary btn-ghost btn-sm"
 						href={resolve(`/teams/${team.name.default}`)}
 					>
-						{m.details()}
+						<UserCog size={18} />{m.details()}
 					</a>
 				{/snippet}
 			</Table>

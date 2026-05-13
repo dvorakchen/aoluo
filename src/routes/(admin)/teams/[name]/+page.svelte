@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto, invalidate } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { guard } from '$lib/client/permission/attachments/permission-guard.js';
 	import { http } from '$lib/client/http';
@@ -49,7 +49,7 @@
 				}
 			});
 			toastStore.add(m.add_success(), 'info');
-			invalidate('user:list');
+			invalidateAll();
 		} catch (e: unknown) {
 			if (e instanceof FetchError) {
 				toastStore.add(e.data.message, 'error');
@@ -68,7 +68,6 @@
 				}
 			});
 			toastStore.add(m.remove_success(), 'warning');
-			invalidate('user:list');
 		} catch (e: unknown) {
 			if (e instanceof FetchError) {
 				toastStore.add(e.data.message, 'error');
@@ -87,7 +86,6 @@
 				}
 			});
 			toastStore.add(m.update_success(), 'info');
-			invalidate('user:list');
 		} catch (e: unknown) {
 			if (e instanceof FetchError) {
 				toastStore.add(e.data.message, 'error');
