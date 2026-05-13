@@ -105,10 +105,7 @@
 				{/snippet}
 
 				{#snippet actions(team: RowType)}
-					<a
-						class="btn text-primary btn-ghost btn-sm"
-						href={resolve(`/teams/${team.name.default}`)}
-					>
+					<a class="btn" href={resolve(`/teams/${team.name.default}`)}>
 						<UserCog size={18} />{m.details()}
 					</a>
 				{/snippet}

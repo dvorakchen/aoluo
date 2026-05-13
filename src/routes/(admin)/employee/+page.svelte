@@ -133,7 +133,10 @@
 	{#snippet display_name(row: RowType)}
 		<div class="flex items-center gap-3">
 			<UserAvatar image={row.image} displayUsername={row.displayUsername ?? ''} />
-			<div class="font-bold">{row.displayUsername || row.username || row.name}</div>
+			<div class="flex flex-col">
+				<span class="font-medium">{row.displayUsername || row.name}</span>
+				<span class="text-xs text-base-content/50">@{row.username}</span>
+			</div>
 		</div>
 	{/snippet}
 
