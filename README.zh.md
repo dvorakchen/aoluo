@@ -126,6 +126,12 @@ export class UserService {
 
 const userService = container.resolve(UserService);
 userService.doWork();
+
+class RoleService {
+	constructor(
+		@inject('NormalDbService') private dbService: DbService,
+	) { }
+}
 ```
 
 ## 样式

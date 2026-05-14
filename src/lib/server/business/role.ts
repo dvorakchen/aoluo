@@ -1,8 +1,8 @@
-import { DBService } from '$lib/server/db';
+import type { DbService } from '$lib/server/db';
 import { role, user, userRole } from '$lib/server/db/schema';
 import type { DbI18nField, Role } from '$lib/shared';
 import { eq, count, and } from 'drizzle-orm';
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 export type RoleWithUserCount = Role & {
 	userCount: number;
@@ -10,7 +10,7 @@ export type RoleWithUserCount = Role & {
 
 @injectable()
 export class RoleService {
-	constructor(private dbService: DBService) {}
+	constructor(@inject('NormalDbService') private dbService: DbService) { }
 
 	private get db() {
 		return this.dbService.db;

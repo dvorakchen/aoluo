@@ -1,16 +1,16 @@
-import { DBService } from '$lib/server/db';
+import type { DbService } from '$lib/server/db';
 import { role } from '$lib/server/db/schema';
 import { inArray } from 'drizzle-orm';
 import type { PermissionValue } from '$lib/shared';
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 import { RoleService } from '$lib/server/business/role';
 
 @injectable()
 export class PermissionService {
 	constructor(
-		private dbService: DBService,
+		@inject('NormalDbService') private dbService: DbService,
 		private roleService: RoleService
-	) {}
+	) { }
 
 	private get db() {
 		return this.dbService.db;

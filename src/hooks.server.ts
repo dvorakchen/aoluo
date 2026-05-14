@@ -11,6 +11,8 @@ import { logger } from '$lib/server/logger';
 import { runMigrations, seed } from '$lib/server/db/seed';
 import { initWebSocket } from '$lib/server/websocket';
 import { APIError } from 'better-auth/api';
+import { container } from 'tsyringe';
+import { AiDbService, NormalDbService } from '$lib/server/db';
 
 /**
  * 处理路由保护的 Handle。这个 Handle 会在每个请求前检查用户是否已登录，除非请求的路径在 anonymousPaths 中。
@@ -109,3 +111,17 @@ if (!building) {
 
 	initWebSocket();
 }
+
+function registerDI() {
+	container.register('NormalDbService', {
+		useClass: NormalDbService
+	})
+	logger.info('DI registered NormalDbService')
+
+	container.register('AiDbService', {
+		useClass: AiDbService
+	})
+	logger.info('DI registered AiDbService')
+}
+
+registerDI();

@@ -1,4 +1,4 @@
-import { DBService } from '$lib/server/db';
+import type { DbService } from '$lib/server/db';
 import { role, userRole, user, teamUser } from '$lib/server/db/schema';
 import { eq, count, and, ilike, type SQL, inArray, sql, notInArray } from 'drizzle-orm';
 import type {
@@ -7,7 +7,7 @@ import type {
 	PermissionValue,
 	User as UserType
 } from '$lib/shared';
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 export type UserFilter = {
 	/**
@@ -30,7 +30,7 @@ export type UserFilter = {
 
 @injectable()
 export class UserService {
-	constructor(private dbService: DBService) {}
+	constructor(@inject('NormalDbService') private dbService: DbService) { }
 
 	private get db() {
 		return this.dbService.db;
