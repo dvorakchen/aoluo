@@ -30,7 +30,7 @@ export type UserFilter = {
 
 @injectable()
 export class UserService {
-	constructor(@inject('NormalDbService') private dbService: DbService) { }
+	constructor(@inject('NormalDbService') private dbService: DbService) {}
 
 	private get db() {
 		return this.dbService.db;

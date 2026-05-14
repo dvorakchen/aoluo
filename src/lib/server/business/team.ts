@@ -4,10 +4,9 @@ import { and, count, eq, inArray, sql } from 'drizzle-orm';
 import type { DbI18nField, PaginationResult, TeamWithManager, User } from '$lib/shared';
 import { inject, injectable } from 'tsyringe';
 
-
 @injectable()
 export class TeamService {
-	constructor(@inject('NormalDbService') private dbService: DbService) { }
+	constructor(@inject('NormalDbService') private dbService: DbService) {}
 
 	private get db() {
 		return this.dbService.db;

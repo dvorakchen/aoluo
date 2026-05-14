@@ -3,7 +3,7 @@
 	import { http } from '$lib/client/http';
 	import type { PaginationResult, User } from '$lib/shared';
 	import { X, Check } from '@lucide/svelte';
-	import Pagination from './pagination.svelte';
+	import Pagination from '$lib/components/pagination.svelte';
 	import UserAvatar from './user-avatar.svelte';
 	import { m } from '$lib/paraglide/messages';
 

@@ -106,6 +106,7 @@ export const handle: Handle = sequence(
 );
 
 if (!building) {
+	registerDI();
 	await runMigrations();
 	await seed();
 
@@ -115,13 +116,11 @@ if (!building) {
 function registerDI() {
 	container.register('NormalDbService', {
 		useClass: NormalDbService
-	})
-	logger.info('DI registered NormalDbService')
+	});
+	logger.info('DI registered NormalDbService');
 
 	container.register('AiDbService', {
 		useClass: AiDbService
-	})
-	logger.info('DI registered AiDbService')
+	});
+	logger.info('DI registered AiDbService');
 }
-
-registerDI();

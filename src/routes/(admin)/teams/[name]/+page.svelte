@@ -7,8 +7,8 @@
 	import DeleteConfirm from '$lib/components/delete-confirm.svelte';
 	import Modal from '$lib/components/modal.svelte';
 	import Table from '$lib/components/table.svelte';
-	import UserAvatar from '$lib/components/user-avatar.svelte';
-	import UserPicker from '$lib/components/user-picker.svelte';
+	import UserAvatar from '$lib/components/user/user-avatar.svelte';
+	import UserPicker from '$lib/components/user/user-picker.svelte';
 	import { m } from '$lib/paraglide/messages';
 	import { PermissionSchema, type User } from '$lib/shared/index.js';
 	import { i18nFromJSON, toDate } from '$lib/shared/utils.js';

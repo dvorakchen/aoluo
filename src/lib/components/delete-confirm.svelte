@@ -3,6 +3,7 @@
 <script lang="ts">
 	import { Trash2, X } from '@lucide/svelte';
 	import { m } from '$lib/paraglide/messages';
+	import { onDestroy } from 'svelte';
 
 	let {
 		onDelete,
@@ -16,25 +17,52 @@
 
 	let confirmed = $state(false);
 	let pending = $state(false);
+	let countdown = $state(0);
+	let timerId: ReturnType<typeof setInterval> | undefined;
 
 	async function handleConfirm() {
-		if (pending || !confirmed) return;
+		if (pending || !confirmed || countdown > 0) return;
 		pending = true;
 		try {
 			await onDelete();
 		} finally {
 			pending = false;
 			confirmed = false;
+			countdown = 0;
+			if (timerId) {
+				clearInterval(timerId);
+				timerId = undefined;
+			}
 		}
 	}
 
 	function handleFirstClick() {
 		confirmed = true;
+		countdown = 3;
+		timerId = setInterval(() => {
+			if (countdown > 0) {
+				countdown -= 1;
+			} else {
+				if (timerId) {
+					clearInterval(timerId);
+					timerId = undefined;
+				}
+			}
+		}, 1000);
 	}
 
 	function handleCancel() {
 		confirmed = false;
+		countdown = 0;
+		if (timerId) {
+			clearInterval(timerId);
+			timerId = undefined;
+		}
 	}
+
+	onDestroy(() => {
+		if (timerId) clearInterval(timerId);
+	});
 </script>
 
 <div class="inline-grid items-center">
@@ -61,7 +89,7 @@
 		<button
 			class="btn whitespace-nowrap btn-sm btn-error"
 			onclick={handleConfirm}
-			disabled={pending}
+			disabled={pending || countdown > 0}
 		>
 			{#if pending}
 				<span class="loading loading-sm loading-spinner"></span>
@@ -69,6 +97,9 @@
 				<Trash2 size={14} />
 			{/if}
 			{confirmLabel}
+			{#if countdown > 0}
+				({countdown})
+			{/if}
 		</button>
 		<button class="btn btn-square btn-soft btn-sm" onclick={handleCancel} disabled={pending}>
 			<X size={14} />

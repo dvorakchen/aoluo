@@ -10,7 +10,7 @@ export type RoleWithUserCount = Role & {
 
 @injectable()
 export class RoleService {
-	constructor(@inject('NormalDbService') private dbService: DbService) { }
+	constructor(@inject('NormalDbService') private dbService: DbService) {}
 
 	private get db() {
 		return this.dbService.db;

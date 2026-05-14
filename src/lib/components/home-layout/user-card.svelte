@@ -4,7 +4,7 @@
 	import { authClient } from '$lib/client/auth';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import UserAvatar from '../user-avatar.svelte';
+	import UserAvatar from '$lib/components/user/user-avatar.svelte';
 	import { i18nFromJSON } from '$lib/shared/utils';
 
 	async function handleLogout() {

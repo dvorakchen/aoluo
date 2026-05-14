@@ -5,7 +5,7 @@
 	import { resolve } from '$app/paths';
 	import Table from '$lib/components/table.svelte';
 	import type { User, PermissionValue } from '$lib/shared';
-	import UserAvatar from '$lib/components/user-avatar.svelte';
+	import UserAvatar from '$lib/components/user/user-avatar.svelte';
 	import {
 		PERMISSIONS,
 		getPermissionLabel,
@@ -17,7 +17,7 @@
 	import { toastStore } from '$lib/client/store/toast.svelte.js';
 	import { invalidateAll, goto } from '$app/navigation';
 	import { FetchError } from 'ofetch';
-	import UserPicker from '$lib/components/user-picker.svelte';
+	import UserPicker from '$lib/components/user/user-picker.svelte';
 	import Modal from '$lib/components/modal.svelte';
 
 	let { data } = $props();

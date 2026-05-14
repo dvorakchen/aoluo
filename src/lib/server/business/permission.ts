@@ -10,7 +10,7 @@ export class PermissionService {
 	constructor(
 		@inject('NormalDbService') private dbService: DbService,
 		private roleService: RoleService
-	) { }
+	) {}
 
 	private get db() {
 		return this.dbService.db;

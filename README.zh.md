@@ -128,9 +128,7 @@ const userService = container.resolve(UserService);
 userService.doWork();
 
 class RoleService {
-	constructor(
-		@inject('NormalDbService') private dbService: DbService,
-	) { }
+	constructor(@inject('NormalDbService') private dbService: DbService) {}
 }
 ```
 

@@ -13,7 +13,6 @@ const client = postgres(env.ADMIN_DATABASE_URL);
  */
 export const db = drizzle(client, { schema });
 
-
 /**
  * 数据库服务类，提供对数据库连接实例的访问
  */
@@ -44,4 +43,3 @@ export class AiDbService implements DbService {
 		return db;
 	}
 }
-

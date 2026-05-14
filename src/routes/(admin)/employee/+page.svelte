@@ -2,13 +2,13 @@
 	import { resolve } from '$app/paths';
 	import Pagination from '$lib/components/pagination.svelte';
 	import Table from '$lib/components/table.svelte';
-	import UserAvatar from '$lib/components/user-avatar.svelte';
+	import UserAvatar from '$lib/components/user/user-avatar.svelte';
 	import { m } from '$lib/paraglide/messages';
 	import type { User } from '$lib/shared';
 	import { page } from '$app/state';
 	import Input from '$lib/components/input.svelte';
 	import { toDateTime } from '$lib/shared/utils';
-	import UserStateBadge from '$lib/components/user-state-badge.svelte';
+	import UserStateBadge from '$lib/components/user/user-state-badge.svelte';
 	import { guard } from '$lib/client/permission/attachments/permission-guard.js';
 	import { UserCog, Users } from '@lucide/svelte';
 

@@ -2,8 +2,8 @@
 	import { enhance } from '$app/forms';
 	import { guard } from '$lib/client/permission/attachments/permission-guard.js';
 	import Copy from '$lib/components/copy.svelte';
-	import UserAvatar from '$lib/components/user-avatar.svelte';
-	import UserStateBadge from '$lib/components/user-state-badge.svelte';
+	import UserAvatar from '$lib/components/user/user-avatar.svelte';
+	import UserStateBadge from '$lib/components/user/user-state-badge.svelte';
 	import { m } from '$lib/paraglide/messages';
 	import { i18nFromJSON, toDateTime } from '$lib/shared/utils';
 	import { MoveLeft, TriangleAlert } from '@lucide/svelte';
