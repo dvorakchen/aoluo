@@ -1,11 +1,12 @@
 import type { DbService } from '$lib/server/db';
 import { role, userRole, user, teamUser } from '$lib/server/db/schema';
 import { eq, count, and, ilike, type SQL, inArray, sql, notInArray } from 'drizzle-orm';
-import type {
-	PaginationResult,
-	PermissionSchema,
-	PermissionValue,
-	User as UserType
+import {
+	USER_ADMIN_USERNAME,
+	type PaginationResult,
+	type PermissionSchema,
+	type PermissionValue,
+	type User as UserType
 } from '$lib/shared';
 import { inject, injectable } from 'tsyringe';
 
@@ -200,6 +201,9 @@ export class UserService {
 	 * 封禁一个用户
 	 */
 	async banUser(username: string, reason: string): Promise<void> {
+		if (username === USER_ADMIN_USERNAME) {
+			return;
+		}
 		await this.db
 			.update(user)
 			.set({ banned: true, banReason: reason, banExpires: null })
@@ -227,6 +231,9 @@ export class UserService {
 	 * 离职一个用户
 	 */
 	async resignUser(username: string): Promise<void> {
+		if (username === USER_ADMIN_USERNAME) {
+			return;
+		}
 		await this.db.update(user).set({ removed: true }).where(eq(user.username, username));
 	}
 
@@ -234,6 +241,7 @@ export class UserService {
 	 * 更新用户信息
 	 */
 	async updateUser(userId: string, data: Partial<UserType>, rolesId?: string[]): Promise<void> {
+		// TODO: username 为 USER_ADMIN_USERNAME 的必须至少保留 角色 ROLE_ADMIN_NAME
 		await this.db.transaction(async (tx) => {
 			// 1. 更新基本信息
 			if (Object.keys(data).length > 0) {

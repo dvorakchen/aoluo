@@ -72,3 +72,20 @@ export const QUERY_FILTER_CHECKABLE_VALUE = {
  * N/A 表示没有
  */
 export const NA = 'N/A';
+
+/**
+ * 固定系统管理员角色名，系统管理员，该角色不能修改，不能删除，保底用
+ *
+ */
+export const ROLE_ADMIN_NAME = '系统管理员';
+
+/**
+ * 固定系统管理员用户名，admin，该用户名不能修改，不能删除，保底用
+ *
+ */
+export const USER_ADMIN_USERNAME = 'admin';
+/**
+ * 固定系统管理员展示用户名，系统管理员，该用户名不能修改，不能删除，保底用
+ *
+ */
+export const USER_ADMIN_DISPLAYUSERNAME = '系统管理员';

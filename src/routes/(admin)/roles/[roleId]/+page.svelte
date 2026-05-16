@@ -4,7 +4,12 @@
 	import { ShieldCheck, Users, ChevronLeft, Save } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
 	import Table from '$lib/components/table.svelte';
-	import type { User, PermissionValue } from '$lib/shared';
+	import {
+		type User,
+		type PermissionValue,
+		ROLE_ADMIN_NAME,
+		USER_ADMIN_USERNAME
+	} from '$lib/shared';
 	import UserAvatar from '$lib/components/user/user-avatar.svelte';
 	import {
 		PERMISSIONS,
@@ -112,6 +117,9 @@
 	}
 
 	async function handleRemoveUser(user: User) {
+		if (user.username === USER_ADMIN_USERNAME) {
+			return;
+		}
 		const list = members.map((t) => t.id).filter((id) => id !== user.id);
 		await updateUsers(list);
 	}
@@ -149,19 +157,21 @@
 				<p class="font-mono text-sm text-base-content/60 uppercase">{role.id}</p>
 			</div>
 		</div>
-		<div class="flex gap-2">
-			<button
-				class="btn gap-2 btn-sm btn-primary"
-				onclick={handleUpdateRolePermissions}
-				{@attach guard('ROLE_UPDATE')}
-			>
-				<Save size={18} />
-				{m.confirm()}
-			</button>
-			<span {@attach guard('ROLE_DELETE')}>
-				<DeleteConfirm label={m.delete_role()} onDelete={handleDeleteRole} />
-			</span>
-		</div>
+		{#if role.name.default !== ROLE_ADMIN_NAME}
+			<div class="flex gap-2">
+				<button
+					class="btn gap-2 btn-sm btn-primary"
+					onclick={handleUpdateRolePermissions}
+					{@attach guard('ROLE_UPDATE')}
+				>
+					<Save size={18} />
+					{m.confirm()}
+				</button>
+				<span {@attach guard('ROLE_DELETE')}>
+					<DeleteConfirm label={m.delete_role()} onDelete={handleDeleteRole} />
+				</span>
+			</div>
+		{/if}
 	</header>
 
 	<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -191,6 +201,7 @@
 												class:checkbox-warning={isInitial(value)}
 												checked={isChecked(value as PermissionValue)}
 												onchange={() => togglePermission(value as PermissionValue)}
+												disabled={role.name.default == ROLE_ADMIN_NAME}
 											/>
 											<span class="label-text flex flex-col">
 												<span class="text-base font-medium"
@@ -241,10 +252,12 @@
 								<a href={resolve(`/employee/${row.username}`)} class="btn btn-ghost btn-sm">
 									{m.details()}
 								</a>
-								<DeleteConfirm
-									onDelete={() => handleRemoveUser(row)}
-									{@attach guard('ROLE_DELETE')}
-								/>
+								{#if row.username !== USER_ADMIN_USERNAME}
+									<DeleteConfirm
+										onDelete={() => handleRemoveUser(row)}
+										{@attach guard('ROLE_DELETE')}
+									/>
+								{/if}
 							</div>
 						{/snippet}
 					</Table>

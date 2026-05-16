@@ -4,7 +4,12 @@ import * as schema from './schema';
 import { eq, sql } from 'drizzle-orm';
 import { auth } from '$lib/server/auth';
 import type { DbI18nField } from '$lib/shared';
-import { PERMISSIONS } from '$lib/shared';
+import {
+	PERMISSIONS,
+	ROLE_ADMIN_NAME,
+	USER_ADMIN_DISPLAYUSERNAME,
+	USER_ADMIN_USERNAME
+} from '$lib/shared';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 
 /**
@@ -65,7 +70,7 @@ export async function seed() {
 	// 2. 定义角色及其配置
 	const rolesConfig: Record<string, { name: DbI18nField; permissions: string[] }> = {
 		admin: {
-			name: { default: '系统管理员', zh: '系统管理员', en: 'System Admin' },
+			name: { default: ROLE_ADMIN_NAME, zh: ROLE_ADMIN_NAME, en: 'System Admin' },
 			permissions: allPermissions
 		},
 		boss: {
@@ -119,8 +124,8 @@ export async function seed() {
 	const usersToSeed = [
 		{
 			email: 'admin@qq.com',
-			username: 'admin',
-			displayUsername: '系统管理员',
+			username: USER_ADMIN_USERNAME,
+			displayUsername: USER_ADMIN_DISPLAYUSERNAME,
 			phoneNumber: '13800138000',
 			roles: ['admin', 'employee']
 		},
