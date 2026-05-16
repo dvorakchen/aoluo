@@ -44,6 +44,7 @@
 
 	function onSend(txt: string, imgs: string[]) {
 		chatContext.chatList.push(ChatBubble.fromUser(txt, imgs));
+		chatContext.start();
 
 		wsClient.send('ai-chat', {
 			type: 'txt-imgs',

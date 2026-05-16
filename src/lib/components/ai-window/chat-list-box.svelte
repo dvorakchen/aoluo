@@ -17,12 +17,12 @@
 	<ul>
 		{#each chatList as bubble (bubble.id)}
 			<bubble.View {...bubble.props} />
-			{#if chatContext.handling}
-				<div class="mt-4 flex items-center gap-3">
-					<span class="loading w-4 loading-spinner"></span>
-					<span class="text-sm opacity-80">{m.ai_assistant_handling()}...</span>
-				</div>
-			{/if}
 		{/each}
+		{#if chatContext.handling}
+			<div class="mt-4 flex items-center gap-3">
+				<span class="loading w-4 loading-spinner"></span>
+				<span class="text-sm opacity-80">{m.ai_assistant_handling()}...</span>
+			</div>
+		{/if}
 	</ul>
 </div>

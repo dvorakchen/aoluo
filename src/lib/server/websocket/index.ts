@@ -1,6 +1,6 @@
 import { WebSocketServer, type WebSocket } from 'ws';
 import { logger } from '$lib/server/logger';
-import type { TxDataAiChat } from '$lib/client/websocket/model';
+import type { RxDataAiChat, TxDataAiChat } from '$lib/client/websocket/model';
 import type { RxData, TxData } from './model';
 import { setTimeout } from 'node:timers/promises';
 
@@ -85,21 +85,15 @@ async function handleIncomingMessage(ws: WebSocket, message: RxData) {
 async function handleAiChatMsg(ws: WebSocket, payload: TxDataAiChat) {
 	const { type, data } = payload;
 
-	let response: TxData;
-
 	switch (type) {
 		case 'txt-imgs':
 			{
 				logger.info('txt-imgs');
 				await setTimeout(2000);
-				response = {
-					type: 'ai-chat',
-					payload: {
-						type: 'plain',
-						data: `你说的是：${data?.txt}`
-					}
-				};
-				logger.info(response, 'txt-imgs response');
+				sendAiChat(ws, {
+					type: 'plain',
+					data: `你说的是：${data?.txt}`
+				});
 			}
 			break;
 
@@ -109,13 +103,19 @@ async function handleAiChatMsg(ws: WebSocket, payload: TxDataAiChat) {
 		}
 	}
 
-	response = {
+	// 发送 end 结束
+	sendAiChat(ws, {
+		type: 'end',
+		data: null
+	});
+}
+
+function sendAiChat(ws: WebSocket, payload: RxDataAiChat) {
+	const response = {
 		type: 'ai-chat',
-		payload: {
-			type: 'end',
-			data: null
-		}
+		payload
 	};
+	logger.debug(response, 'txt-imgs response');
 
 	ws.send(JSON.stringify(response));
 }

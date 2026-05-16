@@ -64,12 +64,11 @@
 
 <div>
 	<fieldset class="fieldset">
-		<!-- <legend class="fieldset-legend">Your bio</legend> -->
 		<textarea
 			bind:this={userInput}
 			bind:value={userInputValue}
 			class="textarea h-24 w-full resize-y"
-			placeholder="Bio"
+			placeholder="我能帮助你什么？"
 			onkeydown={(ev) => {
 				if (!ev.ctrlKey && !ev.shiftKey && ev.key === 'Enter') {
 					ev.preventDefault();
