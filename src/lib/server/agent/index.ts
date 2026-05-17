@@ -9,6 +9,7 @@ import type { DbService } from '$lib/server/db';
 import { LogService } from '$lib/server/logger';
 import { type WebSocket } from 'ws';
 import type { WebSocketWithUser } from '$lib/server/websocket';
+import { ofetch } from 'ofetch';
 
 @injectable()
 export class AgentService {
@@ -45,9 +46,64 @@ export class AgentService {
 	 * @param img 用户可能提交了图片，不实现
 	 */
 	async ask(user: User, txt: string /*img: string[]*/) {
-		const sp = await this.systemPrompt(user);
+		const systemPrompt = await this.systemPrompt(user);
 
-		this.logger.debug(sp);
+		try {
+			// 直接使用 ofetch 调用接口
+			const response = await ofetch(`${this.url}/v1/chat/completions`, {
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${this.apiKey}`,
+					'Content-Type': 'application/json'
+				},
+				body: {
+					"model": this.model,
+					"messages": [
+						{
+							"role": "system",
+							"content": systemPrompt
+						},
+						{
+							"role": "user",
+							"content": txt
+						}
+					],
+					"stream": false
+				}
+
+			});
+
+			const content = response.choices?.[0]?.message?.content;
+			if (content) {
+				this.sendToWs({
+					type: 'plain',
+					data: content
+				});
+			} else {
+				this.logger.error({ response }, 'AI 响应格式异常');
+				this.sendToWs({
+					type: 'plain',
+					data: '抱歉，AI 响应出现异常，请稍后再试。'
+				});
+			}
+		} catch (error) {
+			this.logger.error(error, '调用 AI 接口失败');
+			this.sendToWs({
+				type: 'plain',
+				data: '抱歉，与 AI 服务通信时出错。'
+			});
+		}
+	}
+
+	private sendToWs(payload: any) {
+		if (this.ws && this.ws.readyState === 1) {
+			this.ws.send(
+				JSON.stringify({
+					type: 'ai-chat',
+					payload
+				})
+			);
+		}
 	}
 
 	private async systemPrompt(user: User) {
@@ -72,7 +128,7 @@ export class AgentService {
 
 ### 交互准则
 1. **权限意识**：在回答用户关于特定数据的查询或操作建议时，应参考其拥有的权限列表。如果用户尝试了解其无权访问的领域，请礼貌地指出权限限制。
-2. **安全性**：严禁泄露系统底层配置、数据库连接字符串或 API 密钥。
+2. **安全性**：严禁泄露系统底层配置、数据库连接字符串 or API 密钥。
 3. **专业性**：保持专业、高效、友好的沟通风格。
 4. **简洁性**：除非用户要求详细解释，否则回答应尽量精炼，直击要点。
 5. **合规性**：在涉及删除（DELETE）等破坏性操作的建议时，务必提醒用户谨慎操作。

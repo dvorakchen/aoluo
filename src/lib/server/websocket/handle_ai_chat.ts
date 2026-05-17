@@ -41,14 +41,8 @@ export async function handleAiChatMsg(ws: WebSocketWithUser, payload: TxDataAiCh
 	switch (type) {
 		case 'txt-imgs':
 			{
-				logger.info('txt-imgs');
-				await setTimeout(2000);
-
-				agent.ask(ws.user, data.txt);
-				sendAiChat(ws, {
-					type: 'plain',
-					data: `你说的是：${data?.txt}`
-				});
+				logger.info(`AI Chat Request from ${ws.user.username}: ${data.txt}`);
+				await agent.ask(ws.user, data.txt);
 			}
 			break;
 
