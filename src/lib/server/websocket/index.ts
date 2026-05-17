@@ -1,12 +1,16 @@
 import { WebSocketServer, type WebSocket } from 'ws';
 import { logger } from '$lib/server/logger';
-import type { RxDataAiChat, TxDataAiChat } from '$lib/client/websocket/model';
-import type { RxData, TxData } from './model';
-import { setTimeout } from 'node:timers/promises';
+import type { RxData } from './model';
+import { handleAiChatMsg } from './handle_ai_chat';
+import { auth } from '$lib/server/auth';
+import type { User } from '$lib/shared';
 
 export type WebSocketServerEnhance = WebSocketServer & {
 	_initialized: boolean;
 };
+
+// 扩展 WebSocket 类型以存储用户信息
+export type WebSocketWithUser = WebSocket & { user?: User };
 
 /**
  * 启动 WebSocket 服务器逻辑
@@ -23,20 +27,35 @@ export function initWebSocket() {
 		return wss;
 	}
 
-	wss.on('connection', (ws: WebSocket) => {
+	wss.on('connection', async (ws: WebSocket, request) => {
 		logger.info('✅ WebSocket 客户端已连接');
 
-		ws.on('message', async (raw) => {
+		const session = await auth.api.getSession({
+			headers: request.headers as HeadersInit
+		});
+
+		if (!session) {
+			logger.warn('WebSocket 连接未授权');
+			ws.close(1008, 'Unauthorized');
+			return;
+		}
+
+		// 2. 将用户信息存入 ws 实例
+		(ws as WebSocketWithUser).user = session.user;
+		const wsu = ws as WebSocketWithUser;
+		logger.info(`用户 ${wsu.user?.username ?? 'null'} 已连接 WebSocket`);
+
+		wsu.on('message', async (raw) => {
 			try {
 				const message: RxData = JSON.parse(raw.toString());
-				handleIncomingMessage(ws, message);
+				handleIncomingMessage(wsu, message);
 			} catch (error) {
 				console.error('WebSocket 消息解析失败:', error);
 			}
 		});
 
-		ws.on('close', () => logger.warn('❌ 客户端断开连接'));
-		ws.on('error', (err) => logger.error(err, `WebSocket 错误`));
+		wsu.on('close', () => logger.warn('❌ 客户端断开连接'));
+		wsu.on('error', (err) => logger.error(err, `WebSocket 错误`));
 	});
 
 	wss._initialized = true;
@@ -46,9 +65,9 @@ export function initWebSocket() {
 /**
  * 统一处理客户端发来的消息
  */
-async function handleIncomingMessage(ws: WebSocket, message: RxData) {
+async function handleIncomingMessage(ws: WebSocketWithUser, message: RxData) {
 	const { type, payload } = message;
-	logger.debug(message, 'Received Msg');
+	logger.debug(ws.user, 'Websocket User');
 
 	switch (type) {
 		/* 
@@ -65,65 +84,3 @@ async function handleIncomingMessage(ws: WebSocket, message: RxData) {
 			console.warn('收到未定义的业务类型:', type);
 	}
 }
-
-/**
- * 处理和 AI 对话的逻辑
- * 
- * 所有逻辑处理完后需要发送一个：
- * ```
- * {
-		type: 'ai-chat',
-		payload: {
-			type: 'end',
-			data: null
-		}
-	}
- * ```
-
-	给客户端表示 AI 回答完了你的对话
- */
-async function handleAiChatMsg(ws: WebSocket, payload: TxDataAiChat) {
-	const { type, data } = payload;
-
-	switch (type) {
-		case 'txt-imgs':
-			{
-				logger.info('txt-imgs');
-				await setTimeout(2000);
-				sendAiChat(ws, {
-					type: 'plain',
-					data: `你说的是：${data?.txt}`
-				});
-			}
-			break;
-
-		default: {
-			ws.send(JSON.stringify(UNKNOW_RESPONSE));
-			return;
-		}
-	}
-
-	// 发送 end 结束
-	sendAiChat(ws, {
-		type: 'end',
-		data: null
-	});
-}
-
-function sendAiChat(ws: WebSocket, payload: RxDataAiChat) {
-	const response = {
-		type: 'ai-chat',
-		payload
-	};
-	logger.debug(response, 'txt-imgs response');
-
-	ws.send(JSON.stringify(response));
-}
-
-const UNKNOW_RESPONSE: TxData = {
-	type: 'ai-chat',
-	payload: {
-		type: 'unknow',
-		data: ''
-	}
-};
