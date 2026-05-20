@@ -57,20 +57,19 @@ export class AgentService {
 					'Content-Type': 'application/json'
 				},
 				body: {
-					"model": this.model,
-					"messages": [
+					model: this.model,
+					messages: [
 						{
-							"role": "system",
-							"content": systemPrompt
+							role: 'system',
+							content: systemPrompt
 						},
 						{
-							"role": "user",
-							"content": txt
+							role: 'user',
+							content: txt
 						}
 					],
-					"stream": false
+					stream: false
 				}
-
 			});
 
 			const content = response.choices?.[0]?.message?.content;
